@@ -3,12 +3,14 @@
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="color-scheme" content="light"><title>Fairfield | Heme bundle</title>
-  <link rel="stylesheet" href="style.css?v=20261024-ios-v2"><link rel="stylesheet" href="engine-styles.css?v=20261024-ios-v2">
-  <script defer src="site-config.js?v=20261024-ios-v2"></script>
-  <script defer src="assets/ngl.js?v=20261024-ios-v2"></script><script defer src="content.js?v=20261024-ios-v2"></script>
-  <script defer src="application-data.js?v=20261024-ios-v2"></script><script defer src="application-ui.js?v=20261024-ios-v2"></script>
-  <script defer src="figures-data.js?v=20261024-ios-v2"></script>
-  <script defer src="molecule-engine.js?v=20261024-ios-v2"></script><script defer src="app.js?v=20261024-ios-v2"></script>
+  <link rel="stylesheet" href="style.css?v=20261024-story-v3"><link rel="stylesheet" href="engine-styles.css?v=20261024-story-v3">
+  <link rel="stylesheet" href="story-ui.css?v=20261024-story-v3"><link rel="stylesheet" href="story-scene.css?v=20261024-story-v3">
+  <script defer src="story-data.js?v=20261024-story-v3"></script><script defer src="story-scene.js?v=20261024-story-v3"></script><script defer src="story-ui.js?v=20261024-story-v3"></script>
+  <script defer src="site-config.js?v=20261024-story-v3"></script>
+  <script defer src="assets/ngl.js?v=20261024-story-v3"></script><script defer src="content.js?v=20261024-story-v3"></script>
+  <script defer src="application-data.js?v=20261024-story-v3"></script><script defer src="application-ui.js?v=20261024-story-v3"></script>
+  <script defer src="figures-data.js?v=20261024-story-v3"></script>
+  <script defer src="molecule-engine.js?v=20261024-story-v3"></script><script defer src="app.js?v=20261024-story-v3"></script>
 </head>
 <body>
   <a class="skip" href="#main">Skip to research</a>
@@ -27,17 +29,17 @@
           <div class="molecule-top"><div><span class="eyebrow">Molecular structure</span><h2 id="molecule-title"></h2></div><div class="model-switch" id="model-switch" aria-label="Choose model"><button data-model="gs" aria-pressed="true">GS</button><button data-model="isog" aria-pressed="false">isog</button></div></div>
           <div class="viewer-wrap"><div id="molecular-viewport" tabindex="0" role="img" aria-label="Interactive molecular structure. Arrow keys rotate, plus and minus zoom, Home resets."></div><div id="load-state" class="load-state" role="status"><span id="load-message">Opening the source coordinates…</span><button id="retry-load" hidden>Try again</button></div></div>
           <div class="viewer-toolbar"><div class="representation" aria-label="Molecular representation"><button data-mode="atomic" aria-pressed="true">Atoms</button><button data-mode="secondary" aria-pressed="false">Secondary structure</button></div><div class="camera"><button id="zoom-out" aria-label="Zoom out">−</button><button id="zoom-in" aria-label="Zoom in">+</button><button id="reset-view">Reset</button></div></div>
-          <div class="motion-toolbar"><button id="motion-toggle" type="button" aria-pressed="false">Animate model</button><span id="motion-status" role="status" aria-live="polite">Rotation ready</span><a id="replay-shortcut" href="#heme/modeling">Simulation replay <span aria-hidden="true">↗</span></a></div>
+          <div class="motion-toolbar"><button id="motion-toggle" type="button" aria-pressed="false">Rotate view</button><span id="motion-status" role="status" aria-live="polite">Rotation ready</span><a id="replay-shortcut" href="#heme/modeling">Simulation replay <span aria-hidden="true">↗</span></a></div>
           <details class="viewer-details"><summary>Model details</summary><div class="viewer-meta"><span id="structure-counts">Source model</span><span>Drag to rotate. Pinch or use the zoom buttons.</span></div></details>
           <p class="structure-caption" id="structure-caption"></p>
         </section>
         <div class="research-column">
-          <section class="question-card"><span class="eyebrow" id="question-eyebrow">Research question</span><h2 id="question"></h2><p id="intro-copy"></p><button class="primary" id="explore">Explore the structure <span aria-hidden="true">↙</span></button></section>
+          <section class="question-card"><span class="eyebrow" id="question-eyebrow">Research question</span><h2 id="question"></h2><p id="intro-copy"></p><div class="overview-actions"><button class="primary" id="follow-story">Follow the process <span aria-hidden="true">▶</span></button><button class="explore-link" id="explore">Explore the structure <span aria-hidden="true">↙</span></button></div><p class="story-invitation">Sample → chemistry → measurement</p></section>
           <section class="next-card"><span class="eyebrow">Next experiment</span><p id="next-copy"></p></section>
           <section class="component-card"><div class="component-head"><span class="eyebrow">Choose a component</span><label class="isolate"><input type="checkbox" id="isolate"> Isolate</label></div><div id="component-buttons" class="component-buttons" aria-label="Highlight a component"></div><div id="component-caption" aria-live="polite"><h3 id="selection-title"></h3><p id="selection-copy"></p><small id="selection-count"></small></div></section>
         </div>
       </div>
-      <div class="overview-bottom"><p id="relevance-copy"></p><a class="text-link" id="methods-link" href="#heme/modeling">Model details &amp; sources ↗</a></div>
+      <div class="overview-bottom"><button id="return-to-story" class="return-story" hidden>← Back to the animation</button><p id="relevance-copy"></p><a class="text-link" id="methods-link" href="#heme/modeling">Model details &amp; sources ↗</a></div>
     </div>
     <section id="section-content" hidden></section>
     <footer><span>Smith-Carpenter Lab</span><span>Fairfield University</span></footer>

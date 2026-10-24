@@ -1,176 +1,113 @@
-// Editorial configuration for two separate molecular films.
-// All asset paths below are relative to each exported app's root.
-export const EVIDENCE_TAGS = Object.freeze({
-  SOURCE: 'SOURCE STRUCTURE',
-  DESIGN: 'DESIGN ANIMATION',
-  MD: 'REAL MD',
-  APPLICATION: 'PROPOSED APPLICATION',
-});
-
-const indexSelection = (start, end) => '@' + Array.from({ length: end - start + 1 }, (_, i) => start + i).join(',');
-const stages = (items) => items.map((item, index) => ({
-  id: `${index + 1}`, start: index * 10, end: (index + 1) * 10,
-  startSeconds: index * 10, durationSeconds: 10, ...item,
-}));
-
-const hemeSelections = {
-  all: 'all', protein: 'protein',
-  cofactor: indexSelection(1140, 1212), heme: indexSelection(1140, 1212),
-  caps: '[GS2]', candidate: '[GS2]',
-  chains: [indexSelection(0, 283), indexSelection(284, 569), indexSelection(570, 853), indexSelection(854, 1139)],
-  segments: ['PEPA', 'PEPB', 'PEPC', 'PEPD', 'HEMA'],
-};
-
-export const PROJECTS = {
-  heme: {
-    id: 'heme', title: 'From Heme to Signal',
-    subtitle: 'A molecular design, a real trajectory, a testable sensor idea.',
-    durationSeconds: 60,
-    pdbPath: 'assets/heme-original.pdb',
-    trajectoryPath: 'data/heme-solute-trajectory.json',
-    trajectoryPdbPath: 'assets/heme-solute.pdb',
-    solventPath: 'data/heme-solvent-trajectory.json',
-    defaultModel: 'design',
-    models: [
-      { id: 'design', title: 'Original viewer design', pdbPath: 'assets/heme-original.pdb', atomCount: 1213,
-        tag: EVIDENCE_TAGS.SOURCE, selections: hemeSelections,
-        note: 'Original public-viewer coordinates. Constructed design, not an experimentally determined structure. Never apply trajectory frames to this layer.' },
-      { id: 'asRun', title: 'As-run solution model', pdbPath: 'assets/heme-solute.pdb', topologyPath: 'assets/heme-solute.psf',
-        trajectoryPath: 'data/heme-solute-trajectory.json', atomCount: 1213, tag: EVIDENCE_TAGS.MD,
-        selections: hemeSelections,
-        note: 'Matching solute PDB/PSF and retained trajectory frames. Distinct coordinate layer from the original viewer design.' },
-    ],
-    selections: hemeSelections,
-    sourceAssetPaths: {
-      originalDesign: 'assets/heme-original.pdb',
-      trajectoryStructure: 'assets/heme-solute.pdb', trajectoryTopology: 'assets/heme-solute.psf',
-      compactTrajectory: 'data/heme-solute-trajectory.json', compactPositions: 'data/heme-solute-positions.f32.bin',
-      sparseSolvent: 'data/heme-solvent-trajectory.json', sparseSolventPositions: 'data/heme-solvent-positions.f32.bin',
-      originalFrameMap: 'data/heme-solute-trajectory.json#frameIndices',
+/* Eight source-linked scenes. Assay and chemistry illustrations do not imply measured bundle performance. */
+(() => {
+  const sources={
+    project:{title:'GSPEG2 project overview and analysis',url:'https://docs.google.com/document/d/1rmexqF9TSg2FgBzd4zzPp6pdkmKvPH0Gi1d7rOUiM1I/edit'},
+    summer:{title:'Summer molecular construction report',url:'https://docs.google.com/document/d/1NmHqWayKZAZlZEAxd_fjIPbdLHrgdXQmOLS8Min0uEo/edit'},
+    c45:{title:'C45: a designed heme peroxidase',url:'https://www.nature.com/articles/s41467-017-00541-4'},
+    glucose:{title:'SP1-hemin coupled glucose-biosensing study',url:'https://doi.org/10.1002/smsc.202400025'},
+    cholesterol:{title:'Cholesterol oxidase and hemin-G-quadruplex ABTS assay',url:'https://pubmed.ncbi.nlm.nih.gov/22483213/'},
+    methotrexate:{title:'Methotrexate aptamer/hemin-DNAzyme assay in diluted human serum',url:'https://pubmed.ncbi.nlm.nih.gov/36965245/'},
+    lab:{title:'Smith-Carpenter Lab guanosine-nucleopeptide peroxidase study',url:'https://pubs.rsc.org/en/Content/ArticleLanding/2025/CC/D5CC05835J'},
+    correction:{title:'Correction to the guanosine-nucleopeptide article',url:'https://pubs.rsc.org/en/content/articlepdf/2026/cc/d6cc90031c'}
+  };
+  window.RESEARCH_STORY={
+    project:'heme',title:'From an invisible molecule to a measurement',
+    subtitle:'Follow sample preparation, target recognition, heme chemistry and the controls that make a signal useful.',
+    durationSeconds:120,
+    scaleNote:'Scale labels indicate the level of explanation. Objects, colour intensity and elapsed time are illustrative.',
+    scenes:[
+      {
+        id:'sample',title:'A sample outside the body',question:'Where does a chemical measurement begin?',
+        caption:'A blood sample is prepared for an assay outside the body. Serum contains proteins, salts and many molecules. Before color can mean concentration, the test needs a target-specific recognition step, a reporter and controls for the sample background.',
+        scale:'Person to assay chamber · cm to mm',breadcrumb:['Person','Sample','Assay chamber'],durationSeconds:15,
+        evidenceType:'Assay illustration',evidenceNote:'The serum scene is application context. No patient sample has been measured with this four-helix bundle here.',
+        deep:'The catalyst is a possible laboratory reagent in this story. It is not injected into the person. Published methotrexate and cholesterol sensing studies motivate serum examples, but each used its own recognition system and reporter material. Their results cannot be transferred to the PEG2 assembly.',
+        labels:['Prepared serum sample','Proteins + salts','Target molecules','Possible interferents'],sources:[sources.methotrexate,sources.cholesterol]
+      },
+      {
+        id:'recognition',title:'Recognition comes before reporting',question:'What makes the signal belong to a particular target?',
+        caption:'A heme catalyst is a reporter, not a universal target detector. Glucose oxidase and cholesterol oxidase can generate peroxide from their substrates. A published methotrexate assay instead used aptamer recognition and DNA amplification to control a hemin-DNAzyme reporter.',
+        scale:'Recognition chemistry · nm',breadcrumb:['Sample','Recognition','Reporter input'],durationSeconds:15,
+        evidenceType:'Published assay examples',evidenceNote:'These are distinct published architectures. None establishes target detection by the displayed PEG2 model.',
+        deep:'Recognition identifies the target; reporting creates a measurable output. Choose a route to see which chemical step connects the target to the reporter. The enzymes and aptamer shown are explanatory shapes, not their experimental atomic structures.',
+        labels:['Target recognition','Reporter chemistry','Separate functions'],sources:[sources.glucose,sources.cholesterol,sources.methotrexate],
+        variants:{
+          glucose:{question:'How can glucose create a peroxide input?',caption:'Glucose oxidase reacts with glucose and oxygen, producing hydrogen peroxide. A validated peroxide reporter could turn that output into color. The recognition belongs to glucose oxidase; changing the heme reporter does not automatically improve glucose selectivity.',evidenceType:'Published cascade example',evidenceNote:'GOx-to-peroxide coupling has precedent; this PEG2 bundle has no glucose calibration.',deep:'A different SP1-hemin system has been used in an optical glucose platform. A bundle-based version would need peroxide validation first, then full coupled-assay calibration and interference comparisons in the intended sample.',labels:['Glucose + oxygen','Glucose oxidase','Hydrogen peroxide','Reporter'],sources:[sources.glucose]},
+          cholesterol:{question:'What changes when the target is cholesterol?',caption:'Cholesterol oxidase generates peroxide during cholesterol oxidation. Published hemin-G-quadruplex assays connect that peroxide to ABTS oxidation. The recognition enzyme changes with the target; the peroxide-reporting question remains separate.',evidenceType:'Published cascade example',evidenceNote:'The cited assay used a DNAzyme, not this nucleopeptide bundle.',deep:'The published cholesterol assay combined cholesterol oxidase with hemin-G-quadruplex catalysis and tested serum samples. Its performance belongs to that material and preparation. A new reporter requires its own standards, blank correction and sample-interference study.',labels:['Cholesterol + oxygen','Cholesterol oxidase','Hydrogen peroxide','Reporter'],sources:[sources.cholesterol]},
+          methotrexate:{question:'How could the same medicine be measured in a sample?',caption:'A published methotrexate aptamer assay used recognition and DNA amplification to generate hemin-G-quadruplex reporters. It measured diluted human serum. Methotrexate does not generate the peroxide input in this scheme, and the PEG2 bundle has not demonstrated methotrexate detection.',evidenceType:'Published medication assay',evidenceNote:'An aptamer/amplification/DNAzyme precedent, not a demonstrated application of this bundle.',deep:'The reported route couples methotrexate binding to polymerization/nicking amplification, G-quadruplex production and hemin-DNAzyme color reporting. This connects medicine action to medicine measurement conceptually; it does not establish that an aptamer can simply be replaced by the four-helix assembly.',labels:['Methotrexate','Specific aptamer','DNA amplification','Hemin-DNAzyme reporter'],sources:[sources.methotrexate]}
+        }
+      },
+      {
+        id:'bundle',title:'Enter the four-helix model',question:'What part of the reporter could this project change?',
+        caption:'The project places hemin inside four guanosine-PEG2-capped peptide chains. The helices provide the scaffold, the caps motivate assembly, and histidines face the iron. This constructed arrangement is the design to test, not observed self-assembly or established sensor performance.',
+        scale:'Bundle · nm',breadcrumb:['Assay','Reporter','Four-helix model'],durationSeconds:15,
+        evidenceType:'Project structural model',evidenceNote:'The linked explorer contains the original 1,213-atom PEG2 coordinates, preserved separately from the simulation model.',
+        deep:'The opening model, early summer constructions, the as-run simulation and the corrected reference are distinct versions. The four chains also do not share a single peptide sequence. Historical sample characterization should not be assigned to this model without reconciling the construct and sequence records.',
+        labels:['Peptide helices','Guanosine-PEG2 caps','Hemin','Histidines'],modelSelection:{mode:'secondary',component:'all'},sources:[sources.project,sources.summer],
+        variants:{methotrexate:{caption:'The published methotrexate sensor uses a hemin-DNAzyme reporter. This four-helix PEG2 bundle is a separate material to investigate. Its structure does not establish that it can replace that reporter or measure the medication.',evidenceType:'Separate research model',evidenceNote:'No methotrexate recognition or assay performance is established for this bundle.',sources:[sources.project,sources.methotrexate]}}
+      },
+      {
+        id:'iron',title:'Hold heme, leave chemistry accessible',question:'Can the pocket retain the cofactor and still let it react?',
+        caption:'Zoom from the helices to histidine, the porphyrin ring and iron. The source model specifies two iron-histidine connections. Those bonds hold a geometry in the model; experiments must establish hemin binding and whether peroxide can reach a useful reaction site.',
+        scale:'Iron coordination · Å',breadcrumb:['Bundle','Hemin','Iron site'],durationSeconds:15,
+        evidenceType:'Model and design question',evidenceNote:'The displayed Fe-His bonds are specified topology connections. Their persistence is not a measured binding affinity.',
+        deep:'The C45 precedent used a different, monohistidine-ligated heme design with demonstrated peroxidase activity. It motivates testing access and coordination here. It does not prove that the displayed bis-histidine pocket has the same mechanism, turnover or stability.',
+        labels:['Histidine','Porphyrin ring','Iron','Access to the heme site'],modelSelection:{mode:'atomic',component:'heme'},sources:[sources.project,sources.c45]
+      },
+      {
+        id:'catalysis',title:'Peroxide to oxidized ABTS',question:'How can heme chemistry produce a colored reporter?',
+        caption:'In a heme-peroxidase mechanism, peroxide creates an oxidized catalytic intermediate. Reporter-electron transfers return the catalyst toward its resting state while ABTS is oxidized. This sequence explains the chemistry to test; it is not a reaction observed in the bundle simulation.',
+        scale:'Reaction chemistry · Å',breadcrumb:['Assay','Heme site','Reporter reaction'],durationSeconds:15,
+        evidenceType:'Mechanism illustration',evidenceNote:'Bond changes and intermediates are explanatory. Fixed-topology simulation playback does not establish this catalytic cycle.',
+        deep:'A teaching cycle can show ferric heme, Compound I and Compound II, followed by return to ferric heme through two one-electron reporter oxidations. The exact intermediates and reactive access in this bundle remain unmeasured. C45 demonstrates useful designed-heme chemistry in a different scaffold.',
+        labels:['H₂O₂ input','Oxidized heme intermediate','ABTS oxidation','Catalyst returns'],sources:[sources.c45,sources.project]
+      },
+      {
+        id:'signal',title:'Many reactions become visible',question:'How does a molecular event become a bulk signal?',
+        caption:'Oxidized ABTS accumulates across many reporter reactions and produces a green optical signal. A spectrophotometer measures absorbance or its change with time. The animated color is explanatory; it is not a measured rate or yield for this bundle.',
+        scale:'Molecules to solution · nm to mm',breadcrumb:['Reporter molecules','Bulk color','Optical readout'],durationSeconds:15,
+        evidenceType:'Signal illustration',evidenceNote:'Color and particle numbers are illustrative. No bundle activity or sensitivity is inferred from this scene.',
+        deep:'A green signal alone does not identify what produced it. Hemin, the peptide material, the target-recognition system and sample components can affect the readout. Separate reagent controls and a peroxide-dependence check are needed before interpreting a change as useful reporting.',
+        labels:['ABTS','Oxidized ABTS','Green solution','Absorbance'],sources:[sources.c45,sources.lab,sources.project]
+      },
+      {
+        id:'calibration',title:'Turn color into a measurement',question:'What allows an unknown sample to be interpreted?',
+        caption:'Compare a blank, known standards and an unknown under the same conditions. Calibration connects a corrected optical response to concentration over a stated range. Background, interference and repeatability decide whether the result can be trusted.',
+        scale:'Assay chamber to instrument · mm to cm',breadcrumb:['Blank','Standards','Unknown','Calibration'],durationSeconds:15,
+        evidenceType:'Measurement design',evidenceNote:'The standards and plot are illustrative, without invented concentrations or performance data.',
+        deep:'Establish peroxide reporting first. A glucose or cholesterol application then needs calibration of the complete coupled assay. A medication assay needs a validated recognition and reporting architecture. Dilution and complex sample backgrounds must be evaluated rather than assumed harmless.',
+        labels:['Blank','Known standards','Unknown','Corrected response'],sources:[sources.project,sources.glucose,sources.cholesterol,sources.methotrexate]
+      },
+      {
+        id:'comparison',title:'What would make this material useful?',question:'Which experiment could show an advantage?',
+        caption:'Compare free hemin, peptide alone, peptide plus hemin and an established peroxidase. Measure activity, cofactor retention, storage behavior and preparation-to-preparation variation. A useful difference must be demonstrated under matched conditions, not inferred from the model’s appearance.',
+        scale:'Materials to assay performance',breadcrumb:['Design','Controlled comparison','Measured result'],durationSeconds:15,
+        evidenceType:'Research next steps',evidenceNote:'Related lab nanofibers oxidized ABTS with and without hemin; they differ from the displayed four-helix design.',
+        deep:'The Smith-Carpenter Lab’s published guanosine-nucleopeptide work makes the peptide-only control especially important. Its nanofiber architecture and corrected chemical drawings must be kept distinct from this PEG2 bundle. Better cofactor retention, useful lifetime, surface attachment or sample compatibility are testable aims, not established benefits.',
+        labels:['Free hemin','Peptide only','Peptide + hemin','Reference peroxidase'],sources:[sources.lab,sources.correction,sources.project]
+      }
+    ]
+  };
+  const onstage={
+    sample:'The measurement happens outside the body. A prepared sample needs target recognition, reporting chemistry and background controls.',
+    recognition:'Recognition identifies the target. The heme reporter creates a signal. Choose a route to see the chemistry connecting them.',
+    bundle:'Four capped peptides surround hemin in the constructed PEG2 model. Assembly, binding and reporter activity require separate tests.',
+    iron:'The model specifies two iron-histidine connections. Holding hemin securely and preserving access for peroxide are different design requirements.',
+    catalysis:'Peroxide activates a heme-peroxidase cycle; reporter oxidation returns the catalyst. This mechanism illustration is not a measured bundle reaction.',
+    signal:'Many oxidized ABTS molecules create a green optical signal. The animated color is illustrative, not measured bundle performance.',
+    calibration:'Compare a blank, standards and an unknown. Calibration, interference and repeatability decide whether color becomes a useful measurement.',
+    comparison:'Compare hemin, peptide alone, peptide plus hemin and a reference enzyme. Any advantage needs a matched experimental measurement.'
+  };
+  const shortVariants={
+    recognition:{
+      glucose:'Glucose oxidase generates peroxide from glucose and oxygen. The reporter reads peroxide; the enzyme provides glucose recognition.',
+      cholesterol:'Cholesterol oxidase generates peroxide. Published hemin-DNAzyme assays report it through ABTS; this bundle still needs its own validation.',
+      methotrexate:'A published methotrexate aptamer assay amplified hemin-DNAzyme reporting. Methotrexate did not generate peroxide, and this PEG2 bundle was not the reporter.'
     },
-    stages: stages([
-      {
-        title: 'Start with the atoms', tag: EVIDENCE_TAGS.SOURCE, focus: 'all', modelId: 'design',
-        caption: 'Four peptide helices, guanosine caps, and heme define the starting design. These coordinates are a constructed model.',
-        detail: 'Explore the actual atoms supplied with the original viewer. Heme contains the iron center; the peptide scaffold and PEG2-linked guanosine caps are design components. This is not a crystal structure or a measurement of self-assembly.',
-      },
-      {
-        title: 'Imagine the pieces together', tag: EVIDENCE_TAGS.DESIGN, focus: 'assembly', modelId: 'design',
-        caption: 'Components separate and reunite to explain the architecture. This rigid-component animation illustrates the design; it does not show observed self-assembly.',
-        detail: 'The film may translate and rotate intact components for explanation. Their return to the supplied arrangement is an illustration, not a folding calculation, a guanosine-quartet formation event, or evidence that the assembly occurs spontaneously.',
-        animationType: 'rigid-components', observedAssembly: false,
-      },
-      {
-        title: 'Watch the recorded motion', tag: EVIDENCE_TAGS.MD, focus: 'trajectory', modelId: 'asRun',
-        caption: 'Now switch to the matching as-run model: 120 genuine saved frames reveal sampled motion. Physical simulation time remains unverified.',
-        detail: 'The source contains 23,558 atoms and 5,000 saved frames. This view retains the 1,213-atom solute at original frame indices 0, 42, 84, through 4,998. All atoms in each frame received one rigid alignment to the first retained protein backbone. No new dynamics or internal coordinate changes were introduced. Optional sparse solvent data retain every 24th original water oxygen and all 64 original ions at the same frames. This visual sparsification does not depict literal solvent density. Any additional decorative solvent must be labeled illustrative.',
-        frameLabel: 'Saved frame', physicalTimeVerified: false,
-      },
-      {
-        title: 'A reactive center, a question', tag: EVIDENCE_TAGS.DESIGN, focus: 'activeSite', modelId: 'asRun',
-        caption: 'Could this scaffold support peroxide chemistry? The catalytic cycle is a schematic, while heme coordination and access remain design questions.',
-        detail: 'Peroxidase mimetics can couple peroxide chemistry to oxidation of a reporter such as ABTS. That known chemistry motivates this design; it was not observed in these classical MD frames. The source topology imposes Fe–His bonds, so their persistence cannot establish spontaneous binding or ligand exchange. Two axial histidines raise a testable question about stabilization versus access to an iron coordination site. Do not depict bond breaking as an output of this trajectory.',
-        animationType: 'mechanism-schematic',
-      },
-      {
-        title: 'A sample becomes a signal', tag: EVIDENCE_TAGS.APPLICATION, focus: 'application', modelId: 'asRun',
-        caption: 'An outside-body biosensor could translate peroxide-dependent chemistry into color or an electrical signal. This device concept still needs experimental validation.',
-        detail: 'Show a sample entering a test well or sensor surface outside the body. A colorimetric reporter or electrode could make chemistry measurable. The animation is an application concept, not a calibrated instrument or demonstrated diagnostic. Do not invent detection limits, response times, selectivity, or performance curves.',
-        applicationContext: 'outside-body assay', animationType: 'sensor-concept',
-      },
-      {
-        title: 'Let experiments decide', tag: EVIDENCE_TAGS.APPLICATION, focus: 'evidence', modelId: 'asRun',
-        caption: 'Next: verify assembly and heme binding, measure catalysis, then test calibration, selectivity, and stability against clear controls.',
-        detail: 'The present evidence supports a molecular design and replay of an existing model. Guanosine-quartet persistence, structural potassium placement, and GS2 parameter validity require further checking. Establish folding and heme binding; compare the assembly with free heme, apo peptide, blanks, and a suitable peroxidase benchmark. Only measured calibration, interference, repeatability, and stability can support a sensor claim.',
-        nextEvidence: ['Assembly and folding', 'Heme binding and coordination', 'Peroxide-dependent activity with controls', 'Sensor calibration, interference and stability'],
-      },
-    ]),
-    methods: [
-      { title: 'Two coordinate layers', text: 'The original viewer design and as-run trajectory are separate models. The trajectory is applied only to its matched solute PDB and PSF. Camera movement and component assembly are presentation effects.' },
-      { title: 'What the binary contains', text: 'Float32 little-endian coordinates in frame-major XYZ order: 120 × 1,213 × 3 values. Every coordinate bit matches the existing aligned solute DCD. Source-frame map: index i maps to original saved frame 42 × i, for i = 0…119.' },
-      { title: 'Sparse authentic solvent', text: 'The optional solvent track contains 310 real water oxygen positions and all 64 real source ions at the same 120 retained frames. Coordinates bitwise match the existing aligned solution DCD. Dots are sparse samples of the simulation solution, not a literal representation of molecular density or assay formulation.' },
-      { title: 'Playback is not elapsed laboratory time', text: 'Sixty seconds is the film duration. The source filename includes 0–100 ns, but production timestep, saved-frame spacing, offsets, and processing have not been independently verified. Use saved-frame numbers, not nanoseconds.' },
-      { title: 'Model limitations', text: 'The topology imposes Fe–His bonds. GS2 parameters and potassium coordination require scientific validation. Classical fixed-topology MD does not show peroxide bond cleavage, electronic intermediates, catalytic turnover, or sensor performance.' },
-      { title: 'Prior work and the open question', text: 'Guanosine-containing nucleopeptide peroxidase mimetics and designed heme proteins on electrodes already exist. This project asks about its particular guanosine-capped helical architecture; a claim of first discovery is not established.' },
-    ],
-    sources: [
-      { title: 'Original heme-bundle viewer', url: 'https://github.com/alexw4123/guanosine-heme-bundle-viewer', note: 'Original project and structural viewer; preserve independently from this cinematic presentation.' },
-      { title: 'Nucleopeptide peroxidase mimetics', url: 'https://doi.org/10.1039/D5CC05835J', note: 'O’Neill and colleagues, 2025: guanosine-containing nanofibers and ABTS oxidation; different architecture from the modeled helical bundle.' },
-      { title: 'Corrected chemical drawing', url: 'https://doi.org/10.1039/D6CC90031C', note: '2026 correction to stereochemistry in the earlier paper’s drawing; use corrected chemistry in any detailed diagram.' },
-      { title: 'Designed heme proteins on electrodes', url: 'https://www.princeton.edu/~hecht/papers/2007%20das%20peroxidase.pdf', note: 'Das and Hecht, 2007: prior electrochemical peroxidase activity; contextual precedent, not evidence for this project.' },
-      { title: 'Why reaction chemistry needs another method', url: 'https://www.ks.uiuc.edu/Research/qmmm/', note: 'Official NAMD explanation of classical force-field limitations and QM/MM reaction modeling.' },
-    ],
-  },
-  dhfr: {
-    id: 'dhfr', title: 'Two Candidates, One Molecular Target',
-    subtitle: 'Explore a research question at human DHFR.',
-    durationSeconds: 60, pdbPath: 'assets/dhfr-gs-connected.pdb', defaultModel: 'gs',
-    trajectoryPath: null,
-    models: [
-      { id: 'gs', title: 'GS–Phe–Glu', pdbPath: 'assets/dhfr-gs-connected.pdb', atomCount: 3153,
-        tag: EVIDENCE_TAGS.SOURCE, candidateResidueName: 'GSP',
-        selections: { all: 'all', protein: indexSelection(0, 3012), cofactor: indexSelection(3013, 3086), candidate: indexSelection(3087, 3152) },
-        note: 'Prepared, unsolvated starting model. Candidate pose and binding are unresolved hypotheses; no minimization or MD is represented.' },
-      { id: 'isog', title: 'isog–Phe–Glu', pdbPath: 'assets/dhfr-isog-connected.pdb', atomCount: 3153,
-        tag: EVIDENCE_TAGS.SOURCE, candidateResidueName: 'IGP',
-        selections: { all: 'all', protein: indexSelection(0, 3012), cofactor: indexSelection(3013, 3086), candidate: indexSelection(3087, 3152) },
-        note: 'Prepared, unsolvated starting model. Candidate pose and binding are unresolved hypotheses; no minimization or MD is represented.' },
-    ],
-    selections: { all: 'all', protein: indexSelection(0, 3012), cofactor: indexSelection(3013, 3086), candidate: indexSelection(3087, 3152) },
-    sourceAssetPaths: { gs: 'assets/dhfr-gs-connected.pdb', isog: 'assets/dhfr-isog-connected.pdb', displayProvenance: 'assets/dhfr-display-provenance.json' },
-    stages: stages([
-      {
-        title: 'Meet the molecular target', tag: EVIDENCE_TAGS.SOURCE, focus: 'all',
-        caption: 'Human DHFR, a modeled NADPH cofactor, and one candidate form the starting scene. The candidate arrangement is a prepared hypothesis.',
-        detail: 'These files derive from human DHFR chain A in PDB 4M6K. The deposited structure contains oxidized NADP+ and folic acid. The research preparation replaced that state with a modeled NADPH−4 cofactor and candidate nucleopeptides; the resulting candidate complexes are not experimental structures.',
-      },
-      {
-        title: 'Change one part of the design', tag: EVIDENCE_TAGS.DESIGN, focus: 'assembly',
-        caption: 'Compare GS–Phe–Glu with isog–Phe–Glu. Moving intact components into place explains the comparison; it does not establish binding.',
-        detail: 'The two candidates share a peptide component while changing the nucleoside component. Their donor and acceptor arrangements motivate a comparison of possible pocket interactions. An animated approach to the pocket is illustrative placement, not a docking result, binding event, or measured affinity. Switch candidates to inspect the actual prepared coordinates.',
-        animationType: 'rigid-components', observedBinding: false,
-      },
-      {
-        title: 'Before a simulation can begin', tag: EVIDENCE_TAGS.DESIGN, focus: 'trajectory',
-        caption: 'There is no DHFR trajectory yet. A solution scene is illustrative; these unsolvated starting models have not undergone minimization or MD.',
-        detail: 'The project has prepared native CHARMM models for two candidate complexes, free candidates, and a DHFR–NADPH control. No authentic DHFR motion or solvent coordinates were supplied for this film. Any surrounding water, diffusion, or mixing is explicitly conceptual. Do not attach a molecular-dynamics clock or fabricated motion trace.',
-        animationType: 'solution-preparation-concept', physicalTimeVerified: false, realTrajectoryAvailable: false,
-      },
-      {
-        title: 'Why this pocket matters', tag: EVIDENCE_TAGS.DESIGN, focus: 'activeSite',
-        caption: 'NADPH helps DHFR convert dihydrofolate into tetrahydrofolate, supporting nucleotide synthesis. Whether either candidate inhibits that process remains untested.',
-        detail: 'The known reaction couples NADPH oxidation to dihydrofolate reduction. Methotrexate provides an established example of targeting DHFR in some cancer therapies, but it is a different compound. This mechanism cartoon is literature context, not a reaction observed in these models. Do not show a candidate causing a confirmed chemical block.',
-        animationType: 'mechanism-schematic',
-      },
-      {
-        title: 'A possible path toward cells', tag: EVIDENCE_TAGS.APPLICATION, focus: 'application',
-        caption: 'A delivery concept imagines a candidate reaching cellular DHFR. Uptake, target inhibition, selectivity, and safety are unknown; treatment benefit is unproven.',
-        detail: 'Any body, tissue, membrane, or delivery particle is a proposed research context. Do not present a route of administration, dose, tumor targeting, cellular entry, or anticancer efficacy as established. The scientific question is whether these candidates can become useful inhibitors; a molecular pose alone cannot answer it.',
-        applicationContext: 'speculative delivery and cellular target', animationType: 'delivery-concept',
-      },
-      {
-        title: 'Build the evidence step by step', tag: EVIDENCE_TAGS.APPLICATION, focus: 'evidence',
-        caption: 'Next: validate chemistry and poses, measure binding and inhibition, then examine uptake, cellular selectivity, stability, and safety.',
-        detail: 'Validate the candidate and cofactor parameterization, protonation, and starting poses before interpreting dynamics. Experimental target binding and enzyme inhibition need appropriate controls and interference checks. Cellular uptake, target engagement, and a useful separation between tumor and normal-cell effects are separate questions. Neither clinical efficacy nor safety follows from this visualization.',
-        nextEvidence: ['Chemical identity and parameter validation', 'Plausible poses and controlled simulations', 'Binding and enzyme inhibition', 'Uptake, target engagement, selectivity and safety'],
-      },
-    ]),
-    methods: [
-      { title: 'What is actually displayed', text: 'Two 3,153-atom prepared starting models: human DHFR chain A, modeled N4P cofactor in chain C, and GSP or IGP candidate in chain L. Both are unsolvated; no DHFR dynamics were supplied.' },
-      { title: 'Experimental reference versus prepared model', text: 'PDB 4M6K contains unmutated human DHFR with oxidized NADP+ and folic acid. The NADPH−4 state and candidate complexes are modeled replacements. They must not be labeled as deposited experimental complexes.' },
-      { title: 'Connectivity is a display aid', text: 'Connected PDB derivatives add explicit PSF-recorded connectivity: 3,195 unique bonds per 3,153-atom model. All original atom records and coordinates remain unchanged, with no cross-segment or ligand–protein bonds. Recorded topology is not validation of chemistry or binding.' },
-      { title: 'Cancer relevance and its limits', text: 'DHFR is an established target of drugs such as methotrexate in specified cancer therapies. These particular nucleopeptide candidates have not been established as effective or safe treatments. Binding, inhibition, delivery, and clinical benefit are distinct evidence steps.' },
-      { title: 'Prior work and the open question', text: 'Peptide-based human DHFR inhibitors have been studied experimentally. The present comparison concerns the specific GS–Phe–Glu and isog–Phe–Glu candidates; a first-discovery claim has not been established.' },
-    ],
-    sources: [
-      { title: 'Human DHFR reference: PDB 4M6K', url: 'https://www.rcsb.org/structure/4M6K', note: 'Experimental human DHFR–NADP+–folate structure; starting reference, not the prepared candidate complexes.' },
-      { title: 'Human DHFR dynamics differ from bacterial DHFR', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC3823643/', note: 'Bhabha and colleagues, 2013: primary structural and dynamics study underlying 4M6K.' },
-      { title: 'Prior peptide-based DHFR inhibitor research', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC5816602/', note: '2018 primary study with different peptides, enzyme inhibition, binding, and cell assays; no validation of these nucleopeptides.' },
-      { title: 'Established methotrexate mechanism and indications', url: 'https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=948e0bab-6524-4b87-9853-1799d4415558', note: 'Official labeling for a different, established medicine; context for DHFR relevance, not a treatment claim for this research.' },
-    ],
-  },
-};
-
-export const getProject = (id) => PROJECTS[id];
-if (typeof window !== 'undefined') window.CINEMATIC_PROJECTS = PROJECTS;
-export default PROJECTS;
+    bundle:{methotrexate:'The published methotrexate assay used a DNAzyme. This four-helix bundle is a separate reporter design, without demonstrated medication detection.'}
+  };
+  for(const scene of window.RESEARCH_STORY.scenes){
+    scene.onstageCaption=onstage[scene.id];
+    for(const [key,variant] of Object.entries(scene.variants||{}))variant.onstageCaption=shortVariants[scene.id]?.[key]||onstage[scene.id];
+  }
+})();

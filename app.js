@@ -5,8 +5,8 @@
   const data=window.RESEARCH_CONTENT;
   const site=window.RESEARCH_SITE;
   const siteProject=site.project;
-  const sections=[["overview","Overview","<path d=\"m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1Z\"/>"],["molecules","Molecules","<path d=\"m12 3 8 4.5v9L12 21l-8-4.5v-9Z M12 12l8-4.5M12 12 4 7.5M12 12v9\"/>"],["laboratory","Laboratory Work","<path d=\"M9 3h6M10 3v7L4.5 19a1.3 1.3 0 0 0 1.2 2h12.6a1.3 1.3 0 0 0 1.2-2L14 10V3M7.5 15h9\"/>"],["modeling","Modeling & Results","<path d=\"M4 3v18h17M7 15l4-5 4 3 5-7\"/>"],["chemistry","Chemistry","<circle cx=\"5\" cy=\"12\" r=\"2.5\"/><circle cx=\"17\" cy=\"5\" r=\"2.5\"/><circle cx=\"17\" cy=\"19\" r=\"2.5\"/><path d=\"m7 10.7 7.8-4.5M7 13.3l7.8 4.5M17 7.5v9\"/>"],["applications","Applications","<path d=\"M14 3h7v7M21 3l-9 9M10 4H5a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h13a2 2 0 0 0 2-2v-5\"/>"],["sources","Sources","<path d=\"M5 3h13a1 1 0 0 1 1 1v17H6a3 3 0 0 1-3-3V5a2 2 0 0 1 2-2ZM3 17h16M7 7h8M7 11h6\"/>"]];
-  let project='',section='overview',engine=null,selected='all',mode='atomic',model='gs',chain='PEPA',generation=0;
+  const sections=[["overview","Overview","<path d=\"m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1Z\"/>"],["story","How it works","<path d=\"m9 5 11 7-11 7Z\"/>"],["molecules","Molecules","<path d=\"m12 3 8 4.5v9L12 21l-8-4.5v-9Z M12 12l8-4.5M12 12 4 7.5M12 12v9\"/>"],["laboratory","Laboratory Work","<path d=\"M9 3h6M10 3v7L4.5 19a1.3 1.3 0 0 0 1.2 2h12.6a1.3 1.3 0 0 0 1.2-2L14 10V3M7.5 15h9\"/>"],["modeling","Modeling & Results","<path d=\"M4 3v18h17M7 15l4-5 4 3 5-7\"/>"],["chemistry","Chemistry","<circle cx=\"5\" cy=\"12\" r=\"2.5\"/><circle cx=\"17\" cy=\"5\" r=\"2.5\"/><circle cx=\"17\" cy=\"19\" r=\"2.5\"/><path d=\"m7 10.7 7.8-4.5M7 13.3l7.8 4.5M17 7.5v9\"/>"],["applications","Applications","<path d=\"M14 3h7v7M21 3l-9 9M10 4H5a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h13a2 2 0 0 0 2-2v-5\"/>"],["sources","Sources","<path d=\"M5 3h13a1 1 0 0 1 1 1v17H6a3 3 0 0 1-3-3V5a2 2 0 0 1 2-2ZM3 17h16M7 7h8M7 11h6\"/>"]];
+  let project='',section='overview',engine=null,selected='all',mode='atomic',model='gs',chain='PEPA',generation=0,story=null,returnScene=null,returnVariant=null,returnProgress=0,pendingMolecule=null,playStoryOnOpen=false;
   const esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const sourceLinks=arr=>(arr||[]).map(s=>`<a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.title)} ↗</a>`).join('');
   const hemeComponents=[['all','Whole structure'],['peptide','Helices'],['guanosine','Guanosine + PEG2'],['histidines','Histidines'],['heme','Heme + Fe']];
@@ -41,23 +41,36 @@
   }
   function onMotion(motion){
     const playing=motion.state==='playing';
-    $('motion-toggle').textContent=playing?'Stop rotation':'Animate model';
+    $('motion-toggle').textContent=playing?'Stop rotation':'Rotate view';
     $('motion-toggle').setAttribute('aria-pressed',String(playing));
     $('motion-status').textContent=playing?'Camera rotation':motion.state==='reduced-motion'?'Use drag or arrows':'Drag to explore';
   }
   function setBusy(busy,message){$('load-state').hidden=!busy;if(message)$('load-message').textContent=message;}
+  async function applyPendingMolecule(){
+    if(!pendingMolecule||!engine?.getDiagnostics().ready)return;
+    const next=pendingMolecule;pendingMolecule=null;
+    const current=generation;
+    if(project==='dhfr'&&['gs','isog'].includes(next.model)){model=next.model;await engine.setModel(model);}
+    if(current!==generation||!engine)return;
+    mode=['atomic','secondary'].includes(next.mode)?next.mode:'atomic';engine.setMode(mode);
+    engine.setComponent(next.selection||'all');
+    document.querySelectorAll('[data-mode]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.mode===mode)));
+    document.querySelectorAll('[data-model]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.model===model)));
+    $('molecular-viewport').focus({preventScroll:true});
+    $('molecular-viewport').scrollIntoView({block:'center',behavior:'instant'});
+  }
   function createEngine(){
     if(engine)engine.destroy();engine=null;
     const current=++generation;$('motion-toggle').disabled=true;onMotion({state:'idle'});setBusy(true,'Loading the model…');$('retry-load').hidden=true;$('structure-counts').textContent='Opening source model…';onSelection({key:'all',count:data.projects[project].model.atomCount});
     engine=window.createResearchMolecule({project,viewport:$('molecular-viewport'),onSelection:s=>{if(current===generation)onSelection(s);},onMotion:m=>{if(current===generation)onMotion(m);},onReady:d=>{
-      if(current!==generation)return;setBusy(false);$('motion-toggle').disabled=false;$('structure-counts').textContent=`${Number(d.atomCount||data.projects[project].model.atomCount).toLocaleString()} atoms · ${Number(d.bondCount||data.projects[project].model.bondCount).toLocaleString()} explicit bonds`;
+      if(current!==generation)return;setBusy(false);$('motion-toggle').disabled=false;$('structure-counts').textContent=`${Number(d.atomCount||data.projects[project].model.atomCount).toLocaleString()} atoms · ${Number(d.bondCount||data.projects[project].model.bondCount).toLocaleString()} explicit bonds`;applyPendingMolecule();
     },onError:e=>{if(current!==generation)return;setBusy(true,'The molecular view could not open. Try again, or use the source files under Sources.');$('retry-load').hidden=false;console.warn(e);}});
   }
   function route(){
     const rawHash=location.hash.replace(/^#/,'');
     if(rawHash==='main'&&project)return;
     const parts=rawHash.split('/');
-    const aliases={'biosensor-tour':'applications','application-tour':'applications','structure-controls':'molecules','model-controls':'molecules'};
+    const aliases={'biosensor-tour':'story','application-tour':'story','structure-controls':'molecules','model-controls':'molecules'};
     const nextProject=siteProject;
     const nextSection=aliases[rawHash]||(sections.some(s=>s[0]===parts[1])?parts[1]:'overview');
     if(['heme','dhfr'].includes(parts[0])&&parts[0]!==siteProject)history.replaceState(null,'','#'+siteProject+'/'+nextSection);
@@ -76,13 +89,16 @@
     $('component-buttons').innerHTML=(project==='heme'?hemeComponents:dhfrComponents).map(([id,label])=>`<button data-component="${id}" aria-pressed="${id==='all'}">${label}</button>`).join('');
     $('component-buttons').querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>engine?.setComponent(b.dataset.component)));
     $('overview').hidden=!['overview','molecules'].includes(section);
-    $('section-content').hidden=section==='overview';
+    $('section-content').hidden=section==='overview';$('return-to-story').hidden=section!=='molecules'||returnScene===null;
+    if(section==='story'){engine?.destroy();engine=null;++generation;}
     if(!['overview','molecules'].includes(section))engine?.stopAnimation();
     renderSection();
     $('sidebar').classList.remove('open');$('menu-toggle').setAttribute('aria-expanded','false');
     if(changed){selected='all';mode='atomic';model='gs';$('isolate').checked=false;document.querySelectorAll('[data-mode]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.mode===mode)));document.querySelectorAll('[data-model]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.model===model)));if(['overview','molecules'].includes(section))createEngine();else{engine?.destroy();engine=null;}}
     else {if(!engine&&['overview','molecules'].includes(section))createEngine();else if(engine){const d=engine.getDiagnostics();onSelection({key:d.selectedComponent,count:d.selectedAtomCount,kind:d.selectedKind,chain:d.chain,position:d.position,isolated:d.isolated,picked:d.lastPickedAtom});}window.dispatchEvent(new Event('resize'));}
-    if(section!=='molecules')window.scrollTo({top:0,behavior:'instant'});
+    applyPendingMolecule();
+    if(section==='story')requestAnimationFrame(()=>$('section-content').querySelector('.story-player')?.scrollIntoView({block:'start',behavior:'instant'}));
+    else if(section!=='molecules')window.scrollTo({top:0,behavior:'instant'});
   }
   function renderFigureGroups(){
     return (window.RESEARCH_FIGURES?.[project]||[]).map(group=>`<section><h3>${esc(group.title)}</h3><p class="section-intro">${esc(group.intro)}</p><div class="figure-row">${group.figures.map(figure=>`<button class="figure-button" data-image="${esc(figure.path)}" data-caption="${esc(figure.caption)}" data-source="${esc(figure.source)}"><img src="${esc(figure.path)}" alt="${esc(figure.alt)}"><span>${esc(figure.shortCaption)} ↗</span></button>`).join('')}</div></section>`).join('');
@@ -92,9 +108,15 @@
     return `<details class="experiment-card" ${open?'open':''}><summary><div><h3>${esc(e.title)}</h3><p>${esc(e.summary)}</p></div><span class="chevron" aria-hidden="true">⌄</span></summary><div class="experiment-body"><div class="experiment-layout"><div><dl class="experiment-fields">${fields.map((f,i)=>`<div class="${i<2?'wide':''}"><dt>${esc(f.label)}</dt><dd>${esc(f.value)}</dd></div>`).join('')}</dl></div>${project==='heme'?`<div><button class="poster-preview" data-figure="poster"><img src="assets/heme-poster.jpg" alt="Historical Fairfield poster showing HPLC, mass spectrometry and circular-dichroism data"><span>Preview the original poster ↗</span></button></div>`:''}</div><details class="methods"><summary>Procedure &amp; characterization</summary>${e.procedure.map(x=>`<p>${esc(x)}</p>`).join('')}<p>${esc(e.characterization)}</p></details><p class="interpretation">${esc(e.interpretation)}</p><div class="experiment-links">${sourceLinks(e.sources)}</div></div></details>`;
   }
   function renderSection(){
-    const p=data.projects[project],host=$('section-content');host.innerHTML='';
+    const p=data.projects[project],host=$('section-content');story?.destroy();story=null;host.innerHTML='';
     const heading=(title,intro='')=>`<h2>${title}</h2>${intro?`<p class="section-intro">${intro}</p>`:''}`;
-    if(section==='molecules'){
+    if(section==='story'){
+      story=window.mountResearchStory({project,host,onExploreStructure:options=>{
+        story?.pause();returnScene=options?.returnScene??null;returnVariant=host.dataset.storyVariant;returnProgress=Number(host.dataset.storyProgress)||0;pendingMolecule=options||{};location.hash='#'+project+'/molecules';
+      }});
+      if(returnScene!==null)story.goToScene(returnScene,{variant:returnVariant,progress:returnProgress});
+      if(playStoryOnOpen){playStoryOnOpen=false;story.play();}
+    } else if(section==='molecules'){
       host.innerHTML=heading(project==='heme'?'Read the sequence in the structure':'Compare the two models',project==='heme'?'These letters describe the original model. They have not been assigned to a synthesized batch.':'GS and isog share L-Phe–L-Glu. The amino and oxo groups exchange positions on the base.')+(project==='heme'?`<div class="sequence-panel"><div class="component-buttons">${['PEPA','PEPB','PEPC','PEPD'].map(c=>`<button data-chain="${c}" aria-pressed="${c===chain}">${c}</button>`).join('')}</div><div id="sequence-letters" class="sequence-row"></div><p class="source-note">Peptide positions 1–15 · the separate GS2 cap precedes the sequence.</p></div><div class="card">${p.sequences.map(s=>`<div class="sequence-version"><strong>${esc(s.label)}</strong><code>${esc(s.sequence)}</code><p>${esc(s.caption)}</p></div>`).join('')}</div>`:`<div class="cards-grid"><div class="card"><h3>Guanosine</h3><p>2-amino / 6-oxo base. Select the base in the GS complex, then compare isog.</p><button class="primary" data-compare="gs">Inspect GS base</button></div><div class="card"><h3>Isoguanosine</h3><p>2-oxo / 6-amino base. The peptide and 5′ carbonyl-amide linkage are shared.</p><button class="primary" data-compare="isog">Inspect isog base</button></div></div>`);
       if(project==='heme'){renderSequence();host.querySelectorAll('[data-chain]').forEach(b=>b.addEventListener('click',()=>{chain=b.dataset.chain;renderSequence();host.querySelectorAll('[data-chain]').forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.chain===chain)));}));}
       host.querySelectorAll('[data-compare]').forEach(b=>b.addEventListener('click',async()=>{model=b.dataset.compare;await engine.setModel(model);engine.setComponent('base');document.querySelectorAll('[data-model]').forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.model===model)));$('molecular-viewport').scrollIntoView({block:'center',behavior:matchMedia('(prefers-reduced-motion:reduce)').matches?'instant':'smooth'});}));
@@ -118,6 +140,8 @@
   function showFigure(src,caption,source){$('figure-image').src=src;$('figure-image').alt=caption;$('figure-caption').textContent=caption;$('figure-source').href=source;$('figure-dialog').showModal();}
   $('close-figure').addEventListener('click',()=>$('figure-dialog').close());
   $('menu-toggle').addEventListener('click',()=>{$('sidebar').classList.toggle('open');$('menu-toggle').setAttribute('aria-expanded',String($('sidebar').classList.contains('open')));});
+  $('follow-story').addEventListener('click',()=>{returnScene=null;returnVariant=null;returnProgress=0;playStoryOnOpen=true;location.hash='#'+project+'/story';});
+  $('return-to-story').addEventListener('click',()=>{location.hash='#'+project+'/story';});
   $('explore').addEventListener('click',()=>{$('molecular-viewport').focus({preventScroll:true});$('molecular-viewport').scrollIntoView({block:'center',behavior:matchMedia('(prefers-reduced-motion:reduce)').matches?'instant':'smooth'});});
   document.querySelectorAll('[data-mode]').forEach(b=>b.addEventListener('click',()=>{mode=b.dataset.mode;engine?.setMode(mode);document.querySelectorAll('[data-mode]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));}));
   document.querySelectorAll('[data-model]').forEach(b=>b.addEventListener('click',async()=>{model=b.dataset.model;await engine?.setModel(model);document.querySelectorAll('[data-model]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));}));
@@ -130,5 +154,5 @@
   document.addEventListener('keydown',event=>{if(event.key==='Escape'){$('sidebar').classList.remove('open');$('menu-toggle').setAttribute('aria-expanded','false');}});
   document.addEventListener('visibilitychange',()=>{if(document.hidden)engine?.stopAnimation();});
   $('isolate').addEventListener('change',e=>engine?.isolate(e.target.checked));$('zoom-in').addEventListener('click',()=>engine?.zoom(.12));$('zoom-out').addEventListener('click',()=>engine?.zoom(-.12));$('reset-view').addEventListener('click',()=>engine?.reset());$('retry-load').addEventListener('click',createEngine);
-  window.addEventListener('hashchange',route);window.addEventListener('beforeunload',()=>engine?.destroy());route();
+  window.addEventListener('hashchange',route);window.addEventListener('beforeunload',()=>{story?.destroy();engine?.destroy();});route();
 })();

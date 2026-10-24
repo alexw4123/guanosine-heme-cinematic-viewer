@@ -17,3 +17,11 @@ The original website and molecular archives are preserved. Missing experimental 
 GitHub Pages assembles this static site from the existing molecular archives and versioned text files. No backend or public API is added.
 
 Live page: https://alexw4123.github.io/guanosine-heme-cinematic-viewer/
+
+## How it works
+
+The eight-chapter, two-minute animated explanation is under How it works. Follow the process starts it from a deliberate click. Direct story links open paused. Playback, chapter selection, scrubbing and reduced-motion navigation remain under the visitor's control.
+
+The Heme explanation follows a sample outside the body through recognition, cofactor access, reporter chemistry, optical signal, calibration and controls. Glucose, cholesterol and methotrexate examples distinguish recognition from the reporter and cite published precedents. None establish sensing performance for this bundle.
+
+Body, cell, reaction and assay motion is explanatory 3D animation. Molecular scenes use copies of the actual project PDB coordinates with SHA256, atom and explicit-bond validation. Group/camera transforms do not change source coordinates. Three.js is served from the existing unchanged vendor archive. Sources and scale limitations are attached to each chapter. The authentic Heme saved-coordinate replay remains separate.
