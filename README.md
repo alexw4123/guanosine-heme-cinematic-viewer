@@ -53,3 +53,7 @@ Selectors: [data-component=heme], [data-mode], #zoom-in, #zoom-out, [data-rotate
 Source index groups: HEMA 1140-1212 (73 atoms); cap/linker ranges 0-53, 284-337, 570-623, 854-907 (216 atoms); remaining peptide atoms (924). Picked segment labels use these verified ranges because the original chain field is blank and the NGL proxy does not expose its segment field directly.
 
 Loading/failure disables molecular controls but leaves the research readable. Retry and the original-viewer fallback are provided. Original parser verification remains in verification.json. Final browser QA belongs to the publishing owner.
+
+## Interactive application illustration
+
+How an external peroxide assay becomes an optical readout. The illustrative 3D steps are separate from the source structure and recorded VMD trajectory. The application panel uses short, user-triggered 3D scenes with captions; it does not portray measured pharmacokinetics, chemical reaction dynamics, or treatment outcomes. The atomic NGL explorer and original molecular assets are preserved.

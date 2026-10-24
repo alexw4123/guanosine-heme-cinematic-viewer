@@ -21,7 +21,7 @@ jobs:
       - name: Prepare static research viewer
         run: |
           mkdir -p _site
-          cp index.html style.css app.js research-data.js .nojekyll README.md ASSET-MANIFEST.json _site/
+          cp index.html style.css app.js research-data.js .nojekyll README.md ASSET-MANIFEST.json biosensor-tour.js biosensor-tour.css _site/
           unzip -q assets.zip -d _site
           unzip -oq research-assets.zip -d _site
       - uses: actions/configure-pages@v5

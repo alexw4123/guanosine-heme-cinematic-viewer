@@ -7,9 +7,11 @@
   <meta name="description" content="Explore the source atomic model of a guanosine-capped peptide bundle and the laboratory question behind its heme-binding site.">
   <title>Four-Helix Nucleopeptide Bundle | Smith-Carpenter Lab</title>
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="biosensor-tour.css">
   <script src="assets/ngl.js" defer></script>
   <script src="research-data.js" defer></script>
   <script src="app.js" defer></script>
+  <script type="module" src="biosensor-tour.js"></script>
 </head>
 <body>
   <a class="skip-link" href="#structure-controls">Skip to structure controls</a>
@@ -26,7 +28,7 @@
         <h1 id="research-title">Designing a Four-Helix Nucleopeptide Bundle Capable of Hemin Binding</h1>
         <p class="byline">Christie Stevkovski, Alexander Wong, and Jillian Smith-Carpenter <span>· Fairfield University</span></p>
       </div>
-      <a class="explore-link" href="#structure-controls" id="explore-structure">Explore the structure <span aria-hidden="true">↘</span></a>
+      <div class="biosensor-intro-links"><a class="explore-link" href="#structure-controls" id="explore-structure">Explore the structure <span aria-hidden="true">↘</span></a><a class="biosensor-jump" href="#biosensor-tour">How the readout works ↓</a></div>
     </section>
 
     <section class="research-layout" aria-label="Heme structure and experiment">
@@ -96,6 +98,38 @@
         <div><p class="topic-index" id="topic-index">01 / THE QUESTION</p><h3 id="topic-heading">Can a small peptide assembly organize hemin for catalysis?</h3></div>
         <div><p class="topic-lead" id="topic-lead">Guanosine-capped peptides offer a way to connect molecular recognition with a compact heme-binding scaffold.</p><p id="topic-copy">The design asks whether four capped helices can assemble around hemin and support peroxide-dependent oxidation. The molecular model makes that design inspectable. Hemin binding, assembly, and catalytic performance remain experimental questions.</p><a class="topic-source" id="topic-source" href="https://docs.google.com/document/d/1rmexqF9TSg2FgBzd4zzPp6pdkmKvPH0Gi1d7rOUiM1I/edit" target="_blank" rel="noopener noreferrer">Read the project overview ↗</a><a class="topic-structure-link" href="#structure-controls">View the highlighted structure ↑</a></div>
       </article>
+    </section>
+
+    <section class="biosensor-tour" id="biosensor-tour" aria-labelledby="biosensor-heading" data-current-step="0">
+      <div class="section-intro"><div><p class="eyebrow">The application, step by step</p><h2 id="biosensor-heading">How the peroxide readout would work.</h2></div><p>Follow the route from sample to optical measurement. This external assay becomes useful only if the assembly’s activity and response are confirmed.</p></div>
+      <div class="biosensor-layout">
+        <div class="biosensor-visual">
+          <div class="biosensor-scene-title"><strong>A possible optical assay</strong><span>3D explanation · choose a step below</span></div>
+          <div class="biosensor-stage" id="biosensor-stage" role="img" aria-label="Three-dimensional illustration of a pipette, assay cell, source molecular bundle, and optical detector" aria-describedby="biosensor-caption-title biosensor-caption-lead biosensor-illustration-note" data-scene-ready="false" data-current-step="0" data-animating="false">
+            <div class="biosensor-scene-tag biosensor-tag-source"><strong>Original bundle coordinates</strong><span id="biosensor-source-note">The intended catalyst · activity unmeasured</span></div>
+            <div class="biosensor-scene-tag biosensor-tag-signal"><strong id="biosensor-signal-title">Sample + reagents</strong><span id="biosensor-signal-detail">A possible bench assay</span></div>
+            <div class="biosensor-fallback" id="biosensor-fallback"><strong>Sample → reaction → optical readout → calibration</strong><span>The captions explain the assay even when the 3D illustration is unavailable.</span></div>
+          </div>
+          <div class="biosensor-scene-key" aria-label="Molecular colors"><span><i></i>Peptides</span><span><i class="biosensor-violet"></i>Guanosine–PEG2</span><span><i class="biosensor-amber"></i>Heme</span><span><i class="biosensor-green"></i>Oxidized ABTS</span></div>
+        </div>
+        <article class="biosensor-caption" aria-live="polite" aria-atomic="true">
+          <p class="biosensor-caption-index" id="biosensor-caption-index">01 / THE PEROXIDE READOUT</p>
+          <h3 id="biosensor-caption-title">Start with a peroxide-containing sample.</h3>
+          <p class="biosensor-caption-lead" id="biosensor-caption-lead">The sample goes into an external assay cell containing ABTS and the hemin-containing assembly.</p>
+          <p id="biosensor-caption-copy">The liquid and pipette show a possible measurement setup. The molecular inset uses the original 1,213-atom bundle coordinates; its placement beside the cell is an explanation of the design.</p>
+          <p class="biosensor-boundary" id="biosensor-caption-boundary">This is an assay outside the body. The bundle is not shown as an injectable treatment.</p>
+          <a id="biosensor-caption-source" href="https://docs.google.com/document/d/1rmexqF9TSg2FgBzd4zzPp6pdkmKvPH0Gi1d7rOUiM1I/edit" target="_blank" rel="noopener noreferrer">Read the laboratory comparison plan ↗</a>
+        </article>
+      </div>
+      <div class="biosensor-steps" role="group" aria-label="Choose a step in the optical assay">
+        <button type="button" data-biosensor-step="0" aria-pressed="true"><span>01</span>Sample</button>
+        <button type="button" data-biosensor-step="1" aria-pressed="false"><span>02</span>Test the assembly</button>
+        <button type="button" data-biosensor-step="2" aria-pressed="false"><span>03</span>Read the color</button>
+        <button type="button" data-biosensor-step="3" aria-pressed="false"><span>04</span>Calibrate</button>
+      </div>
+      <div class="biosensor-toolbar"><div><button type="button" id="biosensor-previous" disabled>← Previous</button><button type="button" id="biosensor-next">Next →</button><button type="button" id="biosensor-replay">Replay this step</button></div><label><input type="checkbox" id="biosensor-motion" checked>Animate brief transitions</label></div>
+      <p class="biosensor-explanation" id="biosensor-illustration-note">Illustration of an application pathway. The hardware, particle motion, and color change explain a possible assay; they are not a molecular simulation or measured sensor response. The original atomic viewer and recorded VMD trajectory remain separate. Steps stay still until selected; transitions last about 1.5 seconds.</p>
+      <details class="biosensor-details"><summary>Controls, biosensor connection &amp; sources</summary><div class="biosensor-details-content"><div><h3>What would establish a peroxide assay?</h3><p>Compare assembly plus hemin with matched free hemin, assembly without hemin, and reagent blanks. Include no-peroxide and sample-background measurements; an established peroxidase can provide a positive control.</p><p>Hold buffer, ABTS, peroxide, timing, and hemin concentration constant where applicable. Then measure a calibration against known peroxide, repeatability, stability, selectivity, and interference in the intended sample. This page supplies no assay concentration, wavelength, sensitivity, or performance value for the bundle.</p><a href="#record-7">Return to the planned laboratory comparison ↓</a></div><div><h3>Where does the biosensor connection come from?</h3><p>Hydrogen peroxide can be an analyte itself or the product of another recognition reaction. For example, glucose oxidase produces peroxide during glucose oxidation. A validated peroxidase readout could report that peroxide as an optical signal.</p><p>Published heme-enzyme and protein–hemin assays support this general route. Their architectures and measured performance belong to those systems, not to the guanosine-capped bundle.</p><a href="https://doi.org/10.1038/s41467-017-00541-4" target="_blank" rel="noopener noreferrer">Watkins et al. · designed heme peroxidase / ABTS ↗</a><br><a href="https://doi.org/10.1002/smsc.202400025" target="_blank" rel="noopener noreferrer">Zeibaq et al. · different protein–hemin / glucose-oxidase assay ↗</a></div></div></details>
     </section>
 
     <section class="research-record" aria-labelledby="record-heading">

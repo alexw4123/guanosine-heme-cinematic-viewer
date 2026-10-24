@@ -2,7 +2,7 @@
   "title": "Heme research viewer",
   "createdAt": "2026-10-24T02:14:25.416Z",
   "build": "Buildless static HTML/CSS/JavaScript; all runtime assets local and relative.",
-  "publication": "Prepared for publishing-owner QA; implementation agent performed no deployment or GitHub changes.",
+  "publication": "Public GitHub Pages viewer with independently reviewed source record and application illustration.",
   "sourcePreservation": {
     "checkpointUnchanged": true,
     "originalRepositoriesUnchanged": true,
@@ -177,5 +177,16 @@
       "provenance": "Pinned NGL 2.4.0 library, copied byte-identically from the approved checkpoint."
     }
   ],
-  "scientificReview": "Source-agent review passed after correcting HH/HA definitions and clarifying noncovalent four-capped-helix assembly wording."
+  "scientificReview": "Source-agent review passed after correcting HH/HA definitions and clarifying noncovalent four-capped-helix assembly wording.",
+  "applicationAnimation": {
+    "module": "biosensor-tour.js",
+    "style": "biosensor-tour.css",
+    "description": "How an external peroxide assay becomes an optical readout. The illustrative 3D steps are separate from the source structure and recorded VMD trajectory.",
+    "geometry": "Code-built explanatory geometry plus source-coordinate molecular context. Visual transforms change display placement only.",
+    "sourceCoordinatesModified": false,
+    "simulationEvidence": false,
+    "autoplay": false,
+    "controls": "Four user-selected stages, replay current stage, reduced-motion option.",
+    "renderer": "Existing pinned Three.js files from unchanged assets.zip, vendor/three.module.js and vendor/three.core.js."
+  }
 }
