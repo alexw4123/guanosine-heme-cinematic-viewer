@@ -2,64 +2,150 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#030a12">
-  <meta name="description" content="An interactive 3D molecular research film, from actual atomic coordinates to a clearly labeled proposed application.">
-  <title>From Heme to Signal · Molecular Cinema</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#07131f">
+  <meta name="description" content="Explore the source atomic model of a guanosine-capped peptide bundle and the laboratory question behind its heme-binding site.">
+  <title>Four-Helix Nucleopeptide Bundle | Smith-Carpenter Lab</title>
   <link rel="stylesheet" href="style.css">
-  <script type="importmap">{"imports":{"three":"./vendor/three.module.js"}}</script>
+  <script src="assets/ngl.js" defer></script>
+  <script src="research-data.js" defer></script>
+  <script src="app.js" defer></script>
 </head>
-<body data-project="heme">
-  <a class="skip" href="#film-controls">Skip to playback controls</a>
-  <main id="cinema" aria-label="Interactive molecular research film">
-    <canvas id="molecule-canvas" aria-label="Three-dimensional molecular model. Drag to rotate, scroll to zoom, or use arrow keys." tabindex="0"></canvas>
-    <div class="vignette" aria-hidden="true"></div>
-    <div class="film-grain" aria-hidden="true"></div>
-    <header class="masthead">
-      <a class="identity" href="#" aria-label="Restart molecular film"><span class="orbital" aria-hidden="true"><i></i><i></i><i></i></span><span id="brand">MOLECULAR<br>CINEMA</span></a>
-      <div class="top-center"><span class="live-dot"></span> <span id="project-name">From Heme to Signal</span></div>
-      <div class="top-actions"><button id="exit-explore" hidden>Back to film ↗</button><button id="evidence-open" class="quiet">Evidence <span>↗</span></button><a id="repository-link" class="github-link" target="_blank" rel="noopener">GitHub <span>↗</span></a></div>
-    </header>
-    <div class="scene-topline"><span id="scene-id">SCENE 01 / 06</span><span id="evidence-tag" class="evidence-tag">SOURCE STRUCTURE</span></div>
-    <section class="narrative" aria-label="Scene caption">
-      <p class="eyebrow" id="film-eyebrow">FROM ATOMS TO APPLICATION</p>
-      <h1 id="scene-title">From atoms. To signal.</h1>
-      <p id="scene-caption" class="caption"></p>
-      <div class="hero-actions"><button id="hero-play" class="primary" disabled><span class="play-icon">▶</span> Play the 3D film <small>60 SEC</small></button><button id="inspect" class="inspect">Explore the atoms <span>↗</span></button></div>
-      <p class="context-note" id="context-note">Actual molecular coordinates. A cinematic research story.</p>
-    </section>
-    <aside class="model-toolbar" aria-label="Molecular controls">
-      <p class="toolbar-label">MOLECULAR VIEW</p>
-      <div class="segmented"><button id="mode-atomic" aria-pressed="true">Atoms</button><button id="mode-secondary" aria-pressed="false">Backbone</button></div>
-      <label id="candidate-control" hidden><span>Candidate</span><select id="candidate-select"><option value="gs">GS–Phe–Glu</option><option value="isog">isog–Phe–Glu</option></select></label>
-      <label class="focus-label"><span>Isolate</span><select id="focus-select"><option value="all">Complete model</option><option value="protein">Peptide / protein</option><option value="cofactor">Heme / cofactor</option><option value="candidate">Caps / candidate</option></select></label>
-      <button id="reset-camera" class="tool-button">Reset camera <span>↺</span></button>
-      <button id="structure-open" class="tool-button">Atomic + secondary viewer <span>↗</span></button>
-      <div class="toolbar-legend"><span><i class="cyan"></i><b id="legend-protein">Peptide</b></span><span><i class="amber"></i><b id="legend-cofactor">Heme</b></span><span><i class="violet"></i><b id="legend-candidate">Guanosine</b></span></div>
-    </aside>
-    <div class="spatial-label" id="spatial-label"><span class="crosshair" aria-hidden="true">+</span><span id="spatial-caption">ORIGINAL ATOMIC MODEL</span></div>
-    <div class="scene-status"><span id="model-status">Loading source coordinates…</span><span id="motion-status">DRAG TO ORBIT · SCROLL TO ZOOM</span></div>
-    <section class="film-deck" id="film-controls" aria-label="Film playback controls">
-      <div class="chapters" id="chapters" aria-label="Six scenes"></div>
-      <div class="transport">
-        <button id="play" class="round-button" aria-label="Play the 60-second film" disabled>▶</button>
-        <button id="restart" class="restart" aria-label="Restart film">↺</button>
-        <span id="time" class="time">00:00</span>
-        <input id="timeline" type="range" min="0" max="60" step="0.01" value="0" aria-label="Film time in seconds" aria-valuetext="0 seconds of 60">
-        <span class="duration">01:00</span>
-        <div class="transport-right"><button id="voice" aria-pressed="false" title="Optional browser narration">Voice off</button><button id="record" title="Record five seconds of the current scene with captions" disabled>Save 5s film <span>↓</span></button><button id="fullscreen" aria-label="Enter full screen">⛶</button></div>
+<body>
+  <a class="skip-link" href="#structure-controls">Skip to structure controls</a>
+  <header class="masthead">
+    <a class="university" href="https://www.fairfield.edu/" target="_blank" rel="noopener noreferrer" aria-label="Fairfield University, opens in a new tab">FAIRFIELD<span>UNIVERSITY</span></a>
+    <div class="lab-identity"><strong>Smith-Carpenter Lab</strong><span>Department of Chemistry and Biochemistry</span></div>
+    <a class="source-header" href="https://alexw4123.github.io/dhfr-cinematic-viewer/" target="_blank" rel="noopener noreferrer">Explore DHFR research <span aria-hidden="true">↗</span></a>
+  </header>
+
+  <main>
+    <section class="introduction" aria-labelledby="research-title">
+      <div class="intro-copy">
+        <p class="eyebrow">Molecular structure &amp; the next experiment</p>
+        <h1 id="research-title">Designing a Four-Helix Nucleopeptide Bundle Capable of Hemin Binding</h1>
+        <p class="byline">Christie Stevkovski, Alexander Wong, and Jillian Smith-Carpenter <span>· Fairfield University</span></p>
       </div>
-      <div class="deck-footer"><span id="footnote">SOURCE STRUCTURES · DESIGN ANIMATION · PROPOSED APPLICATION</span><button id="motion-toggle" aria-pressed="false">Reduced motion</button></div>
+      <a class="explore-link" href="#structure-controls" id="explore-structure">Explore the structure <span aria-hidden="true">↘</span></a>
     </section>
-    <div class="loading" id="loading" role="status"><span class="loader-orbit"></span><span>Building the molecular scene</span><small>Source atoms. Real depth. Your research.</small></div>
-    <div id="recording" class="recording" hidden><i></i><span id="recording-text">Recording five seconds…</span></div>
-    <p id="announcer" class="sr-only" aria-live="polite"></p>
+
+    <section class="research-layout" aria-label="Heme structure and experiment">
+      <article class="reading-pane" aria-labelledby="caption-heading">
+        <p class="section-label">The experiment</p>
+        <h2 id="caption-heading">Does hemin change the ABTS response?</h2>
+        <p class="experiment-lead">Compare ABTS oxidation in assemblies with and without hemin, alongside hemin-only and reagent controls.</p>
+        <div id="component-description" class="component-description" aria-live="polite" aria-atomic="true">
+          <h3 id="component-heading">Inside the PEG2 model</h3>
+          <p id="component-copy">Heme sits among four peptide helices. Histidine side chains on two helices face its iron center, Fe; guanosines connect through PEG2 linkers.</p>
+        </div>
+        <div class="relevance">
+          <h3>From color to a peroxide readout</h3>
+          <p>If active, heme would let hydrogen peroxide oxidize ABTS into a green product. Spectrophotometer absorbance, calibrated against known peroxide concentrations, could then provide a concentration readout.</p>
+        </div>
+        <p class="model-boundary">Fe–His bonds are built into these coordinates; they do not establish laboratory binding or activity.</p>
+      </article>
+
+      <div class="molecular-pane">
+        <div class="structure-top">
+          <div><h2 id="structure-title">Explore the atomic structure</h2><p>Choose a component, or select one of its atoms.</p></div>
+          <span class="structure-marker" aria-hidden="true">01 / HEME</span>
+        </div>
+        <fieldset class="component-controls" id="structure-controls" tabindex="-1" disabled>
+          <legend class="sr-only">Highlight a molecular component</legend>
+          <button type="button" class="component-button" data-component="all" aria-pressed="true">Whole structure</button>
+          <button type="button" class="component-button peptide" data-component="peptide" aria-pressed="false"><span aria-hidden="true"></span>Peptide</button>
+          <button type="button" class="component-button guanosine" data-component="guanosine" aria-pressed="false"><span aria-hidden="true"></span>Guanosine</button>
+          <button type="button" class="component-button heme" data-component="heme" aria-pressed="false"><span aria-hidden="true"></span>Heme + Fe</button>
+        </fieldset>
+
+        <div id="molecular-viewport" role="group" aria-label="Interactive three-dimensional source molecule" aria-describedby="viewer-help" tabindex="0" data-model-ready="false" data-selected-component="all" data-topic="question" data-last-picked-atom="" data-atom-count="0" data-bond-count="0" data-selected-atom-count="1213" data-isolated="false" data-representation="atomic">
+          <div id="ngl-canvas" aria-hidden="true"></div>
+          <div id="load-state" class="load-state" role="status"><span class="loading-orbit" aria-hidden="true"></span><p id="load-message">Opening the source structure…</p><button type="button" id="retry-load" hidden>Try loading again</button><a id="fallback-link" href="https://alexw4123.github.io/guanosine-heme-bundle-viewer/" target="_blank" rel="noopener noreferrer" hidden>Open the original viewer ↗</a></div>
+          <p class="picked-label" id="picked-label" aria-live="polite"></p>
+        </div>
+
+        <div class="viewer-bottom">
+          <fieldset class="representation-controls" id="representation-controls" disabled>
+            <legend class="sr-only">Molecular representation</legend>
+            <button type="button" data-mode="atomic" aria-pressed="true">Atomic</button><button type="button" data-mode="secondary" aria-pressed="false">Secondary structure</button>
+          </fieldset>
+          <fieldset class="camera-controls" id="camera-controls" disabled>
+            <legend class="sr-only">Camera controls</legend>
+            <button type="button" id="zoom-in" aria-label="Zoom in" title="Zoom in">+</button><button type="button" id="zoom-out" aria-label="Zoom out" title="Zoom out">−</button>
+            <button type="button" data-rotate="left" aria-label="Rotate left" title="Rotate left">←</button><button type="button" data-rotate="right" aria-label="Rotate right" title="Rotate right">→</button>
+            <button type="button" data-rotate="up" aria-label="Rotate upward" title="Rotate upward">↑</button><button type="button" data-rotate="down" aria-label="Rotate downward" title="Rotate downward">↓</button>
+            <button type="button" id="reset-camera">Reset view</button>
+          </fieldset>
+          <div class="viewer-options"><label><input type="checkbox" id="isolate-selected" disabled>Isolate the selected component</label><span id="selection-summary">All 1,213 source atoms</span></div>
+          <p id="viewer-help">Drag to rotate · Scroll or pinch to zoom · Arrow keys rotate the focused view · + / − zoom · Home resets. Component selection keeps the camera still.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="research-reader" aria-labelledby="reader-heading">
+      <div class="section-intro"><div><p class="eyebrow">The research, one question at a time</p><h2 id="reader-heading">Read the structure.</h2></div><p>Follow the molecular design, the proposed experiment, and what the existing simulation can tell us.</p></div>
+      <div class="topic-controls" role="group" aria-label="Choose a research topic">
+        <button type="button" data-topic="question" aria-pressed="true">The question</button>
+        <button type="button" data-topic="peptide" aria-pressed="false">The peptide</button>
+        <button type="button" data-topic="cap" aria-pressed="false">Cap + PEG2</button>
+        <button type="button" data-topic="heme" aria-pressed="false">Heme + Fe</button>
+        <button type="button" data-topic="assay" aria-pressed="false">The ABTS experiment</button>
+        <button type="button" data-topic="findings" aria-pressed="false">Simulation findings</button>
+      </div>
+      <article class="topic-reading" id="topic-reading" data-current-topic="question" aria-live="polite" aria-atomic="true">
+        <div><p class="topic-index" id="topic-index">01 / THE QUESTION</p><h3 id="topic-heading">Can a small peptide assembly organize hemin for catalysis?</h3></div>
+        <div><p class="topic-lead" id="topic-lead">Guanosine-capped peptides offer a way to connect molecular recognition with a compact heme-binding scaffold.</p><p id="topic-copy">The design asks whether four capped helices can assemble around hemin and support peroxide-dependent oxidation. The molecular model makes that design inspectable. Hemin binding, assembly, and catalytic performance remain experimental questions.</p><a class="topic-source" id="topic-source" href="https://docs.google.com/document/d/1rmexqF9TSg2FgBzd4zzPp6pdkmKvPH0Gi1d7rOUiM1I/edit" target="_blank" rel="noopener noreferrer">Read the project overview ↗</a><a class="topic-structure-link" href="#structure-controls">View the highlighted structure ↑</a></div>
+      </article>
+    </section>
+
+    <section class="research-record" aria-labelledby="record-heading">
+      <div class="section-intro"><div><p class="eyebrow">From laboratory work to the next test</p><h2 id="record-heading">The research record.</h2></div><p>Earlier experiments, the summer molecular build, and the saved trajectory answer different questions. The sources below keep those stages connected.</p></div>
+      <div class="record-list">
+        <article class="record-step" id="record-1"><p class="step-number">01</p><div class="step-content"><h3>Laboratory foundation</h3><p>Earlier gs-helix samples were purified and examined by HPLC, mass spectrometry, and circular dichroism. Those measurements belong to the experimental constructs shown in the historical poster.</p><p class="step-context">They provide laboratory context for the design; they do not establish the binding or catalytic activity of this PEG2 model.</p><a class="record-source" href="assets/heme-poster.jpg" target="_blank" rel="noopener noreferrer">Open the original poster ↗</a><details class="method-source-details"><summary>Methods and source details</summary><p>The poster reports purification and HPLC, MALDI-TOF/ESI mass spectrometry, and CD characterization of earlier gs-helix constructs. PS3 is the reported synthesizer model. Exact current PEG2 synthesis amounts and an adopted peroxide-assay wavelength are not established here. The research title and author credit at the top of this page follow that poster.</p></details></div><figure class="record-figure"><button type="button" class="figure-open" data-figure="poster" aria-label="Enlarge historical Fairfield research poster"><img src="assets/heme-poster.jpg" alt="Historical Fairfield research poster showing the molecular design, HPLC, mass spectrometry, and circular dichroism results." loading="lazy" width="600" height="450"><span>View poster <span aria-hidden="true">↗</span></span></button><figcaption>Historical experimental samples · original poster</figcaption></figure></article>
+
+        <article class="record-step" id="record-2"><p class="step-number">02</p><div class="step-content"><h3>Summer molecular construction</h3><p>Alex built a 15-residue helix and a guanosine-derived fragment, checked their covalent linkage in ChimeraX, and arranged four monomers in parallel.</p><p class="step-context">This computational construction describes an intended assembly. It does not verify its experimental stoichiometry or folding.</p><a class="record-source" href="https://docs.google.com/document/d/1NmHqWayKZAZlZEAxd_fjIPbdLHrgdXQmOLS8Min0uEo/edit" target="_blank" rel="noopener noreferrer">Read the summer modeling report ↗</a><details class="method-source-details"><summary>Methods and source details</summary><p>The summer report records the initial helix/guanosine construction and parallel four-monomer arrangement. Its earlier geometry is a design history, separate from the later mixed His8/Ala8 PEG2 reference.</p></details></div><div class="record-media" id="construction-figures"></div></article>
+
+        <article class="record-step" id="record-3"><p class="step-number">03</p><div class="step-content"><h3>Hemin-pocket and linker redesigns</h3><p>The summer record compared centered, one-histidine, and two-histidine hemin placements. The later PEG2 design uses His8 on segments A/C and Ala8 on B/D.</p><p class="step-context">The original model above displays the mixed His/Ala design. PEG2 in this model and PEG3 in the future synthesis plan are different constructs.</p><a class="record-source" href="https://docs.google.com/document/d/1rmexqF9TSg2FgBzd4zzPp6pdkmKvPH0Gi1d7rOUiM1I/edit" target="_blank" rel="noopener noreferrer">Read the GSPEG2 design record ↗</a><details class="method-source-details"><summary>Methods and source details</summary><p>The displayed source file contains four 15-residue peptides, guanosine/PEG2 caps, and heme. Histidine at peptide position 8 appears as residue 9 after the cap in the source PDB. Its explicit Fe–His bonds encode the intended coordination; they are not a spontaneous binding observation.</p></details></div><div class="record-media" id="redesign-figures"></div></article>
+
+        <article class="record-step trajectory-step" id="record-4"><p class="step-number">04</p><div class="step-content"><h3>Macwan’s NAMD trajectory</h3><p>Matched PSF/PDB files were prepared in VMD, solvated with water and KCl, then minimized, heated, equilibrated, and simulated by Prof. Macwan.</p><p class="step-context">This five-second VMD replay shows saved coordinates from that existing run. Rigid alignment removes overall drift. Playback seconds are not physical simulation time; the nanosecond interval has not been verified.</p><a class="record-source" href="https://docs.google.com/document/d/1rmexqF9TSg2FgBzd4zzPp6pdkmKvPH0Gi1d7rOUiM1I/edit" target="_blank" rel="noopener noreferrer">Read the simulation source record ↗</a><details class="method-source-details"><summary>Trajectory and replay details</summary><p>The matched as-run system has 23,558 atoms and 5,000 saved frames. The VMD clip uses 120 aligned source snapshots at frame indices 0, 42, …, 4,998. It is a visualization of an existing molecular dynamics run, not an additional simulation. It is not applied to the unmatched original viewer model above.</p><a href="assets/motion/heme-replay-manifest.json" target="_blank" rel="noopener noreferrer">Open the replay provenance</a></details></div><figure class="record-video"><video id="trajectory-video" controls playsinline preload="none" poster="assets/motion/heme-md-poster.jpg" aria-label="Five-second VMD replay of the recorded GSPEG2 trajectory"><source src="assets/motion/heme-md-5s.mp4" type="video/mp4"><track kind="captions" src="assets/motion/heme-md-5s.vtt" srclang="en" label="English captions" default><p>Your browser cannot play this video. <a href="assets/motion/heme-md-5s.mp4">Open the recorded VMD replay</a>.</p></video><figcaption>VMD render of existing aligned snapshots · source frames 0–4,998 <a href="assets/motion/heme-md-5s.mp4" download>Download video</a></figcaption></figure></article>
+
+        <article class="record-step" id="record-5"><p class="step-number">05</p><div class="step-content"><h3>Analysis of the saved structures</h3><p>The reported core stayed compact, with partial helix retention. Persistent guanine-quartet contacts were not supported by the trajectory checks. Fe–His bonds were built into the topology.</p><p class="step-context">Compactness and imposed coordination do not demonstrate spontaneous hemin binding, peroxide oxidation, or sensor performance.</p><a class="record-source" href="https://docs.google.com/document/d/1rmexqF9TSg2FgBzd4zzPp6pdkmKvPH0Gi1d7rOUiM1I/edit" target="_blank" rel="noopener noreferrer">Read the reported analysis ↗</a><details class="method-source-details"><summary>Analysis and interpretation details</summary><p>These are reported project findings, not a new independent reanalysis. A complete starting guanine quartet was not established; the interpretation is that tested guanine contacts were not sustained. The two Fe–His connections were explicit topology bonds, so their retention cannot establish spontaneous coordination or binding affinity.</p></details></div><div class="record-media" id="analysis-figures"></div></article>
+
+        <article class="record-step" id="record-6"><p class="step-number">06</p><div class="step-content"><h3>The corrected PEG2 reference</h3><p>A corrected 2HH:2HA_AC solute build passed static checks. It is separate from the original trajectory; a corrected simulation has not been run.</p><p class="step-context">A cleaner starting reference resolves model preparation questions. It does not supply missing dynamics or laboratory results.</p><a class="record-source" href="https://docs.google.com/document/d/1rmexqF9TSg2FgBzd4zzPp6pdkmKvPH0Gi1d7rOUiM1I/edit" target="_blank" rel="noopener noreferrer">Read the corrected-reference record ↗</a><details class="method-source-details"><summary>Reference-version details</summary><p>The intended corrected topology has His8 on A/C and Ala8 on B/D. The dry solute reference and its static validation are distinct from the older as-run PSF/PDB/DCD system. No corrected production trajectory or catalytic activity measurement is supplied by that build.</p></details></div><div class="record-media" id="reference-figures"></div></article>
+
+        <article class="record-step" id="record-7"><p class="step-number">07</p><div class="step-content"><h3>The next laboratory comparison</h3><p>The plan is to synthesize PEG3 His8 and Ala8 variants, compare five HH/HA mixing ratios, and measure assembly and hemin binding. The existing purchased gs-helix(A8H) offers another experimental route.</p><p class="step-context">ABTS oxidation compares assemblies with and without hemin, alongside hemin-only and reagent controls. A sensor claim would then need calibrated peroxide response, selectivity, repeatability, stability, and tests of sample interference.</p><a class="record-source" href="https://fairfield0-my.sharepoint.com/personal/jsmith-carpenter_fairfield_edu/_layouts/15/Doc.aspx?sourcedoc={c078a375-a377-47ed-8eb4-114bc5d5dfc6}&amp;action=edit&amp;wd=target%28Helix%20Project%2FBenchtop%20work.one%7C3e6ba2d1-66bc-9f47-962d-2b04a2b49820%2FPreliminary%20data%7C8cb03921-f862-934c-bd42-9722ae4e616c%2F%29&amp;wdorigin=NavigationUrl" target="_blank" rel="noopener noreferrer">Open the laboratory plan in OneNote ↗</a><details class="method-source-details"><summary>Planned experiment details</summary><p>The 2026–2027 goals describe PEG3 helices with histidine at position 8 (HH) and alanine at position 8 (HA), synthesized on amide resin, with staged test cleavages and planned HH/HA mixtures of 100:0, 75:25, 50:50, 25:75, and 0:100. Planned CD, thermal response, hemin binding, and possible catalysis are not completed results. Mixture ratios alone would not establish a defined four-chain assembly.</p></details></div><aside class="next-question"><span>Next question</span><p>Does the peptide assembly change the response beyond free hemin?</p><p>Measure the comparison before claiming a catalytic scaffold.</p></aside></article>
+      </div>
+    </section>
+
+    <details class="source-details">
+      <summary>Model, laboratory context &amp; sources</summary>
+      <div class="source-content">
+        <div>
+          <h2>What is displayed?</h2>
+          <p>The unchanged original viewer PDB contains <strong id="atom-count">1,213 atoms</strong> and <strong id="bond-count">1,232 explicit bonds</strong>. No bond inference is added. Histidine at peptide position 8 on segments A and C faces heme iron; B and D have alanine there. This is a static PEG2 model, separate from the as-run GSPEG2 trajectory and the corrected dry reference.</p>
+          <p>Atomic view shows the source atoms and bonds. Secondary structure uses NGL’s assignment from these coordinates. Clicking a component changes emphasis; it does not change molecular coordinates. Explicit isolation hides other components only when selected.</p>
+          <dl class="model-metadata"><div><dt>Selected component</dt><dd id="metadata-selection">Whole structure · 1,213 source atoms</dd></div><div><dt>Last atom selected</dt><dd id="metadata-picked">None yet</dd></div><div><dt>Source file</dt><dd><a href="assets/heme-original.pdb" download>Download original PDB</a></dd></div></dl>
+        </div>
+        <div>
+          <h2>The laboratory question</h2>
+          <p>Earlier laboratory samples were purified and examined by HPLC, mass spectrometry, and circular dichroism. Those experimental constructs and the historical poster are distinct from this computational PEG2 model. The next comparisons test assembly, hemin binding, and ABTS oxidation; this model does not establish performance. A useful sensor would also need tests of selectivity, repeatability, and sample interference.</p>
+          <p>Heme enzymes and artificial peroxidases already support peroxide assays. This project tests a specific guanosine-capped helical assembly. The lab’s earlier nanofiber paper describes a different architecture; it does not establish activity for this bundle.</p>
+          <nav class="source-links" aria-label="Research sources">
+            <a href="assets/heme-poster.jpg" target="_blank" rel="noopener noreferrer">Historical Fairfield research poster <span>↗</span></a>
+            <a href="https://docs.google.com/document/d/1rmexqF9TSg2FgBzd4zzPp6pdkmKvPH0Gi1d7rOUiM1I/edit" target="_blank" rel="noopener noreferrer">GSPEG2 project overview <span>↗</span></a>
+            <a href="https://docs.google.com/document/d/1NmHqWayKZAZlZEAxd_fjIPbdLHrgdXQmOLS8Min0uEo/edit" target="_blank" rel="noopener noreferrer">Summer modeling report <span>↗</span></a>
+            <a href="https://fairfield0-my.sharepoint.com/personal/jsmith-carpenter_fairfield_edu/_layouts/15/Doc.aspx?sourcedoc={c078a375-a377-47ed-8eb4-114bc5d5dfc6}&amp;action=edit&amp;wd=target%28Helix%20Project%2FBenchtop%20work.one%7C3e6ba2d1-66bc-9f47-962d-2b04a2b49820%2FPreliminary%20data%7C8cb03921-f862-934c-bd42-9722ae4e616c%2F%29&amp;wdorigin=NavigationUrl" target="_blank" rel="noopener noreferrer">OneNote laboratory record <span>↗</span></a>
+            <a href="https://github.com/alexw4123/guanosine-heme-bundle-viewer" target="_blank" rel="noopener noreferrer">Original structure viewer &amp; source <span>↗</span></a>
+            <a href="https://doi.org/10.1039/D5CC05835J" target="_blank" rel="noopener noreferrer">Lab paper: a different nanofiber architecture <span>↗</span></a>
+            <a href="https://doi.org/10.1039/D6CC90031C" target="_blank" rel="noopener noreferrer">Correction to the nanofiber paper <span>↗</span></a>
+            <a href="https://ueaeprints.uea.ac.uk/64743/1/Published_manuscript.pdf" target="_blank" rel="noopener noreferrer">C45 heme enzyme and ABTS assay precedent <span>↗</span></a>
+          </nav>
+          <p class="access-note">Project documents and the laboratory notebook may require access. Title and author credit follow the historical Fairfield research poster.</p>
+        </div>
+      </div>
+    </details>
   </main>
-  <dialog id="evidence-dialog" aria-labelledby="evidence-title">
-    <header class="dialog-header"><div><p class="eyebrow">THE SCIENCE BEHIND THE FILM</p><h2 id="evidence-title">What you are seeing.</h2></div><button data-close aria-label="Close evidence">×</button></header>
-    <div class="dialog-content"><p id="scene-detail"></p><div class="evidence-key"><span>Source structure</span><span>Design animation</span><span>Real MD, when supplied</span><span>Proposed application</span></div><h3>Methods & interpretation</h3><div id="methods"></div><h3>Sources & context</h3><div id="sources"></div><a id="vmd-link" href="assets/motion/heme-md-5s.mp4" target="_blank">Open the authentic five-second VMD render ↗</a><p class="source-note">Independent viewer. Original coordinates and the original heme website are preserved.</p></div>
-  </dialog>
-  <dialog id="structure-dialog" class="structure-dialog" aria-label="Atomic and secondary-structure explorer"><header class="dialog-header"><div><p class="eyebrow">INSPECT THE STRUCTURE</p><h2 id="structure-title">Atomic + secondary views</h2></div><button data-close aria-label="Close molecular explorer">×</button></header><iframe id="structure-frame" title="Atomic and secondary-structure molecular explorer"></iframe></dialog>
-  <script type="module" src="app.js"></script>
+  <footer><span>Smith-Carpenter Lab · Fairfield University</span><a href="https://alexw4123.github.io/dhfr-cinematic-viewer/" target="_blank" rel="noopener noreferrer">Explore the DHFR research viewer ↗</a></footer>
+  <dialog id="figure-dialog" aria-labelledby="figure-title" aria-describedby="figure-caption"><div class="figure-dialog-top"><h2 id="figure-title">Research figure</h2><button type="button" id="close-figure" aria-label="Close figure">Close <span aria-hidden="true">×</span></button></div><img id="figure-full" alt=""><p id="figure-caption"></p><div class="figure-dialog-links"><a id="figure-original" href="assets/heme-poster.jpg" target="_blank" rel="noopener noreferrer">Open original ↗</a><a id="figure-download" href="assets/heme-poster.jpg" download>Download figure ↓</a><a id="figure-source-document" href="#" target="_blank" rel="noopener noreferrer" hidden>Open source record ↗</a></div></dialog>
 </body>
 </html>

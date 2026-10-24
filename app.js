@@ -1,320 +1,331 @@
-import { PROJECTS } from './story-data.js';
-import { createMolecularScene } from './molecular-scene.js';
-
-const $ = (id) => document.getElementById(id);
-const id = document.body.dataset.project;
-const project = PROJECTS[id];
-const isHeme = id === 'heme';
-const repository = isHeme ? 'guanosine-heme-cinematic-viewer' : 'dhfr-cinematic-viewer';
-const stageNames = isHeme ? ['The atoms', 'The assembly', 'Into solution', 'The chemistry', 'The biosensor', 'The next test'] : ['The target', 'The candidates', 'Into solution', 'The mechanism', 'Toward cells', 'The next test'];
-const hero = isHeme ? 'From atoms.<br>To <em>signal.</em>' : 'One target.<br>A new <em>question.</em>';
-const spatial = isHeme ? ['ORIGINAL ATOMIC DESIGN', 'ASSEMBLY · EXPLANATORY MOTION', 'AS-RUN MODEL · AUTHENTIC SAVED FRAMES', 'HEME CENTER · MECHANISM SCHEMATIC', 'EXTERNAL BIOSENSOR · PROPOSED', 'ACTIVITY & CALIBRATION TO TEST'] : ['PREPARED HUMAN DHFR MODEL', 'CANDIDATE PLACEMENT · ILLUSTRATIVE', 'SOLUTION PREPARATION · ILLUSTRATIVE', 'FOLATE PATHWAY · MECHANISM CONTEXT', 'DELIVERY & UPTAKE · UNTESTED', 'BINDING, INHIBITION & SELECTIVITY TO TEST'];
-let engine;
-let ready = false;
-let playing = false;
-let filmTime = 0;
-let currentStage = -1;
-let voice = false;
-let exploring = false;
-let resumeTime = 0;
-let recording = false;
-let reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-let previousTick = performance.now();
-let lastStatusUpdate = 0;
-let recordState = null;
-let recordChunks = [];
-let utterance = null;
-
-$('project-name').textContent = isHeme ? 'Guanosine · Heme' : 'Human DHFR · GS / isog';
-$('brand').innerHTML = isHeme ? 'HEME /<br>MOLECULAR CINEMA' : 'DHFR /<br>MOLECULAR CINEMA';
-$('repository-link').href = `https://github.com/alexw4123/${repository}`;
-$('candidate-control').hidden = isHeme;
-$('vmd-link').hidden = !isHeme;
-$('legend-protein').textContent = isHeme ? 'Peptide helices' : 'Human DHFR';
-$('legend-cofactor').textContent = isHeme ? 'Heme · iron center' : 'Modeled NADPH';
-$('legend-candidate').textContent = isHeme ? 'Guanosine / PEG2' : 'GS / isog candidate';
-$('footnote').textContent = isHeme ? 'ORIGINAL DESIGN → REAL MOLECULAR MOTION → A PROPOSED BIOSENSOR' : 'PREPARED STRUCTURES → MECHANISM CONTEXT → A PROPOSED APPLICATION';
-$('motion-toggle').setAttribute('aria-pressed', String(reducedMotion));
-
-project.stages.forEach((stage, index) => {
-  const button = document.createElement('button');
-  button.className = 'chapter';
-  button.setAttribute('aria-label', `Scene ${index + 1}: ${stage.title}`);
-  button.innerHTML = `<span class="chapter-number">0${index + 1}</span><span>${stageNames[index]}</span>`;
-  button.addEventListener('click', () => { leaveExplore(); setTime(index * 10 + (index ? (playing ? .1 : 5) : 0), true); });
-  $('chapters').append(button);
-});
-
-project.methods.forEach(method => {
-  const details = document.createElement('details');
-  const summary = document.createElement('summary');
-  const body = document.createElement('p');
-  summary.textContent = method.title;
-  body.textContent = method.text;
-  details.append(summary, body);
-  $('methods').append(details);
-});
-project.sources.forEach(source => {
-  const link = document.createElement('a');
-  link.className = 'source';
-  link.href = source.url;
-  link.target = '_blank';
-  link.rel = 'noopener';
-  link.textContent = source.title + ' ↗';
-  const note = document.createElement('small');
-  note.textContent = source.note;
-  link.append(note);
-  $('sources').append(link);
-});
-
-function cancelSpeech() {
-  if ('speechSynthesis' in window) window.speechSynthesis.cancel();
-  utterance = null;
-}
-function speakStage(index) {
-  cancelSpeech();
-  if (!voice || !playing || !('speechSynthesis' in window)) return;
-  utterance = new SpeechSynthesisUtterance(project.stages[index].caption);
-  utterance.rate = 1.02;
-  utterance.lang = 'en-US';
-  window.speechSynthesis.speak(utterance);
-}
-function formatTime(time) {
-  return `${Math.floor(time / 60).toString().padStart(2, '0')}:${Math.floor(time % 60).toString().padStart(2, '0')}`;
-}
-function stageAt(time) { return Math.min(5, Math.floor(time / 10)); }
-
-function updateStage(force = false) {
-  const index = stageAt(filmTime);
-  const stage = project.stages[index];
-  if (force || index !== currentStage) {
-    currentStage = index;
-    $('scene-title').textContent = stage.title;
-    $('scene-caption').textContent = stage.caption;
-    $('scene-id').textContent = `SCENE 0${index + 1} / 06`;
-    $('evidence-tag').textContent = stage.tag;
-    $('evidence-tag').dataset.kind = stage.tag === 'REAL MD' ? 'real' : ['DESIGN ANIMATION', 'PROPOSED APPLICATION'].includes(stage.tag) ? 'concept' : 'source';
-    $('scene-detail').textContent = stage.detail;
-    $('spatial-caption').textContent = spatial[index];
-    $('film-eyebrow').textContent = isHeme ? 'FROM ATOMS TO A POSSIBLE SIGNAL' : 'FROM A PREPARED MODEL TO A TESTABLE IDEA';
-    $('context-note').textContent = index === 2 ? isHeme ? 'Source frames 0–4998. Playback seconds are editorial.' : 'No DHFR trajectory is represented in this film.' : index >= 4 ? isHeme ? 'A device concept. Activity and performance remain to be tested.' : 'Delivery, uptake and treatment benefit are unproven.' : 'Source structures and explanatory animation are labeled separately.';
-    document.querySelectorAll('.chapter').forEach((button, i) => button.setAttribute('aria-current', String(i === index)));
-    $('announcer').textContent = `Scene ${index + 1}. ${stage.title}. ${stage.tag}.`;
-    if (playing) speakStage(index);
-  }
-  if (filmTime < .05 && !playing) {
-    $('scene-title').innerHTML = hero;
-    $('film-eyebrow').textContent = isHeme ? 'GUANOSINE · PEPTIDE · HEME' : 'GS–Phe–Glu · isog–Phe–Glu · DHFR';
-    $('scene-caption').textContent = isHeme ? 'Enter the atomic structure. Watch the pieces come together. Follow real molecular motion toward a possible biosensor.' : 'Enter your actual candidate models. Travel from the enzyme to a proposed cellular application—and see what still needs to be proven.';
-  }
-  $('timeline').value = String(filmTime);
-  $('timeline').style.setProperty('--progress', `${filmTime / 60 * 100}%`);
-  $('timeline').setAttribute('aria-valuetext', `${filmTime.toFixed(1)} seconds of 60. Scene ${index + 1}, ${stage.title}`);
-  $('time').textContent = formatTime(filmTime);
-}
-function setTime(time, announce = false) {
-  filmTime = Math.max(0, Math.min(60, Number(time) || 0));
-  engine?.setProgress(filmTime / 60);
-  updateStage(announce);
-  if (filmTime >= 60 && playing && !recording) setPlaying(false);
-}
-function setPlaying(value) {
-  if (!ready) return;
-  playing = Boolean(value);
-  engine?.setPaused(!playing);
-  $('play').textContent = playing ? 'Ⅱ' : '▶';
-  $('play').setAttribute('aria-label', playing ? 'Pause film' : 'Play the 60-second film');
-  $('hero-play').innerHTML = `<span class="play-icon">${playing ? 'Ⅱ' : '▶'}</span> ${playing ? 'Pause the film' : 'Play the 3D film'} <small>60 SEC</small>`;
-  if (!playing) cancelSpeech();
-  else { updateStage(true); speakStage(currentStage); }
-}
-function togglePlaying() {
-  leaveExplore();
-  if (filmTime >= 60) setTime(0, true);
-  setPlaying(!playing);
-}
-function leaveExplore() {
-  if (!exploring) return;
-  exploring = false;
-  document.body.classList.remove('exploring');
-  $('exit-explore').hidden = true;
-  engine?.setModel(isHeme ? 'auto' : $('candidate-select').value);
-  setTime(resumeTime, true);
-}
-
-$('play').addEventListener('click', togglePlaying);
-$('hero-play').addEventListener('click', togglePlaying);
-$('restart').addEventListener('click', () => { leaveExplore(); setPlaying(false); setTime(0, true); engine?.resetCamera(); });
-document.querySelector('.identity').addEventListener('click', event => { event.preventDefault(); $('restart').click(); });
-$('timeline').addEventListener('input', event => { leaveExplore(); setTime(event.target.value, false); });
-$('timeline').addEventListener('change', () => { if (playing) speakStage(currentStage); });
-$('inspect').addEventListener('click', () => {
-  setPlaying(false);
-  resumeTime = filmTime;
-  exploring = true;
-  document.body.classList.add('exploring');
-  $('exit-explore').hidden = false;
-  engine?.setModel(isHeme ? 'design' : $('candidate-select').value);
-  engine?.setProgress(0);
-  engine?.resetCamera();
-  $('spatial-caption').textContent = isHeme ? 'ORIGINAL SOURCE DESIGN · INTERACTIVE' : 'PREPARED SOURCE MODEL · INTERACTIVE';
-  $('molecule-canvas').focus();
-});
-$('exit-explore').addEventListener('click', leaveExplore);
-$('mode-atomic').addEventListener('click', () => setMode('atomic'));
-$('mode-secondary').addEventListener('click', () => setMode('secondary'));
-function setMode(mode) {
-  engine?.setMode(mode);
-  $('mode-atomic').setAttribute('aria-pressed', String(mode === 'atomic'));
-  $('mode-secondary').setAttribute('aria-pressed', String(mode === 'secondary'));
-}
-$('focus-select').addEventListener('change', event => engine?.setSelection(event.target.value));
-$('candidate-select').addEventListener('change', event => { engine?.setModel(event.target.value); $('announcer').textContent = `${event.target.value === 'gs' ? 'GS' : 'Isoguanosine'} candidate model selected. Prepared static coordinates.`; });
-$('reset-camera').addEventListener('click', () => engine?.resetCamera());
-$('voice').addEventListener('click', () => {
-  voice = !voice;
-  $('voice').setAttribute('aria-pressed', String(voice));
-  $('voice').textContent = voice ? 'Voice on' : 'Voice off';
-  if (voice && playing) speakStage(currentStage); else cancelSpeech();
-});
-if (!('speechSynthesis' in window)) { $('voice').disabled = true; $('voice').title = 'Narration is unavailable in this browser. Captions remain visible.'; }
-$('motion-toggle').addEventListener('click', () => {
-  reducedMotion = !reducedMotion;
-  $('motion-toggle').setAttribute('aria-pressed', String(reducedMotion));
-  document.body.classList.toggle('reduced-motion', reducedMotion);
-  engine?.setReducedMotion?.(reducedMotion);
-});
-$('fullscreen').addEventListener('click', async () => {
-  try { if (!document.fullscreenElement) await $('cinema').requestFullscreen(); else await document.exitFullscreen(); }
-  catch { $('announcer').textContent = 'Fullscreen is unavailable in this browser panel.'; }
-});
-
-function openDialog(dialog) {
-  setPlaying(false);
-  if (!dialog.open) dialog.showModal();
-}
-$('evidence-open').addEventListener('click', () => openDialog($('evidence-dialog')));
-$('structure-open').addEventListener('click', () => {
-  const frame = $('structure-frame');
-  const path = isHeme ? 'original-viewer/index.html' : `reference-viewer.html?candidate=${$('candidate-select').value}`;
-  if (frame.getAttribute('src') !== path) frame.src = path;
-  $('structure-title').textContent = isHeme ? 'Your preserved original viewer' : 'Actual DHFR preparation models';
-  openDialog($('structure-dialog'));
-});
-document.querySelectorAll('[data-close]').forEach(button => button.addEventListener('click', () => button.closest('dialog').close()));
-document.querySelectorAll('dialog').forEach(dialog => dialog.addEventListener('click', event => { if (event.target === dialog) dialog.close(); }));
-$('molecule-canvas').addEventListener('pointerdown', () => { if (playing && !recording) setPlaying(false); });
-document.addEventListener('keydown', event => {
-  if (event.code === 'Space' && !['INPUT', 'SELECT', 'BUTTON', 'TEXTAREA', 'SUMMARY'].includes(document.activeElement?.tagName) && !document.querySelector('dialog[open]')) { event.preventDefault(); togglePlaying(); }
-});
-document.addEventListener('visibilitychange', () => { if (document.hidden && playing && !recording) setPlaying(false); });
-
-function wrapText(context, value, x, y, width, lineHeight, maxLines = 3) {
-  const words = value.split(/\s+/); let line = '', lineIndex = 0;
-  for (const word of words) {
-    const next = line ? line + ' ' + word : word;
-    if (context.measureText(next).width > width && line) {
-      context.fillText(line, x, y + lineIndex * lineHeight);
-      lineIndex++;
-      if (lineIndex >= maxLines) return;
-      line = word;
-    } else line = next;
-  }
-  if (lineIndex < maxLines) context.fillText(line, x, y + lineIndex * lineHeight);
-}
-function drawRecordingFrame() {
-  if (!recordState) return;
-  const { context, canvas } = recordState;
-  engine?.renderFrame?.();
-  context.fillStyle = '#030a12'; context.fillRect(0, 0, canvas.width, canvas.height);
-  const source = $('molecule-canvas');
-  const scale = Math.min(canvas.width / source.width, canvas.height / source.height);
-  const width = source.width * scale, height = source.height * scale;
-  context.drawImage(source, (canvas.width - width) / 2, (canvas.height - height) / 2, width, height);
-  const gradient = context.createLinearGradient(0, 0, 0, canvas.height);
-  gradient.addColorStop(0, 'rgba(3,10,18,.9)'); gradient.addColorStop(.24, 'rgba(3,10,18,0)'); gradient.addColorStop(.64, 'rgba(3,10,18,0)'); gradient.addColorStop(1, 'rgba(3,10,18,.98)');
-  context.fillStyle = gradient; context.fillRect(0, 0, canvas.width, canvas.height);
-  const stage = project.stages[stageAt(filmTime)];
-  context.fillStyle = '#83e4ed'; context.font = '14px Segoe UI, sans-serif'; context.fillText(isHeme ? 'FROM ATOMS TO SIGNAL' : 'DHFR / A MOLECULAR QUESTION', 42, 39);
-  context.textAlign = 'right'; context.fillStyle = '#c4c0e8'; context.font = '12px Segoe UI, sans-serif'; context.fillText(stage.tag, 1238, 39); context.textAlign = 'left';
-  context.fillStyle = '#e1f2f5'; context.font = '32px Segoe UI, sans-serif'; context.fillText(stage.title, 42, 591);
-  context.fillStyle = '#a2bbc7'; context.font = '17px Segoe UI, sans-serif'; wrapText(context, stage.caption, 42, 629, 1120, 25, 2);
-  context.fillStyle = '#668c9b'; context.font = '11px Segoe UI, sans-serif';
-  const info = engine?.getStatus();
-  context.fillText(stage.tag === 'REAL MD' ? `SOURCE FRAME ${info?.sourceFrame ?? '—'} · PHYSICAL TIME UNVERIFIED` : stage.tag === 'SOURCE STRUCTURE' ? 'ACTUAL SOURCE COORDINATES · PRESENTATION CAMERA' : 'EXPLANATORY / PROPOSED SEQUENCE · NOT OBSERVED BIOLOGY', 42, 698);
-}
-async function startRecording() {
-  if (!ready || recording) return;
-  if (!window.MediaRecorder || !HTMLCanvasElement.prototype.captureStream) { $('announcer').textContent = 'Recording is not available in this browser.'; return; }
-  leaveExplore();
-  const savedTime = filmTime, savedPlaying = playing;
-  if (filmTime > 55) setTime(55, true);
-  const startTime = filmTime;
-  const canvas = document.createElement('canvas'); canvas.width = 1280; canvas.height = 720;
-  const context = canvas.getContext('2d');
-  const stream = canvas.captureStream(30);
-  const mimeType = ['video/webm;codecs=vp9', 'video/webm;codecs=vp8', 'video/webm'].find(type => MediaRecorder.isTypeSupported(type));
-  if (!mimeType || !context) { stream.getTracks().forEach(track => track.stop()); return; }
-  const recorder = new MediaRecorder(stream, { mimeType, videoBitsPerSecond: 5500000 });
-  recordChunks = [];
-  recordState = { canvas, context, stream, recorder, start: performance.now(), startTime, savedTime, savedPlaying };
-  recording = true; $('recording').hidden = false; $('record').disabled = true;
-  recorder.ondataavailable = event => { if (event.data.size) recordChunks.push(event.data); };
-  recorder.onstop = () => {
-    const result = new Blob(recordChunks, { type: mimeType });
-    const link = document.createElement('a'); link.href = URL.createObjectURL(result); link.download = `${repository}-scene-${stageAt(startTime) + 1}.webm`; link.click();
-    setTimeout(() => URL.revokeObjectURL(link.href), 30000);
-    stream.getTracks().forEach(track => track.stop());
-    const prior = recordState;
-    recording = false; recordState = null; recordChunks = [];
-    $('recording').hidden = true; $('record').disabled = false;
-    if (prior) { setTime(prior.savedTime, true); setPlaying(prior.savedPlaying); }
-    $('announcer').textContent = 'Five-second captioned 3D film saved.';
+/* Heme research viewer. Source coordinates are never changed. */
+(() => {
+  'use strict';
+  const $ = id => document.getElementById(id);
+  const viewport = $('molecular-viewport');
+  const groupButtons = [...document.querySelectorAll('[data-component]')];
+  const modeButtons = [...document.querySelectorAll('[data-mode]')];
+  const topicButtons = [...document.querySelectorAll('[data-topic]')].filter(element => element.tagName === 'BUTTON');
+  const research = window.HEME_RESEARCH || {topics:{},figures:[]};
+  const sourcePath = 'assets/heme-original.pdb';
+  const caps = [[0,53],[284,337],[570,623],[854,907]];
+  const isCap = index => caps.some(([start,end]) => index >= start && index <= end);
+  const groupOf = index => index >= 1140 ? 'heme' : isCap(index) ? 'guanosine' : 'peptide';
+  const sourceSegmentOf = index => index < 284 ? 'PEPA' : index < 570 ? 'PEPB' : index < 854 ? 'PEPC' : index < 1140 ? 'PEPD' : 'HEMA';
+  const info = {
+    all: { name:'Whole structure', count:1213, heading:'Inside the PEG2 model', copy:'Heme sits among four peptide helices. Histidine side chains on two helices face its iron center, Fe; guanosines connect through PEG2 linkers.', accent:'#f7bc60' },
+    peptide: { name:'Peptide', count:924, heading:'Four peptide helices', copy:'The model contains four 15-residue peptide chains. Histidine at peptide position 8 on segments A and C faces heme iron; segments B and D have alanine at that position.', accent:'#56d5e9' },
+    guanosine: { name:'Guanosine', count:216, heading:'Guanosine caps and PEG2 linkers', copy:'Each peptide is linked to a guanosine cap. The caps were intended to organize a guanine quartet; persistent quartet contacts were not supported by the reported trajectory checks.', accent:'#b9a0f2' },
+    heme: { name:'Heme + Fe', count:73, heading:'Heme and its iron center, Fe', copy:'The heme cofactor contains the central iron atom. Histidine side chains on peptide segments A and C face Fe. Their two Fe–His connections are imposed bonds in this model.', accent:'#f7bc60' }
   };
-  drawRecordingFrame(); recorder.start(); setPlaying(true);
-}
-$('record').addEventListener('click', startRecording);
+  const state = { selected:'all', mode:'atomic', topic:'question', isolated:false, ready:false, picked:null };
+  let stage, component, initialOrientation, colorScheme;
+  let loadGeneration = 0;
+  let touchStart = null;
+  let lastTap = { index:-1, time:0 };
 
-function tick(now) {
-  const delta = Math.min(.08, (now - previousTick) / 1000); previousTick = now;
-  if (recordState) {
-    const elapsed = Math.min(5, (now - recordState.start) / 1000);
-    setTime(recordState.startTime + elapsed);
-    drawRecordingFrame();
-    $('recording-text').textContent = `Recording ${elapsed.toFixed(1)} / 5.0 seconds`;
-    if (elapsed >= 5 && recordState.recorder.state === 'recording') recordState.recorder.stop();
-  } else if (playing) setTime(filmTime + delta);
-  if (engine && now - lastStatusUpdate > 250) {
-    lastStatusUpdate = now;
-    const info = engine.getStatus();
-    const source = isHeme ? info.model === 'asRun' ? 'As-run model' : 'Original design' : info.model === 'isog' ? 'isog candidate' : 'GS candidate';
-    $('model-status').textContent = `${source} · ${(info.atomCount || (isHeme ? 1213 : 3153)).toLocaleString()} atoms`;
-    $('motion-status').textContent = isHeme && currentStage === 2 ? `SOURCE FRAME ${info.sourceFrame ?? '—'} / 4999 · ${info.solutionIllustrative ? 'ILLUSTRATIVE SOLVENT' : 'RECORDED WATER + IONS'}` : !isHeme && currentStage >= 4 ? 'PROPOSED DELIVERY · UPTAKE UNTESTED' : 'DRAG TO ORBIT · SCROLL TO ZOOM';
+  function enableControls(enabled) {
+    ['structure-controls','representation-controls','camera-controls'].forEach(id => { $(id).disabled = !enabled; });
+    $('isolate-selected').disabled = !enabled || state.selected === 'all';
   }
-  requestAnimationFrame(tick);
-}
 
-updateStage(true);
-try {
-  engine = createMolecularScene({ canvas: $('molecule-canvas'), project, assetBase: './assets', reducedMotion,
-    onReady() {
-      ready = true;
-      engine?.setTrajectory(isHeme);
-      engine?.setPaused(true);
-      $('hero-play').disabled = false; $('play').disabled = false; $('record').disabled = false;
-      $('loading').hidden = true;
-      $('announcer').textContent = 'Molecular scene ready. Play the film or explore the actual atoms.';
-    },
-    onError(error) {
-      console.error(error);
-      if (!ready) { $('loading').innerHTML = '<span>Could not open the 3D model.</span><small>Use a WebGL-capable browser and reload this page.</small>'; }
-      $('announcer').textContent = error.message;
-    },
+  function updateOrientation() {
+    if (!stage || !state.ready) return;
+    const elements = stage.viewerControls.getOrientation().elements;
+    viewport.dataset.viewOrientation = JSON.stringify(Array.from(elements));
+  }
+
+  function updateSelectionUI() {
+    const current = info[state.selected];
+    groupButtons.forEach(button => button.setAttribute('aria-pressed', String(button.dataset.component === state.selected)));
+    modeButtons.forEach(button => button.setAttribute('aria-pressed', String(button.dataset.mode === state.mode)));
+    viewport.dataset.selectedComponent = state.selected;
+    viewport.dataset.selectedAtomCount = String(current.count);
+    viewport.dataset.isolated = String(state.isolated);
+    viewport.dataset.representation = state.mode;
+    $('component-heading').textContent = current.heading;
+    $('component-copy').textContent = current.copy;
+    $('component-description').style.borderColor = current.accent;
+    $('metadata-selection').textContent = `${current.name} · ${current.count.toLocaleString()} source atoms`;
+    $('selection-summary').textContent = state.selected === 'all' ? 'All 1,213 source atoms' : `${current.count.toLocaleString()} ${state.selected === 'heme' ? 'heme' : state.selected} source atoms${state.isolated ? ' · isolated' : ' · whole structure retained'}`;
+    $('isolate-selected').checked = state.isolated;
+    $('isolate-selected').disabled = !state.ready || state.selected === 'all';
+  }
+
+  function selectedIndices(group) {
+    return Array.from({length:1213}, (_,index) => index).filter(index => group === 'all' || groupOf(index) === group);
+  }
+  function atomSelection(indices) { return indices.length ? '@' + indices.join(',') : 'NONE'; }
+
+  function renderRepresentation() {
+    if (!component || !state.ready) return;
+    component.removeAllRepresentations();
+    const allowed = selectedIndices(state.isolated ? state.selected : 'all');
+    const atomicParams = {
+      colorScheme, multipleBond:'symmetric', radiusScale:0.38,
+      aspectRatio:2.0, bondSpacing:0.75, quality:'high',
+      opacity:1, disablePicking:false
+    };
+    if (state.mode === 'atomic') {
+      // One whole-molecule representation retains the explicit cross-component Fe–His bonds.
+      component.addRepresentation('ball+stick', {...atomicParams, sele:atomSelection(allowed)});
+    } else {
+      const peptideIndices = allowed.filter(index => groupOf(index) === 'peptide');
+      if (peptideIndices.length) component.addRepresentation('cartoon', {
+        sele:atomSelection(peptideIndices), colorScheme, quality:'high',
+        smoothSheet:true, scale:1.1, disablePicking:false
+      });
+      const atomicIndices = [];
+      component.structure.eachAtom(atom => {
+        const index = atom.index;
+        const histidine = ['HSD','HIS','HSE'].includes(atom.resname) && atom.resno === 9;
+        if (allowed.includes(index) && (groupOf(index) !== 'peptide' || histidine)) atomicIndices.push(index);
+      });
+      if (atomicIndices.length) component.addRepresentation('ball+stick', {...atomicParams, sele:atomSelection(atomicIndices)});
+    }
+    // Selection and representation changes deliberately never call autoView/orient/center.
+    updateSelectionUI();
+    updateOrientation();
+  }
+
+  function setTopic(key) {
+    const topic = research.topics[key];
+    if (!topic) return;
+    state.topic = key;
+    viewport.dataset.topic = key;
+    $('topic-reading').dataset.currentTopic = key;
+    topicButtons.forEach(button => button.setAttribute('aria-pressed',String(button.dataset.topic === key)));
+    $('topic-index').textContent = topic.index;
+    $('topic-heading').textContent = topic.heading;
+    $('topic-lead').textContent = topic.lead;
+    $('topic-copy').textContent = topic.copy;
+    $('topic-source').href = topic.source;
+    $('topic-source').textContent = topic.sourceLabel;
+  }
+
+  function selectComponent(group, picked = null, topicKey = null) {
+    if (!state.ready || !info[group]) return;
+    state.selected = group;
+    // Ordinary component/atom selection always returns to a complete, dimmed-context view.
+    state.isolated = false;
+    if (picked) {
+      state.picked = picked;
+      viewport.dataset.lastPickedAtom = String(picked.index);
+      const label = `Atom ${picked.index + 1} · ${picked.atomname} · ${picked.resname} ${picked.resno} · ${picked.segid || 'source model'}`;
+      $('metadata-picked').textContent = label;
+      $('picked-label').textContent = label;
+    }
+    renderRepresentation();
+    setTopic(topicKey || {all:'question',peptide:'peptide',guanosine:'cap',heme:'heme'}[group]);
+  }
+
+  function onPicked(proxy) {
+    if (!state.ready || !proxy) return;
+    const atom = proxy.atom || proxy.closestBondAtom;
+    if (!atom || atom.index < 0 || atom.index >= 1213) return;
+    const now = performance.now();
+    if (lastTap.index === atom.index && now - lastTap.time < 180) return;
+    // Copy immediately: NGL atom proxies are reused while representations are rebuilt.
+    const picked = { index:atom.index, atomname:atom.atomname, resname:atom.resname, resno:atom.resno, segid:sourceSegmentOf(atom.index), element:atom.element };
+    lastTap = { index:picked.index, time:now };
+    selectComponent(groupOf(picked.index), picked);
+  }
+
+  function rotate(direction) {
+    if (!state.ready) return;
+    const movement = {left:[-12,0],right:[12,0],up:[0,-12],down:[0,12]}[direction];
+    stage.trackballControls.rotate(...movement);
+    updateOrientation();
+  }
+
+  function makeStage() {
+    if (!window.NGL) throw new Error('Viewer library unavailable');
+    stage = new NGL.Stage('ngl-canvas', {
+      backgroundColor:'#07131f', quality:'high', sampleLevel:0,
+      cameraType:'perspective', cameraFov:36,
+      lightIntensity:1.0, ambientIntensity:0.65,
+      clipNear:0, clipFar:100, fogNear:65, fogFar:100,
+      tooltip:false
+    });
+    // NGL focuses its own canvas on pointer input; keep that focus in the accessibility tree.
+    $('ngl-canvas').removeAttribute('aria-hidden');
+    const canvas = stage.viewer.renderer?.domElement;
+    if (canvas) {
+      canvas.setAttribute('role','img');
+      canvas.setAttribute('aria-label','Interactive atomic model of the four-helix heme bundle. Arrow keys rotate, plus and minus zoom, and Home resets the view.');
+    }
+    // Disable NGL defaults that recenter, animate, measure, or transform source components.
+    ['clickPick-left','clickPick-middle','clickPick-right','clickPick-ctrl-left',
+      'drag-ctrl-shift-right','drag-ctrl-shift-left','hoverPick'].forEach(binding => stage.mouseControls.remove(binding));
+    stage.keyControls.clear();
+    stage.spinAnimation.pause(true);
+    stage.rockAnimation.pause(true);
+    stage.signals.clicked.add(onPicked);
+    stage.viewerControls.signals.changed.add(updateOrientation);
+    // Camera group matrices are finalized by rendering; reflect that real matrix in the DOM too.
+    stage.viewer.signals.rendered.add(updateOrientation);
+    const colors = { peptide:0x56d5e9, guanosine:0xb9a0f2, heme:0xf7bc60 };
+    colorScheme = NGL.ColormakerRegistry.addScheme(function () {
+      this.atomColor = atom => {
+        const group = groupOf(atom.index);
+        let color = colors[group];
+        if (atom.element === 'FE') color = 0xffe4a7;
+        if (state.selected !== 'all' && group !== state.selected && !state.isolated) {
+          const amount = 0.39;
+          const mix = (channel,background) => Math.round(background + (channel-background)*amount);
+          color = (mix((color>>16)&255,7)<<16) | (mix((color>>8)&255,19)<<8) | mix(color&255,31);
+        }
+        return color;
+      };
+    });
+  }
+
+  async function loadStructure() {
+    const generation = ++loadGeneration;
+    state.ready = false;
+    viewport.dataset.modelReady = 'false';
+    enableControls(false);
+    $('load-state').hidden = false;
+    $('load-message').textContent = 'Opening the source structure…';
+    $('retry-load').hidden = true;
+    $('fallback-link').hidden = true;
+    try {
+      if (!stage) makeStage();
+      if (component) { stage.removeComponent(component); component = null; }
+      const loaded = await stage.loadFile(sourcePath, {ext:'pdb',defaultRepresentation:false,inferBonds:'none'});
+      if (generation !== loadGeneration) { stage.removeComponent(loaded); return; }
+      component = loaded;
+      const atoms = component.structure.atomCount;
+      const bonds = component.structure.bondCount;
+      if (atoms !== 1213 || bonds !== 1232) throw new Error('Source structure counts differ');
+      viewport.dataset.atomCount = String(atoms);
+      viewport.dataset.bondCount = String(bonds);
+      $('atom-count').textContent = `${atoms.toLocaleString()} atoms`;
+      $('bond-count').textContent = `${bonds.toLocaleString()} explicit bonds`;
+      state.ready = true;
+      state.selected = research.topics[state.topic]?.group || state.selected;
+      renderRepresentation();
+      stage.handleResize();
+      component.autoView(0);
+      initialOrientation = stage.viewerControls.getOrientation().clone();
+      viewport.dataset.modelReady = 'true';
+      updateOrientation();
+      enableControls(true);
+      $('load-state').hidden = true;
+    } catch (error) {
+      if (generation !== loadGeneration) return;
+      state.ready = false;
+      viewport.dataset.modelReady = 'false';
+      enableControls(false);
+      $('load-message').textContent = 'The structure could not open here. Try again, or explore the original source viewer.';
+      $('retry-load').hidden = false;
+      $('fallback-link').hidden = false;
+      // Keep the reader-facing failure concise; no stack trace is inserted into the page.
+      console.warn('Source molecular viewer did not load:', error.message);
+    }
+  }
+
+  groupButtons.forEach(button => button.addEventListener('click', () => selectComponent(button.dataset.component)));
+  topicButtons.forEach(button => button.addEventListener('click', () => {
+    const key = button.dataset.topic;
+    if (!research.topics[key]) return;
+    if (state.ready) selectComponent(research.topics[key].group,null,key);
+    else setTopic(key);
+  }));
+  modeButtons.forEach(button => button.addEventListener('click', () => {
+    if (!state.ready) return;
+    state.mode = button.dataset.mode;
+    renderRepresentation();
+  }));
+  document.querySelectorAll('[data-rotate]').forEach(button => button.addEventListener('click', () => rotate(button.dataset.rotate)));
+  $('isolate-selected').addEventListener('change', event => {
+    if (!state.ready) return;
+    state.isolated = event.target.checked && state.selected !== 'all';
+    renderRepresentation();
   });
-  engine.setProgress(0);
-} catch (error) {
-  console.error(error);
-  $('loading').innerHTML = '<span>This browser could not initialize 3D.</span><small>Open the GitHub Pages viewer in a browser with WebGL enabled.</small>';
-}
-requestAnimationFrame(tick);
-window.addEventListener('pagehide', () => { cancelSpeech(); engine?.dispose(); });
+  $('zoom-in').addEventListener('click', () => { if (state.ready) stage.viewerControls.zoom(0.12); });
+  $('zoom-out').addEventListener('click', () => { if (state.ready) stage.viewerControls.zoom(-0.12); });
+  function resetCamera() { if (state.ready && initialOrientation) { stage.viewerControls.orient(initialOrientation); updateOrientation(); } }
+  $('reset-camera').addEventListener('click', resetCamera);
+  $('retry-load').addEventListener('click', loadStructure);
+  function focusStructure(event) {
+    event.preventDefault();
+    $('structure-controls').scrollIntoView({block:'center',behavior:'instant'});
+    if (state.ready) groupButtons[0].focus({preventScroll:true});
+    else viewport.focus({preventScroll:true});
+  }
+  $('explore-structure').addEventListener('click',focusStructure);
+  document.querySelectorAll('.topic-structure-link').forEach(link => link.addEventListener('click',focusStructure));
+  viewport.addEventListener('keydown', event => {
+    if (!state.ready || event.altKey || event.ctrlKey || event.metaKey) return;
+    const directions = {ArrowLeft:'left',ArrowRight:'right',ArrowUp:'up',ArrowDown:'down'};
+    if (directions[event.key]) { event.preventDefault(); rotate(directions[event.key]); }
+    else if (event.key === '+' || event.key === '=') { event.preventDefault(); stage.viewerControls.zoom(0.12); }
+    else if (event.key === '-' || event.key === '_') { event.preventDefault(); stage.viewerControls.zoom(-0.12); }
+    else if (event.key === 'Home') { event.preventDefault(); resetCamera(); }
+  });
+  // NGL 2.4 mouse picking omits touchend clicks. Convert only a short, stationary touch to an atom pick.
+  viewport.addEventListener('pointerdown', event => {
+    if (event.pointerType !== 'touch') return;
+    touchStart = {id:event.pointerId,x:event.clientX,y:event.clientY,time:performance.now(),multiple:!event.isPrimary};
+  });
+  viewport.addEventListener('pointerup', event => {
+    if (event.pointerType !== 'touch' || !touchStart || touchStart.id !== event.pointerId) return;
+    const tap = touchStart;
+    touchStart = null;
+    if (!state.ready || tap.multiple || performance.now()-tap.time > 500 || Math.hypot(event.clientX-tap.x,event.clientY-tap.y)>6) return;
+    const rect = $('ngl-canvas').getBoundingClientRect();
+    onPicked(stage.pickingControls.pick(event.clientX-rect.left,rect.bottom-event.clientY));
+  });
+  viewport.addEventListener('pointercancel', () => { touchStart = null; });
+  const resize = () => { if (stage) { stage.handleResize(); updateOrientation(); } };
+  if ('ResizeObserver' in window) new ResizeObserver(resize).observe(viewport);
+  else window.addEventListener('resize', resize);
+  window.addEventListener('pagehide', event => { if (!event.persisted) { ++loadGeneration; if (stage) stage.dispose(); } });
+  const figureMap = new Map(research.figures.map(figure => [figure.id,figure]));
+  research.figures.forEach(figure => {
+    if (!figure.container || !$(figure.container)) return;
+    const wrapper = document.createElement('figure');
+    wrapper.className = 'record-figure';
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'figure-open';
+    button.dataset.figure = figure.id;
+    button.setAttribute('aria-label',`Enlarge ${figure.title}`);
+    const image = document.createElement('img');
+    image.src = figure.path;
+    image.alt = figure.alt;
+    image.loading = 'lazy';
+    const action = document.createElement('span');
+    action.textContent = 'View figure ↗';
+    const caption = document.createElement('figcaption');
+    caption.textContent = figure.shortCaption || figure.title;
+    button.append(image,action);
+    wrapper.append(button,caption);
+    $(figure.container).append(wrapper);
+  });
+  const figureDialog = $('figure-dialog');
+  document.querySelectorAll('[data-figure]').forEach(button => button.addEventListener('click', () => {
+    const figure = figureMap.get(button.dataset.figure);
+    if (!figure) return;
+    $('figure-title').textContent = figure.title;
+    $('figure-full').src = figure.path;
+    $('figure-full').alt = figure.alt;
+    $('figure-caption').textContent = figure.caption;
+    $('figure-original').href = figure.path;
+    $('figure-download').href = figure.path;
+    $('figure-source-document').hidden = !figure.source;
+    if (figure.source) $('figure-source-document').href = figure.source;
+    figureDialog.dataset.figure = figure.id;
+    if (typeof figureDialog.showModal === 'function') figureDialog.showModal();
+    else window.open(figure.path,'_blank','noopener');
+  }));
+  $('close-figure').addEventListener('click', () => figureDialog.close());
+  figureDialog.addEventListener('click',event => { if (event.target === figureDialog) { const r=figureDialog.getBoundingClientRect(); if(event.clientX<r.left||event.clientX>r.right||event.clientY<r.top||event.clientY>r.bottom) figureDialog.close(); } });
+  $('trajectory-video').addEventListener('play', () => { $('trajectory-video').dataset.playback = 'playing'; });
+  $('trajectory-video').addEventListener('pause', () => { $('trajectory-video').dataset.playback = 'paused'; });
+  $('trajectory-video').addEventListener('ended', () => { $('trajectory-video').dataset.playback = 'ended'; });
+  updateSelectionUI();
+  setTopic('question');
+  loadStructure();
+})();

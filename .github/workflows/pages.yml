@@ -1,4 +1,4 @@
-name: Publish molecular viewer
+name: Publish molecular research viewer
 on:
   push:
     branches: [main]
@@ -18,15 +18,16 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v6
-      - name: Prepare static viewer
+      - name: Prepare static research viewer
         run: |
           mkdir -p _site
-          cp index.html style.css app.js story-data.js molecular-scene.js application-scene.js .nojekyll README.md ASSET-MANIFEST.json _site/
+          cp index.html style.css app.js research-data.js .nojekyll README.md ASSET-MANIFEST.json _site/
           unzip -q assets.zip -d _site
+          unzip -oq research-assets.zip -d _site
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v4
         with:
           path: _site
-      - name: Deploy viewer
+      - name: Deploy research viewer
         id: deployment
         uses: actions/deploy-pages@v4
