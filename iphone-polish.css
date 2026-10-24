@@ -1,0 +1,49 @@
+/* Final touch refinements for compact Safari and LinkedIn's in-app browser. */
+@media(max-width:850px){
+  .project-heading,#section-content,.research-story,.story-caption{min-width:0;max-width:100%}
+  .story-player{scroll-margin-top:calc(52px + env(safe-area-inset-top,0px))}
+  .research-story .story-stage{position:absolute;inset:0;width:100%;height:100%;min-height:0}
+  .story-visual,.story-stage,.story-stage canvas{touch-action:pan-y}
+  .story-source-links a,.story-evidence-body{overflow-wrap:anywhere}
+  .story-source-links a>span{flex:none}
+  .story-controls{padding-bottom:11px}
+  .story-playback button,.story-variants button,.story-structure,.return-story,.explore-link{min-height:44px}
+  .story-scrub,.story-scrub input{min-height:44px;height:44px}
+  .story-scrub input{padding:0;margin:0}
+  .story-stage-status{font-size:13px;line-height:1.7}
+}
+@media(max-width:700px){
+  .story-heading h2,.story-question{text-wrap:balance}
+  .story-onstage-caption{font-size:13px;line-height:1.55;padding:36px 16px 16px;color:#f3f8fc}
+  .story-scale{font-size:10px;color:#dfeaf2}
+  .story-illustration{font-size:8px;letter-spacing:.65px;color:#c1d0dd}
+  .story-location{font-size:9px;color:#a8bdce;gap:4px}
+  .story-location span{padding:4px 5px}
+  .story-clock{font-size:10px;color:#b6c9d8;letter-spacing:0}
+  .story-playback{column-gap:6px}
+  .story-playback .story-restart{font-size:10px;min-width:44px}
+  .story-chapters button strong{font-size:10px;line-height:1.4}
+  .story-evidence-type{font-size:9px;letter-spacing:.8px}
+  .story-step-count{font-size:10px}
+  .story-motion-note,.story-variant-note{font-size:11px;line-height:1.6}
+  .story-evidence-body{font-size:13px;line-height:1.75}
+  .story-source-links a{font-size:12px;line-height:1.6}
+}
+@media(max-width:380px){
+  .story-playback{column-gap:5px}
+  .story-playback .story-play{min-width:111px;padding-inline:9px}
+  .story-clock{font-size:9px}
+  .story-chapters button{padding-inline:5px}
+  .story-chapters button strong{font-size:9.5px}
+  .story-onstage-caption{font-size:12.5px;padding-inline:14px}
+}
+@media(max-height:500px) and (orientation:landscape) and (max-width:1000px){
+  .story-visual{height:clamp(210px,58svh,290px)}
+  .story-player{scroll-margin-top:calc(52px + env(safe-area-inset-top,0px))}
+  .story-scene-hud{inset:11px 15px auto}
+  .story-location{inset:45px 15px auto;font-size:9px;gap:5px}
+  .story-onstage-caption{font-size:12px;line-height:1.5;padding:30px 18px 12px;min-height:74px}
+  .story-controls{padding-top:8px;padding-bottom:6px}
+  .story-playback{gap:8px}
+  .story-chapters{margin-bottom:20px}
+}
