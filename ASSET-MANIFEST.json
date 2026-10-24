@@ -1,192 +1,119 @@
 {
-  "title": "Heme research viewer",
-  "createdAt": "2026-10-24T02:14:25.416Z",
-  "build": "Buildless static HTML/CSS/JavaScript; all runtime assets local and relative.",
-  "publication": "Public GitHub Pages viewer with independently reviewed source record and application illustration.",
-  "sourcePreservation": {
-    "checkpointUnchanged": true,
-    "originalRepositoriesUnchanged": true,
-    "identicalCheckpointAssets": true,
-    "sourcePdbSha256": "e3eccb1cbe10a18a0bd633aaf076a7cd1fd2beeedccba0fd73a2a7695b238b4c",
-    "inferBonds": "none",
-    "sourceAtomCount": 1213,
-    "explicitBondCount": 1232,
-    "coordinatesModified": false
+  "project": "heme",
+  "liveUrl": "https://alexw4123.github.io/guanosine-heme-cinematic-viewer/",
+  "defaultProject": "heme",
+  "sourceCoordinatesModified": false,
+  "sourceHashes": {
+    "heme-original.pdb": "e3eccb1cbe10a18a0bd633aaf076a7cd1fd2beeedccba0fd73a2a7695b238b4c",
+    "ngl.js": "be8d4b16f1d73458efd70d2a3319ef2888fb6fa821732c319a99ff43a8e4f7e0"
   },
-  "scientificVersions": {
-    "opening": "Original static PEG2 source model.",
-    "video": "Existing matched as-run GSPEG2 NAMD coordinates rendered in VMD; distinct from original model.",
-    "reference": "Separate corrected 2HH:2HA_AC dry build; no corrected production trajectory documented.",
-    "laboratory": "Historical gs-helix samples and future PEG3 variants are distinct from PEG2 modeling."
-  },
-  "video": {
-    "path": "assets/motion/heme-md-5s.mp4",
-    "captions": "assets/motion/heme-md-5s.vtt",
-    "provenance": "assets/motion/heme-replay-manifest.json",
-    "playbackSeconds": 5,
-    "sourceFrameCount": 120,
-    "sourceFirstFrame": 0,
-    "sourceLastFrame": 4998,
-    "sourceStride": 42,
-    "physicalTimeVerified": false,
-    "autoplay": false
-  },
-  "assetArchives": {
-    "existingAssetsZipChanged": false,
-    "supplementalArchive": "research-assets.zip, prepared by publishing owner from this assets directory"
-  },
-  "crosslink": "https://alexw4123.github.io/dhfr-cinematic-viewer/",
-  "sourceFiles": [
+  "expectedBonds": 1232,
+  "newTextFiles": [
+    "index.html",
+    "style.css",
+    "engine-styles.css",
+    "content.js",
+    "application-data.js",
+    "application-ui.js",
+    "molecule-engine.js",
+    "app.js",
+    "figures-data.js",
+    "site-config.js",
+    "README.md",
+    ".nojekyll",
+    "assets/selection-maps.v1.compact.json",
+    ".github/workflows/pages.yml",
+    "ASSET-MANIFEST.json"
+  ],
+  "newBinaryFiles": [
+    {
+      "path": "atomic-replay-assets.zip",
+      "bytes": 1691892,
+      "sha256": "0409a6db06ca23aa2d68490941f24608ae0798063e64d61ae9734301f95c6a61",
+      "entries": [
+        "assets/motion/coordinate-verification.json",
+        "assets/motion/heme-atomic-replay-manifest.json",
+        "assets/motion/heme-md-atomic-5s.mp4",
+        "assets/motion/heme-md-atomic-5s.vtt",
+        "assets/motion/heme-md-atomic-poster.jpg",
+        "assets/motion/heme-md-atomic-poster.png",
+        "assets/motion/replay-verification.json"
+      ]
+    }
+  ],
+  "originalArchivesModified": false,
+  "noNewBackend": true,
+  "projectSwitch": "Cross-links the two independent viewer sites",
+  "files": [
     {
       "path": "index.html",
-      "bytes": 24061,
-      "sha256": "88a421bec06e97a73a536ae0d49746a65acd904c8877bb2e9d2aece12008d343"
+      "bytes": 5358,
+      "sha256": "45117a920556e78414f6e0442b146114829a03faf2cb63933e241987980f5fa1"
     },
     {
       "path": "style.css",
-      "bytes": 24427,
-      "sha256": "e093fbbb2cdcef346442eae87ba13fe74bbef8e199f63c746007d5b251de6421"
+      "bytes": 19068,
+      "sha256": "b3613ea378c46789f50b96dc05506d2dc706a5f69b67501831e919aff9868251"
+    },
+    {
+      "path": "engine-styles.css",
+      "bytes": 472,
+      "sha256": "6da08be91929f1d81e39c90e7795148b2cc12979e25412bd7a8c52d021d374db"
+    },
+    {
+      "path": "content.js",
+      "bytes": 53810,
+      "sha256": "96188843f134559ae2465a1c33b699d45cb2c6b42b713c519cf9f22c4c6fc2f4"
+    },
+    {
+      "path": "application-data.js",
+      "bytes": 9694,
+      "sha256": "436025d112db8b5cbe7e1f93f7e7c3e6cf67eca3d1aa6f80feee952a21297094"
+    },
+    {
+      "path": "application-ui.js",
+      "bytes": 3392,
+      "sha256": "b362dacced1d8d847854501bc3eea70909af740aa1cce79e7686f46cfa83e404"
+    },
+    {
+      "path": "molecule-engine.js",
+      "bytes": 23717,
+      "sha256": "3bc56c68ea82cd381fc278f008860f34a4e850e9bc549ecf2f0de2d2b952a23f"
     },
     {
       "path": "app.js",
-      "bytes": 18019,
-      "sha256": "d79db6865a5cb99b9afa7bf899cae8ddf07faa236e8fbb24bfc456a5d1db8289"
+      "bytes": 22469,
+      "sha256": "6eb9814c3cb36214cc3d0efaa226d1cf6f34767b674df20cdcca205897e5fe16"
     },
     {
-      "path": "research-data.js",
-      "bytes": 8989,
-      "sha256": "4a1c3b2de91091a0f2fd1935ecd3f0000648e63ea5836486d5a7bcc8a305aa65"
+      "path": "figures-data.js",
+      "bytes": 4957,
+      "sha256": "f499b233ca2545c269a5d4eddb1b2bafc16a744fa6b67eddbe2fb0898bd521cc"
+    },
+    {
+      "path": "site-config.js",
+      "bytes": 197,
+      "sha256": "95661680e5b8e3f536dabb59a774a2135ef83ea6b41f1cd171b21daf8233d432"
     },
     {
       "path": "README.md",
-      "bytes": 7017,
-      "sha256": "e33eeaec34f6845a4e0bf6c072ba62a961beb976e1e5465ffbc7c3a2a55111b2"
-    },
-    {
-      "path": "DEPLOY-FILES.txt",
-      "bytes": 277,
-      "sha256": "ed393133a392bcd175c0fcec7fd7f9ace189ca8a30230edaeb9ab3bfad6262c9"
-    },
-    {
-      "path": "verification.json",
-      "bytes": 489,
-      "sha256": "45ff3d6a425dfa769de376760d741ab0165102afc3556f585683a7fac715be4e"
+      "bytes": 1295,
+      "sha256": "67419eabd125d7636b539e292b057898ec5c5b0d5336f327d347d4ecf5f941fc"
     },
     {
       "path": ".nojekyll",
       "bytes": 0,
       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "assets/selection-maps.v1.compact.json",
+      "bytes": 59751,
+      "sha256": "d4054e5fead7e39d09da54bd6dd1ca898d9f4fa19f71bf57b49e97113077865c"
+    },
+    {
+      "path": ".github/workflows/pages.yml",
+      "bytes": 1181,
+      "sha256": "afd5e9262c3ac411461023145bf632bd2cdf0934880a30ca27be14bdac3e80c2"
     }
-  ],
-  "assets": [
-    {
-      "path": "assets/NGL-LICENSE.txt",
-      "bytes": 1230,
-      "sha256": "146ec981abe68ac72ee133565f9c83928fa804c4c89ce04b248fa6f6ec0cbad4",
-      "provenance": "Original NGL license, copied byte-identically from the approved checkpoint."
-    },
-    {
-      "path": "assets/figures/bundle_core_rg.png",
-      "bytes": 117461,
-      "sha256": "2832ee7ce1f29c1ad2f8c098a73a3b454607828baff524eed6c0f53104f937c9",
-      "provenance": "The core stayed compact across the original run. Radius of gyration measures how widely selected backbone atoms spread around their center; it does not mean the structure stayed unchanged. Original plot: core Cα, residue IDs 3–15 on PEPA–D, stride 10. The horizontal axis is saved frame, not verified nanoseconds.",
-      "sourceUrl": "https://drive.google.com/file/d/1i3dcySEdLx3LbbZD_vZLzOWjXVxy_CaA/view"
-    },
-    {
-      "path": "assets/figures/gs2_quartet_hbonds.png",
-      "bytes": 531872,
-      "sha256": "25a1ab3059001cbac89d85b53f0334a9bae0c998441f9b0ccdd648016eea3401",
-      "provenance": "The predefined guanine contacts did not remain consistently short. These distance checks do not show a persistent quartet, and they do not prove a quartet formed and then fell apart. Original distance axes are in angstroms and the horizontal axes show saved frame indices.",
-      "sourceUrl": "https://drive.google.com/file/d/1LWQ0iZKCP51Ee9BxioiF0RVbXLgeeXAE/view"
-    },
-    {
-      "path": "assets/figures/heme_geometry.png",
-      "bytes": 648625,
-      "sha256": "941b56f78099730142ac8c32db22effe5fbbc197f07671506c02239ab4dc085b",
-      "provenance": "Built-in Fe–His distances fluctuate near 2.11 Å. This checks an imposed coordination site; it does not demonstrate spontaneous hemin binding. The original plots use saved frame indices; a physical nanosecond interval is not verified.",
-      "sourceUrl": "https://drive.google.com/file/d/1Mgh5x-j6sFNRXfoZoB2nY3nAJv5QVaZT/view"
-    },
-    {
-      "path": "assets/figures/summer-linkage-view-source.png",
-      "bytes": 251420,
-      "sha256": "ad5fd485d86aafbcec2c84ac0bf6fc4b5a31a1af7ce753460d0a9db329612338",
-      "provenance": "Early guanosine-linked monomer, shown after the custom amide connection was added. This direct-link prototype predates the mixed His/Ala PEG2 model.",
-      "sourceUrl": "https://docs.google.com/document/d/1NmHqWayKZAZlZEAxd_fjIPbdLHrgdXQmOLS8Min0uEo/edit"
-    },
-    {
-      "path": "assets/figures/summer-mono-his-pocket-source.png",
-      "bytes": 584494,
-      "sha256": "d03aa785f3c94355aeae1ca0cfee82f2352c53ddf463a6937173e2e4e01110c0",
-      "provenance": "An early manually placed heme model with one Fe–His distance of 2.150 Å. This was a geometry test, distinct from the later A/C bis-His PEG2 model.",
-      "sourceUrl": "https://docs.google.com/document/d/1NmHqWayKZAZlZEAxd_fjIPbdLHrgdXQmOLS8Min0uEo/edit"
-    },
-    {
-      "path": "assets/figures/summer-nucleopeptide-source.png",
-      "bytes": 298815,
-      "sha256": "f326368c3f9cd733793f15bdc77df1149714b2fc3159973cae99fbae5e16b34a",
-      "provenance": "Four early nucleopeptide chains arranged as a starting bundle. The geometry was constructed; the image does not show observed self-assembly.",
-      "sourceUrl": "https://docs.google.com/document/d/1NmHqWayKZAZlZEAxd_fjIPbdLHrgdXQmOLS8Min0uEo/edit"
-    },
-    {
-      "path": "assets/figures/summer-tetramer-source.png",
-      "bytes": 609136,
-      "sha256": "ab5b431812ed17840f834cae0fc5aa7a4c4a7312d8152eacf2e51144b641ea31",
-      "provenance": "The early all-His pocket. Yellow measurements show neighboring histidine nitrogen separations of 4.387 Å before heme placement. This is an earlier design, not the mixed His/Ala PEG2 reference.",
-      "sourceUrl": "https://docs.google.com/document/d/1NmHqWayKZAZlZEAxd_fjIPbdLHrgdXQmOLS8Min0uEo/edit"
-    },
-    {
-      "path": "assets/heme-original.pdb",
-      "bytes": 122765,
-      "sha256": "e3eccb1cbe10a18a0bd633aaf076a7cd1fd2beeedccba0fd73a2a7695b238b4c",
-      "provenance": "Unchanged original structure asset, copied through the approved checkpoint; 1213 atoms and 1232 explicit CONECT bonds."
-    },
-    {
-      "path": "assets/heme-poster.jpg",
-      "bytes": 937898,
-      "sha256": "4c0ac2b2a18cb52733a430d90f595941f5813459fb430b1543da5773ddec2cd9",
-      "provenance": "Historical Fairfield poster original image, copied byte-identically from the approved checkpoint."
-    },
-    {
-      "path": "assets/motion/heme-md-5s.mp4",
-      "bytes": 827790,
-      "sha256": "f0e8d20a7486fadda98e4b2b6aa3c0d5c95735a0bf58d8ec7f74503772489782",
-      "provenance": "Existing verified VMD replay asset, copied byte-identically from the original cinematic output."
-    },
-    {
-      "path": "assets/motion/heme-md-5s.vtt",
-      "bytes": 174,
-      "sha256": "3a1a1920a4b16ebf8464029cd90cf277eb20a88092f2ebae7498325dd8b43b58",
-      "provenance": "Existing verified VMD replay asset, copied byte-identically from the original cinematic output."
-    },
-    {
-      "path": "assets/motion/heme-md-poster.jpg",
-      "bytes": 68999,
-      "sha256": "3fb34cfe76c5de0229b0ccb0c6ee917519a0529e46bd3a3b77d9cd51755afc11",
-      "provenance": "Existing verified VMD replay asset, copied byte-identically from the original cinematic output."
-    },
-    {
-      "path": "assets/motion/heme-replay-manifest.json",
-      "bytes": 5884,
-      "sha256": "990e9ad2022a8bf59feff69965ed6b9dd10b8f32f77932f3503670eba554f9cd",
-      "provenance": "Existing verified VMD replay asset, copied byte-identically from the original cinematic output."
-    },
-    {
-      "path": "assets/ngl.js",
-      "bytes": 1291567,
-      "sha256": "be8d4b16f1d73458efd70d2a3319ef2888fb6fa821732c319a99ff43a8e4f7e0",
-      "provenance": "Pinned NGL 2.4.0 library, copied byte-identically from the approved checkpoint."
-    }
-  ],
-  "scientificReview": "Source-agent review passed after correcting HH/HA definitions and clarifying noncovalent four-capped-helix assembly wording.",
-  "applicationAnimation": {
-    "module": "biosensor-tour.js",
-    "style": "biosensor-tour.css",
-    "description": "How an external peroxide assay becomes an optical readout. The illustrative 3D steps are separate from the source structure and recorded VMD trajectory.",
-    "geometry": "Code-built explanatory geometry plus source-coordinate molecular context. Visual transforms change display placement only.",
-    "sourceCoordinatesModified": false,
-    "simulationEvidence": false,
-    "autoplay": false,
-    "controls": "Four user-selected stages, replay current stage, reduced-motion option.",
-    "renderer": "Existing pinned Three.js files from unchanged assets.zip, vendor/three.module.js and vendor/three.core.js."
-  }
+  ]
 }
