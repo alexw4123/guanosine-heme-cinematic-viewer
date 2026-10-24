@@ -124,8 +124,8 @@
     },
     {
       "path": "story-data.js",
-      "bytes": 19903,
-      "sha256": "2eb65bf4281376fe429e3cfcb84e41cfa47dd54ff9a4cdca03e82ea1ee705393"
+      "bytes": 19917,
+      "sha256": "af04261bd9430bfc66938105a02bc35ea803d2495c85a698f7d19a118f68732a"
     },
     {
       "path": "story-scene.js",
@@ -139,8 +139,8 @@
     },
     {
       "path": "story-ui.js",
-      "bytes": 14498,
-      "sha256": "b33951309b2d38947098b9065612974a8c5920ff1d5a06406d29aee3a0fc9169"
+      "bytes": 14494,
+      "sha256": "12d36bd4e528f91806025ad9872c5e7ab81d321090d0830157408a910b676fb3"
     },
     {
       "path": "story-ui.css",

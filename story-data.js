@@ -187,7 +187,7 @@ window.RESEARCH_STORY = {
           "onstageCaption": "The published methotrexate assay used a DNAzyme. This four-helix bundle is a separate reporter design, without demonstrated medication detection."
         }
       },
-      "onstageCaption": "Four capped peptide chains surround hemin in the model. The helices provide the pocket; the guanosine groups are the assembly idea."
+      "onstageCaption": "Four capped peptide chains surround hemin in the model. The helices form the pocket. The guanosine caps are intended to help the chains assemble."
     },
     {
       "id": "iron",

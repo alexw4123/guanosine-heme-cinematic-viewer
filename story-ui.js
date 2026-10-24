@@ -10,7 +10,7 @@
     reset:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 8v5h5M5.5 12a7 7 0 1 0 2-5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>'
   };
   const order={heme:['bundle','iron','catalysis','signal','calibration'],dhfr:['cell','reaction','inhibition','nucleotides','dna']};
-  const labels={heme:{bundle:'Structure',iron:'Heme site',catalysis:'Reaction',signal:'Signal',calibration:'Measurement'},dhfr:{cell:'Structure',reaction:'Reaction',inhibition:'Comparison',nucleotides:'Nucleotides',dna:'DNA synthesis'}};
+  const labels={heme:{bundle:'Structure',iron:'Heme site',catalysis:'Reaction',signal:'Signal',calibration:'Readout'},dhfr:{cell:'Structure',reaction:'Reaction',inhibition:'Comparison',nucleotides:'Nucleotides',dna:'DNA synthesis'}};
   const seconds=7;
 
   window.mountResearchStory=function mountResearchStory({project,host,onExploreStructure=()=>{},initialScene=null,initialVariant=null,initialProgress=0}={}) {
