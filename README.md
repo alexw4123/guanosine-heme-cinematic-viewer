@@ -1,13 +1,19 @@
-# Heme bundle · Fairfield research viewer
+# Heme bundle | Fairfield
 
-Independent public viewer for the Smith-Carpenter Lab research project. Its own project opens by default; the project switch links to the other independent viewer.
+Independent research page for the Smith-Carpenter Lab at Fairfield University. This site contains only its own project content and selection mappings, with no combined project navigation.
 
-Scientific explanations, application comparisons, source documents and atom-selection mappings are separate from the interface. The molecular engine validates source SHA256, atom counts and explicit bond counts before display. NGL bond inference is disabled; secondary structure comes from each currently loaded model's own coordinates.
+The opening screen uses a short project name. The full research title and detailed methods remain available in disclosures. Source documents keep their original access permissions.
 
-The original guanosine-heme-bundle-viewer website and source molecular files are preserved. Historic characterization, constructed models, the as-run trajectory and corrected references remain distinct. Missing experimental values are not invented. DHFR delivery/injection content is removed; application claims are tied to named comparisons and measurements.
+The mobile layout uses iPhone safe areas, 44-pixel controls and a collapsible section menu. A tap starts a 2.5-second camera rotation; it does not change coordinates or simulate molecular motion. Selection, manual controls and Escape stop it. Reduced motion disables the orbit. Nothing autoplays.
+
+NGL verifies source hashes, atoms and explicit bonds before displaying each model. Additional bond inference is disabled. Secondary structure is calculated from the currently loaded coordinates.
+
+The five-second atomic replay under Modeling & Results uses authentic saved frames, with frame indices and provenance. It is separate from the camera rotation. Historical experimental samples, the opening PEG2 model, the as-run simulation and corrected reference are identified separately.
+
+The original website and molecular archives are preserved. Missing experimental measurements are omitted instead of filled with placeholders.
 
 ## Deployment
 
-The workflow extracts the existing, unchanged assets.zip, research-assets.zip and the additive atomic-replay-assets.zip, then copies the versioned selection-map JSON. Existing molecular archives are not replaced. The native-controlled atomic replay is five seconds and never autoplays.
+GitHub Pages assembles this static site from the existing molecular archives and versioned text files. No backend or public API is added.
 
 Live page: https://alexw4123.github.io/guanosine-heme-cinematic-viewer/

@@ -43,62 +43,62 @@
   ],
   "originalArchivesModified": false,
   "noNewBackend": true,
-  "projectSwitch": "Cross-links the two independent viewer sites",
+  "projectSwitch": false,
   "files": [
     {
       "path": "index.html",
-      "bytes": 5358,
-      "sha256": "45117a920556e78414f6e0442b146114829a03faf2cb63933e241987980f5fa1"
+      "bytes": 5552,
+      "sha256": "d9ddf70a5cbc0796c2240cb3e26998d2c058482a06a0c481d3eeda0648efc179"
     },
     {
       "path": "style.css",
-      "bytes": 19068,
-      "sha256": "b3613ea378c46789f50b96dc05506d2dc706a5f69b67501831e919aff9868251"
+      "bytes": 33101,
+      "sha256": "48e0aaa3f3ce4063b7f635dc157e495d0d383c2acb42fec7019db34574d0eb38"
     },
     {
       "path": "engine-styles.css",
-      "bytes": 472,
-      "sha256": "6da08be91929f1d81e39c90e7795148b2cc12979e25412bd7a8c52d021d374db"
+      "bytes": 535,
+      "sha256": "a4a78621520a9d99c4645b66146fe643d3ac8e713cd563baa5f5cdafeffb5aa5"
     },
     {
       "path": "content.js",
-      "bytes": 53810,
-      "sha256": "96188843f134559ae2465a1c33b699d45cb2c6b42b713c519cf9f22c4c6fc2f4"
+      "bytes": 32936,
+      "sha256": "7473d2450720715d8924b3ed75bc1cf54f6a493377ee73c3d73b449495e5ff07"
     },
     {
       "path": "application-data.js",
-      "bytes": 9694,
-      "sha256": "436025d112db8b5cbe7e1f93f7e7c3e6cf67eca3d1aa6f80feee952a21297094"
+      "bytes": 7154,
+      "sha256": "12502e158796205788b4b9032022897114fa160ffbbc8df06e8ed475e951bc04"
     },
     {
       "path": "application-ui.js",
-      "bytes": 3392,
-      "sha256": "b362dacced1d8d847854501bc3eea70909af740aa1cce79e7686f46cfa83e404"
+      "bytes": 3311,
+      "sha256": "e53f6f4043ddfe7f9070360cb9a71528bab9f45b26bcc7cba959e2cd3a735519"
     },
     {
       "path": "molecule-engine.js",
-      "bytes": 23717,
-      "sha256": "3bc56c68ea82cd381fc278f008860f34a4e850e9bc549ecf2f0de2d2b952a23f"
+      "bytes": 27083,
+      "sha256": "3d6381f282021ad0c05440c04baa5067df127d7a3981f037192d949dd31700b5"
     },
     {
       "path": "app.js",
-      "bytes": 22469,
-      "sha256": "6eb9814c3cb36214cc3d0efaa226d1cf6f34767b674df20cdcca205897e5fe16"
+      "bytes": 24087,
+      "sha256": "7f38d3e97af0e1c682fbe41b82f9b7970b462f5740e6ce01840556fd6afaeeee"
     },
     {
       "path": "figures-data.js",
-      "bytes": 4957,
-      "sha256": "f499b233ca2545c269a5d4eddb1b2bafc16a744fa6b67eddbe2fb0898bd521cc"
+      "bytes": 5642,
+      "sha256": "e38a39359399aa83ab05065f41688166ded3f7ae65eb808ad56ddecb62ee8ff1"
     },
     {
       "path": "site-config.js",
-      "bytes": 197,
-      "sha256": "95661680e5b8e3f536dabb59a774a2135ef83ea6b41f1cd171b21daf8233d432"
+      "bytes": 134,
+      "sha256": "bd5d1b8e72ef27a27200aab84016f10df2561a6f2aa7dc28cf061f21b58589d0"
     },
     {
       "path": "README.md",
-      "bytes": 1295,
-      "sha256": "67419eabd125d7636b539e292b057898ec5c5b0d5336f327d347d4ecf5f941fc"
+      "bytes": 1552,
+      "sha256": "9a92426d5d8059382c55b0890a94bfa7df4ba645f438d3cf71bbf63a06f473aa"
     },
     {
       "path": ".nojekyll",
@@ -107,13 +107,22 @@
     },
     {
       "path": "assets/selection-maps.v1.compact.json",
-      "bytes": 59751,
-      "sha256": "d4054e5fead7e39d09da54bd6dd1ca898d9f4fa19f71bf57b49e97113077865c"
+      "bytes": 23400,
+      "sha256": "a6add87fc5be08de85e0bd1c96330131e5c08966926d4656c97cc22d29ce1188"
     },
     {
       "path": ".github/workflows/pages.yml",
       "bytes": 1181,
       "sha256": "afd5e9262c3ac411461023145bf632bd2cdf0934880a30ca27be14bdac3e80c2"
     }
-  ]
+  ],
+  "revision": "20261024-ios-v2",
+  "independentProjectData": true,
+  "motion": {
+    "kind": "camera",
+    "durationSeconds": 2.5,
+    "autoplay": false,
+    "respectsReducedMotion": true,
+    "sourceCoordinatesChanged": false
+  }
 }

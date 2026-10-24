@@ -8,7 +8,7 @@
   const labels = {
     all:'Whole structure',peptide:'Peptide helices',guanosine:'Guanosine–PEG2 groups',caps:'Guanosine–PEG2 groups',
     heme:'Heme + Fe',iron:'Iron',histidines:'Histidines',base:'Base chemistry',linker:'Linker',
-    protein:'Human DHFR',enzyme:'Human DHFR',nadph:'NADPH',candidate:'Nucleopeptide candidate',pocket:'Modeled pocket context',
+    protein:'Human DHFR',enzyme:'Human DHFR',nadph:'NADPH',candidate:'Nucleopeptide model',pocket:'Modeled pocket context',
     ribose:'Ribose',phenylalanine:'L-Phenylalanine',glutamate:'L-Glutamate',changedBaseGroups:'Changed base chemistry'
   };
   const captions = {
@@ -26,14 +26,14 @@
       all:'The source complex combines human DHFR, modeled reduced NADPH, and a nucleopeptide starting pose. It has not been relaxed or validated as an inhibitor.',
       protein:'DHFR helps regenerate tetrahydrofolate, a cofactor needed for nucleotide production. NADPH supplies the reducing equivalents for the normal enzyme reaction.',
       nadph:'NADPH is the modeled reduced cofactor. In the normal reaction it supplies a hydride while dihydrofolate is reduced to tetrahydrofolate.',
-      candidate:'The candidate combines a nucleoside with Phe–Glu. Its placement here is a prepared starting model, not evidence of inhibition.',
-      pocket:'This geometric neighborhood includes the candidate, NADPH, and protein residues with a heavy atom within 6 Å of the candidate. Short contacts remain unresolved.',
+      candidate:'The model combines a nucleoside with Phe–Glu. Its placement here is a prepared starting structure. Inhibition has not been measured.',
+      pocket:'This geometric neighborhood includes the nucleopeptide, NADPH, and protein residues with a heavy atom within 6 Å of the nucleopeptide. Short contacts remain unresolved.',
       base:'GS and isog exchange amino and oxo groups at base positions 2 and 6. That changes the arrangement of possible hydrogen-bond donors and acceptors.',
       changedBaseGroups:'GS has 2-amino/6-oxo chemistry; isog has 2-oxo/6-amino chemistry. The highlighted atoms are mapped from the explicit source topology.',
       ribose:'The ribose ring links the base to the 5′ carbonyl attachment. Its hydroxyl groups can contribute to molecular recognition.',
       linker:'A 5′ carbonyl links the nucleoside to the Phe amide nitrogen. This model contains a carbonyl amide connection, not a PEG linker.',
-      phenylalanine:'Phenylalanine supplies an aromatic side chain. The same Phe portion is retained in both candidates.',
-      glutamate:'Glutamate provides two carboxylate groups in the prepared model. Its shared peptide chemistry is retained in both candidates.'
+      phenylalanine:'Phenylalanine supplies an aromatic side chain. The same Phe portion is retained in both models.',
+      glutamate:'Glutamate provides two carboxylate groups in the prepared model. Its shared peptide chemistry is retained in both models.'
     }
   };
 
@@ -46,7 +46,7 @@
   }
 
   window.createResearchMolecule = function createResearchMolecule(options) {
-    const {project,viewport,onSelection=()=>{},onReady=()=>{},onError=()=>{}} = options || {};
+    const {project,viewport,onSelection=()=>{},onReady=()=>{},onError=()=>{},onMotion=()=>{}} = options || {};
     if (!['heme','dhfr'].includes(project) || !(viewport instanceof HTMLElement)) throw new Error('A project and molecular viewport are required.');
     const state = {project,model:project==='heme'?'original-peg2':'gs',mode:'atomic',ready:false,isolated:false,
       selected:'all',kind:'component',chain:null,position:null,picked:null,sourceHash:null,hashVerified:false};
@@ -54,6 +54,8 @@
     let residueByAtom=new Map(),candidatePartByAtom=new Map(),pendingSelection=null,initialOrientation,generation=0,destroyed=false;
     let lastPick={index:-1,time:0},touchStart=null,resizeObserver,initialTiltApplied=false;
     let secondaryAssignments={}, coordinateFingerprint=null;
+    let motionFrame=null,motionToken=0,motionResolve=null,motionState='idle',motionProgress=0;
+    const reducedMotion=window.matchMedia?.('(prefers-reduced-motion: reduce)');
     viewport.classList.add('research-molecule');
     viewport.tabIndex = viewport.tabIndex < 0 ? 0 : viewport.tabIndex;
     viewport.setAttribute('aria-label',(project==='heme'?'Interactive four-helix heme bundle':'Interactive human DHFR complex')+'. Arrow keys rotate, plus and minus zoom, Home resets.');
@@ -71,7 +73,8 @@
         bondCount:component?.structure.bondCount||0,selectedComponent:state.selected,selectedKind:state.kind,
         selectedIndices:[...selectedIndices],selectedAtomCount:selectedIndices.length,chain:state.chain,position:state.position,
         representation:state.mode,isolated:state.isolated,orientation:orientation(),sourceHash:state.sourceHash,
-        hashVerified:state.hashVerified,coordinateFingerprint,secondaryStructureAssignments:{...secondaryAssignments},lastPickedAtom:state.picked};
+        hashVerified:state.hashVerified,coordinateFingerprint,secondaryStructureAssignments:{...secondaryAssignments},lastPickedAtom:state.picked,
+        motionState,motionProgress,motionKind:'camera'};
     }
     function reflect() {
       const d=diagnostics();
@@ -92,6 +95,55 @@
       viewport.dataset.coordinateFingerprint=d.coordinateFingerprint||'';
       viewport.dataset.secondaryStructure=JSON.stringify(d.secondaryStructureAssignments);
       viewport.dataset.lastPickedAtom=state.picked?String(state.picked.index):'';
+      viewport.dataset.motionState=d.motionState;
+      viewport.dataset.motionProgress=String(d.motionProgress);
+      viewport.dataset.motionKind=d.motionKind;
+    }
+    function reportMotion(status,progress,reason) {
+      motionState=status;motionProgress=progress;
+      reflect();
+      onMotion({state:status,progress,kind:'camera',...(reason?{reason}:{})});
+    }
+    function stopAnimation(reason='stopped') {
+      const playing=motionState==='playing';
+      ++motionToken;
+      if(motionFrame!==null)cancelAnimationFrame(motionFrame);
+      motionFrame=null;
+      if(playing)reportMotion('stopped',motionProgress,reason);
+      if(motionResolve){const resolve=motionResolve;motionResolve=null;resolve({state:'stopped',reason});}
+      return playing;
+    }
+    function animateModel({durationMs=2500}={}) {
+      if(destroyed||!state.ready)return {started:false,reason:destroyed?'destroyed':'not-ready',finished:Promise.resolve({state:'unavailable'})};
+      stopAnimation('restarted');
+      if(reducedMotion?.matches) {
+        reportMotion('reduced-motion',0,'reduced-motion');
+        return {started:false,reason:'reduced-motion',finished:Promise.resolve({state:'reduced-motion'})};
+      }
+      const duration=Math.min(3000,Math.max(400,Number(durationMs)||2500));
+      const token=++motionToken;
+      let startedAt=null,previous=0;
+      const finished=new Promise(resolve=>{motionResolve=resolve;});
+      reportMotion('playing',0);
+      function step(now) {
+        if(destroyed||token!==motionToken||!state.ready)return;
+        if(startedAt===null)startedAt=now;
+        const progress=Math.min(1,Math.max(0,(now-startedAt)/duration));
+        const eased=progress*progress*(3-2*progress);
+        // Orbit the camera around authentic coordinates. No atom or bond is changed.
+        stage.trackballControls.rotate(65*(eased-previous),6*(eased-previous));
+        previous=eased;
+        if(progress<1) {
+          reportMotion('playing',progress);
+          motionFrame=requestAnimationFrame(step);
+        } else {
+          motionFrame=null;
+          reportMotion('completed',1);
+          if(motionResolve){const resolve=motionResolve;motionResolve=null;resolve({state:'completed'});}
+        }
+      }
+      motionFrame=requestAnimationFrame(step);
+      return {started:true,finished};
     }
     function emitSelection() {
       reflect();
@@ -114,14 +166,14 @@
       }
       if (i>=3087) return state.model==='gs'?0xfb86ae:0xc3a3ff;
       if (i>=3013) return 0xf1c272;
-      const colors={C:0x91a4b9,N:0x7eacbe,O:0xc38c99,S:0xe0be77,H:0x697b8f};
-      return colors[atom.element]||0x91a4b9;
+      const colors={C:0xa8bbce,N:0x97bed0,O:0xd3a0ad,S:0xe5c987,H:0x8c9fb3};
+      return colors[atom.element]||0xa8bbce;
     }
     function render() {
       if (!state.ready || !component) return;
       component.removeAllRepresentations();
       const allowed=state.isolated?selectedIndices:allIndices;
-      const atomic={colorScheme,multipleBond:'symmetric',radiusScale:project==='heme'?0.46:0.34,
+      const atomic={colorScheme,multipleBond:'symmetric',radiusScale:project==='heme'?0.46:0.44,
         aspectRatio:2,bondSpacing:0.75,quality:'high',opacity:1,disablePicking:false};
       if (state.mode==='atomic') {
         // The single complete representation retains the source's Fe–His cross-component bonds.
@@ -157,6 +209,7 @@
       return entry ? expand(entry.atomIndexRanges) : null;
     }
     function commitSelection({key,indices,kind='component',chain=null,position=null,picked=null}) {
+      stopAnimation('selection');
       state.selected=key;state.kind=kind;state.chain=chain;state.position=position;state.picked=picked;
       state.isolated=false;
       selectedIndices=[...indices];selectedSet=new Set(selectedIndices);
@@ -242,6 +295,7 @@
     async function loadModel(key) {
       if(destroyed)return;
       if(project==='dhfr' && !['gs','isog'].includes(key))return;
+      stopAnimation('model-change');
       const token=++generation;
       const preserve=stage&&state.ready?stage.viewerControls.getOrientation().clone():null;
       const previousSelection=state.kind==='residue'?{chain:state.chain,position:state.position}:{key:state.selected};
@@ -301,10 +355,10 @@
     function rotate(direction) {
       if(!state.ready)return;
       const movement={left:[-12,0],right:[12,0],up:[0,-12],down:[0,12]}[direction];
-      if(movement){stage.trackballControls.rotate(...movement);reflect();}
+      if(movement){stopAnimation('manual-control');stage.trackballControls.rotate(...movement);reflect();}
     }
-    function zoom(delta) {if(state.ready){stage.viewerControls.zoom(Number(delta));reflect();}}
-    function reset() {if(state.ready&&initialOrientation){stage.viewerControls.orient(initialOrientation);reflect();}}
+    function zoom(delta) {if(state.ready){stopAnimation('manual-control');stage.viewerControls.zoom(Number(delta));reflect();}}
+    function reset() {stopAnimation('reset');if(state.ready&&initialOrientation){stage.viewerControls.orient(initialOrientation);reflect();}}
     function onKey(event) {
       if(!state.ready||event.altKey||event.ctrlKey||event.metaKey)return;
       const direction={ArrowLeft:'left',ArrowRight:'right',ArrowUp:'up',ArrowDown:'down'}[event.key];
@@ -312,8 +366,10 @@
       else if(event.key==='+'||event.key==='='){event.preventDefault();zoom(.12);}
       else if(event.key==='-'||event.key==='_'){event.preventDefault();zoom(-.12);}
       else if(event.key==='Home'){event.preventDefault();reset();}
+      else if(event.key==='Escape'){event.preventDefault();stopAnimation('manual-control');}
     }
     function pointerDown(event) {
+      stopAnimation('manual-control');
       if(event.pointerType==='touch')touchStart={id:event.pointerId,x:event.clientX,y:event.clientY,time:performance.now(),multiple:!event.isPrimary};
     }
     function pointerUp(event) {
@@ -324,22 +380,27 @@
       onPicked(stage.pickingControls.pick(event.clientX-rect.left,rect.bottom-event.clientY));
     }
     function pointerCancel(){touchStart=null;}
+    const wheel=()=>stopAnimation('manual-control');
+    const motionPreference=event=>{if(event.matches)stopAnimation('reduced-motion');};
     const resize=()=>{if(stage&&!destroyed){stage.handleResize();reflect();}};
     viewport.addEventListener('keydown',onKey);
     viewport.addEventListener('pointerdown',pointerDown);
     viewport.addEventListener('pointerup',pointerUp);
     viewport.addEventListener('pointercancel',pointerCancel);
+    viewport.addEventListener('wheel',wheel,{passive:true});
+    reducedMotion?.addEventListener?.('change',motionPreference);
     if('ResizeObserver'in window){resizeObserver=new ResizeObserver(resize);resizeObserver.observe(viewport);}
     else window.addEventListener('resize',resize);
     const api={
       setComponent,setResidue,
       setModel:key=>loadModel(key),
-      setMode(mode){if(!['atomic','secondary'].includes(mode))return false;state.mode=mode;if(state.ready){render();emitSelection();}return true;},
-      isolate(value){state.isolated=Boolean(value)&&state.selected!=='all';if(state.ready){render();emitSelection();}},
-      zoom,rotate,reset,getDiagnostics:diagnostics,
-      destroy(){if(destroyed)return;destroyed=true;++generation;resizeObserver?.disconnect();window.removeEventListener('resize',resize);
+      setMode(mode){if(!['atomic','secondary'].includes(mode))return false;stopAnimation('representation-change');state.mode=mode;if(state.ready){render();emitSelection();}return true;},
+      isolate(value){stopAnimation('selection');state.isolated=Boolean(value)&&state.selected!=='all';if(state.ready){render();emitSelection();}},
+      zoom,rotate,reset,animateModel,stopAnimation,getDiagnostics:diagnostics,
+      destroy(){if(destroyed)return;stopAnimation('destroyed');destroyed=true;++generation;resizeObserver?.disconnect();window.removeEventListener('resize',resize);
         viewport.removeEventListener('keydown',onKey);viewport.removeEventListener('pointerdown',pointerDown);
         viewport.removeEventListener('pointerup',pointerUp);viewport.removeEventListener('pointercancel',pointerCancel);
+        viewport.removeEventListener('wheel',wheel);reducedMotion?.removeEventListener?.('change',motionPreference);
         if(stage)stage.dispose();host.remove();viewport.dataset.modelReady='false';}
     };
     api.ready=loadModel(state.model);
