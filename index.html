@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#030a12">
+  <meta name="description" content="An interactive 3D molecular research film, from actual atomic coordinates to a clearly labeled proposed application.">
+  <title>From Heme to Signal · Molecular Cinema</title>
+  <link rel="stylesheet" href="style.css">
+  <script type="importmap">{"imports":{"three":"./vendor/three.module.js"}}</script>
+</head>
+<body data-project="heme">
+  <a class="skip" href="#film-controls">Skip to playback controls</a>
+  <main id="cinema" aria-label="Interactive molecular research film">
+    <canvas id="molecule-canvas" aria-label="Three-dimensional molecular model. Drag to rotate, scroll to zoom, or use arrow keys." tabindex="0"></canvas>
+    <div class="vignette" aria-hidden="true"></div>
+    <div class="film-grain" aria-hidden="true"></div>
+    <header class="masthead">
+      <a class="identity" href="#" aria-label="Restart molecular film"><span class="orbital" aria-hidden="true"><i></i><i></i><i></i></span><span id="brand">MOLECULAR<br>CINEMA</span></a>
+      <div class="top-center"><span class="live-dot"></span> <span id="project-name">From Heme to Signal</span></div>
+      <div class="top-actions"><button id="exit-explore" hidden>Back to film ↗</button><button id="evidence-open" class="quiet">Evidence <span>↗</span></button><a id="repository-link" class="github-link" target="_blank" rel="noopener">GitHub <span>↗</span></a></div>
+    </header>
+    <div class="scene-topline"><span id="scene-id">SCENE 01 / 06</span><span id="evidence-tag" class="evidence-tag">SOURCE STRUCTURE</span></div>
+    <section class="narrative" aria-label="Scene caption">
+      <p class="eyebrow" id="film-eyebrow">FROM ATOMS TO APPLICATION</p>
+      <h1 id="scene-title">From atoms. To signal.</h1>
+      <p id="scene-caption" class="caption"></p>
+      <div class="hero-actions"><button id="hero-play" class="primary" disabled><span class="play-icon">▶</span> Play the 3D film <small>60 SEC</small></button><button id="inspect" class="inspect">Explore the atoms <span>↗</span></button></div>
+      <p class="context-note" id="context-note">Actual molecular coordinates. A cinematic research story.</p>
+    </section>
+    <aside class="model-toolbar" aria-label="Molecular controls">
+      <p class="toolbar-label">MOLECULAR VIEW</p>
+      <div class="segmented"><button id="mode-atomic" aria-pressed="true">Atoms</button><button id="mode-secondary" aria-pressed="false">Backbone</button></div>
+      <label id="candidate-control" hidden><span>Candidate</span><select id="candidate-select"><option value="gs">GS–Phe–Glu</option><option value="isog">isog–Phe–Glu</option></select></label>
+      <label class="focus-label"><span>Isolate</span><select id="focus-select"><option value="all">Complete model</option><option value="protein">Peptide / protein</option><option value="cofactor">Heme / cofactor</option><option value="candidate">Caps / candidate</option></select></label>
+      <button id="reset-camera" class="tool-button">Reset camera <span>↺</span></button>
+      <button id="structure-open" class="tool-button">Atomic + secondary viewer <span>↗</span></button>
+      <div class="toolbar-legend"><span><i class="cyan"></i><b id="legend-protein">Peptide</b></span><span><i class="amber"></i><b id="legend-cofactor">Heme</b></span><span><i class="violet"></i><b id="legend-candidate">Guanosine</b></span></div>
+    </aside>
+    <div class="spatial-label" id="spatial-label"><span class="crosshair" aria-hidden="true">+</span><span id="spatial-caption">ORIGINAL ATOMIC MODEL</span></div>
+    <div class="scene-status"><span id="model-status">Loading source coordinates…</span><span id="motion-status">DRAG TO ORBIT · SCROLL TO ZOOM</span></div>
+    <section class="film-deck" id="film-controls" aria-label="Film playback controls">
+      <div class="chapters" id="chapters" aria-label="Six scenes"></div>
+      <div class="transport">
+        <button id="play" class="round-button" aria-label="Play the 60-second film" disabled>▶</button>
+        <button id="restart" class="restart" aria-label="Restart film">↺</button>
+        <span id="time" class="time">00:00</span>
+        <input id="timeline" type="range" min="0" max="60" step="0.01" value="0" aria-label="Film time in seconds" aria-valuetext="0 seconds of 60">
+        <span class="duration">01:00</span>
+        <div class="transport-right"><button id="voice" aria-pressed="false" title="Optional browser narration">Voice off</button><button id="record" title="Record five seconds of the current scene with captions" disabled>Save 5s film <span>↓</span></button><button id="fullscreen" aria-label="Enter full screen">⛶</button></div>
+      </div>
+      <div class="deck-footer"><span id="footnote">SOURCE STRUCTURES · DESIGN ANIMATION · PROPOSED APPLICATION</span><button id="motion-toggle" aria-pressed="false">Reduced motion</button></div>
+    </section>
+    <div class="loading" id="loading" role="status"><span class="loader-orbit"></span><span>Building the molecular scene</span><small>Source atoms. Real depth. Your research.</small></div>
+    <div id="recording" class="recording" hidden><i></i><span id="recording-text">Recording five seconds…</span></div>
+    <p id="announcer" class="sr-only" aria-live="polite"></p>
+  </main>
+  <dialog id="evidence-dialog" aria-labelledby="evidence-title">
+    <header class="dialog-header"><div><p class="eyebrow">THE SCIENCE BEHIND THE FILM</p><h2 id="evidence-title">What you are seeing.</h2></div><button data-close aria-label="Close evidence">×</button></header>
+    <div class="dialog-content"><p id="scene-detail"></p><div class="evidence-key"><span>Source structure</span><span>Design animation</span><span>Real MD, when supplied</span><span>Proposed application</span></div><h3>Methods & interpretation</h3><div id="methods"></div><h3>Sources & context</h3><div id="sources"></div><a id="vmd-link" href="assets/motion/heme-md-5s.mp4" target="_blank">Open the authentic five-second VMD render ↗</a><p class="source-note">Independent viewer. Original coordinates and the original heme website are preserved.</p></div>
+  </dialog>
+  <dialog id="structure-dialog" class="structure-dialog" aria-label="Atomic and secondary-structure explorer"><header class="dialog-header"><div><p class="eyebrow">INSPECT THE STRUCTURE</p><h2 id="structure-title">Atomic + secondary views</h2></div><button data-close aria-label="Close molecular explorer">×</button></header><iframe id="structure-frame" title="Atomic and secondary-structure molecular explorer"></iframe></dialog>
+  <script type="module" src="app.js"></script>
+</body>
+</html>

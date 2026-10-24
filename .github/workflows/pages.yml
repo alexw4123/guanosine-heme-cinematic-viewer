@@ -1,0 +1,32 @@
+name: Publish molecular viewer
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency:
+  group: pages
+  cancel-in-progress: true
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v6
+      - name: Prepare static viewer
+        run: |
+          mkdir -p _site
+          cp index.html style.css app.js story-data.js molecular-scene.js application-scene.js .nojekyll README.md ASSET-MANIFEST.json _site/
+          unzip -q assets.zip -d _site
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: _site
+      - name: Deploy viewer
+        id: deployment
+        uses: actions/deploy-pages@v4

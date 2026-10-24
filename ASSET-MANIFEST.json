@@ -1,0 +1,24 @@
+{
+  "project": "heme",
+  "sha256": {
+    "assets/heme-original.pdb": "e3eccb1cbe10a18a0bd633aaf076a7cd1fd2beeedccba0fd73a2a7695b238b4c",
+    "assets/heme-solute.pdb": "5507cdf520b7953ee596e25b79bd61cb2916da7a9f0b42020dcf959800ee230c",
+    "assets/heme-solute.psf": "a2401a86355057dd9c5fe772094a4e37db0e9d0698cdf4f9bf67fe18fb133a48",
+    "assets/motion/heme-md-5s.mp4": "f0e8d20a7486fadda98e4b2b6aa3c0d5c95735a0bf58d8ec7f74503772489782",
+    "assets/motion/heme-md-5s.vtt": "3a1a1920a4b16ebf8464029cd90cf277eb20a88092f2ebae7498325dd8b43b58",
+    "assets/motion/heme-md-poster.jpg": "3fb34cfe76c5de0229b0ccb0c6ee917519a0529e46bd3a3b77d9cd51755afc11",
+    "assets/motion/heme-replay-manifest.json": "990e9ad2022a8bf59feff69965ed6b9dd10b8f32f77932f3503670eba554f9cd",
+    "vendor/OrbitControls.js": "b97879c748170baadeb3fb84cea1ffdf4674e283dc06042f34e2acb95a76042c",
+    "vendor/THREE-LICENSE.txt": "bfe119ea4fd413f5f7ca3fcd63adb0c4a073ed39daa2fe7d3e6b769e21272601",
+    "vendor/three.core.js": "eb077d2417f61d3e6d9264c317cabc4ea35769ed6b0ab533067292a550784c20",
+    "vendor/three.module.js": "c8211c69345d2e9949dc7a8ac969380497aa0600a5a8ac6a459c8cd02dd9cb8a",
+    "data/heme-solute-positions.f32.bin": "a542a2cf082d0af6035a79c8e4ffe272902f99df36ea5a60c4fa3ef3aa7a6683",
+    "data/heme-solute-trajectory.json": "046d9cb4926fdc2fa4149a0f2621d653d6cdb70c10ddd01a26f4cc867d744889",
+    "data/heme-solvent-positions.f32.bin": "f5c85bc39fa9cb5d81ba905e35f22837487893b9c310e3bba946d537a3879f5f",
+    "data/heme-solvent-trajectory.json": "4f254f45004c0cbc998e052075b37af35b1566d384e29211bb9a284526d23fbc",
+    "original-viewer/guanosine_capped_four_helix_bundle_heme.pdb": "e3eccb1cbe10a18a0bd633aaf076a7cd1fd2beeedccba0fd73a2a7695b238b4c",
+    "original-viewer/index.html": "2c80cb6ca8fdf13fc777e8c98c72c240bb4552a795d252f7aa51344833c3b21c",
+    "original-viewer/README.txt": "13d02d5da13c0c40270ccf5312f3f6685a46a19630b8f153bb46db48d3133bbc"
+  },
+  "original_files_unchanged": true
+}
