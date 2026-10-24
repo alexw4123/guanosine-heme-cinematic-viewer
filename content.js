@@ -1,54 +1,42 @@
-/* Verified content for this independent project. Source records are unchanged. */
+/* Source-linked project content. Molecular files and notebook permissions are unchanged. */
 window.RESEARCH_CONTENT = {
-  "version": "2026-10-24-independent-3",
+  "version": "2026-10-24-source-audit-v5",
   "navigation": [
     "Overview",
-    "Molecules",
-    "Laboratory Work",
-    "Modeling & Results",
-    "Chemistry",
-    "Applications",
+    "Atomic structure",
+    "How it works",
+    "Research",
     "Sources"
   ],
   "sources": {
     "heme-overview": {
       "id": "heme-overview",
       "title": "GSPEG2 project overview and analysis",
-      "url": "https://docs.google.com/document/d/1rmexqF9TSg2FgBzd4zzPp6pdkmKvPH0Gi1d7rOUiM1I/edit",
       "access": "Existing document permissions retained"
     },
     "summer-report": {
       "id": "summer-report",
       "title": "Summer molecular construction report",
-      "url": "https://docs.google.com/document/d/1NmHqWayKZAZlZEAxd_fjIPbdLHrgdXQmOLS8Min0uEo/edit",
       "access": "Existing document permissions retained"
     },
     "historical-poster": {
       "id": "historical-poster",
       "title": "Historical Fairfield hemin-binding poster",
-      "url": "https://drive.google.com/file/d/1JoVrj6yu0zRcj3p4OrN1-_Mcf0TU3Ue8/view",
-      "local_file": "work/source-evidence/heme-poster.jpg",
       "access": "Existing document permissions retained"
     },
     "notebook-background": {
       "id": "notebook-background",
       "title": "OneNote · Project Background",
-      "page_id": "8562a2a2-9d93-f44d-bc4b-c3ba1a0a9b13",
-      "url": "https://fairfield0-my.sharepoint.com/personal/jsmith-carpenter_fairfield_edu/_layouts/15/Doc.aspx?sourcedoc={c078a375-a377-47ed-8eb4-114bc5d5dfc6}&action=edit&wd=target%28Helix%20Project%2FBenchtop%20work.one%7C3e6ba2d1-66bc-9f47-962d-2b04a2b49820%2FProject%20Background%7C8562a2a2-9d93-f44d-bc4b-c3ba1a0a9b13%2F%29&wdorigin=NavigationUrl",
       "access": "Existing notebook permissions retained"
     },
     "notebook-preliminary": {
       "id": "notebook-preliminary",
       "title": "OneNote · Preliminary data",
-      "page_id": "8cb03921-f862-934c-bd42-9722ae4e616c",
-      "url": "https://fairfield0-my.sharepoint.com/personal/jsmith-carpenter_fairfield_edu/_layouts/15/Doc.aspx?sourcedoc={c078a375-a377-47ed-8eb4-114bc5d5dfc6}&action=edit&wd=target%28Helix%20Project%2FBenchtop%20work.one%7C3e6ba2d1-66bc-9f47-962d-2b04a2b49820%2FPreliminary%20data%7C8cb03921-f862-934c-bd42-9722ae4e616c%2F%29&wdorigin=NavigationUrl",
       "access": "Existing notebook permissions retained"
     },
     "notebook-goals": {
       "id": "notebook-goals",
       "title": "OneNote · 2026 to 2027 goals",
-      "page_id": "0f37c925-66c8-c94c-8dbc-996b27eeecb6",
-      "url": "https://fairfield0-my.sharepoint.com/personal/jsmith-carpenter_fairfield_edu/_layouts/15/Doc.aspx?sourcedoc={c078a375-a377-47ed-8eb4-114bc5d5dfc6}&action=edit&wd=target%28Helix%20Project%2FBenchtop%20work.one%7C3e6ba2d1-66bc-9f47-962d-2b04a2b49820%2F2026%E2%80%932027%20goals%7C0f37c925-66c8-c94c-8dbc-996b27eeecb6%2F%29&wdorigin=NavigationUrl",
       "access": "Existing notebook permissions retained"
     },
     "c45": {
@@ -93,11 +81,11 @@ window.RESEARCH_CONTENT = {
       "lab": "Smith-Carpenter Lab",
       "institution": "Fairfield University",
       "department": "Department of Chemistry and Biochemistry",
-      "question": "Can guanosine-capped peptide helices organize hemin and support peroxide-dependent oxidation?",
-      "overview": "A guanosine cap is the assembly idea; peptide helices provide the intended scaffold; histidines face hemin’s iron. We can inspect that arrangement in the molecular model. The experiment asks whether the assembly changes the reaction compared with free hemin and controls.",
-      "next": "Compare hemin-containing and control assemblies using ABTS oxidation. Then test whether the signal changes reproducibly with peroxide concentration.",
+      "question": "Can this bundle bind hemin and help catalyze oxidation?",
+      "overview": "This project asks whether short, guanosine-capped peptides can organize a hemin-binding bundle. The peptide helices form the scaffold, PEG2 joins each cap to its peptide, and histidines face the heme iron in the model.",
+      "next": "Start with assembly, circular-dichroism and hemin-binding comparisons. Then compare ABTS oxidation in assemblies with and without hemin, alongside free-hemin and reagent controls.",
       "nextDetail": "Use the purchased gs-helix(A8H) material or separately documented future PEG3 constructs, with construct-specific preparation records. Assembly, hemin binding and oxidation must be measured separately.",
-      "relevance": "Peroxide can be measured through a colored reporter reaction. First we need to learn whether the peptide assembly changes hemin’s activity beyond free hemin, and whether that response is reproducible.",
+      "relevance": "A reproducible peroxide-dependent optical response could become a reporter in an assay. The first comparison is whether the assembly changes the response beyond free hemin.",
       "model": {
         "label": "Original PEG2 atomic model",
         "caption": "Original PEG2 molecular model · four constructed chains with hemin. Select a part to read its role while the full structure stays visible.",
@@ -110,7 +98,7 @@ window.RESEARCH_CONTENT = {
         {
           "id": "peptides",
           "label": "Peptide helices",
-          "text": "The 15-residue peptides form the intended helical scaffold. This file contains two sequence types; inspect each chain rather than treating every chain as the same synthesized peptide.",
+          "text": "Each modeled peptide has 15 amino acids. The helices provide the scaffold around hemin. Chains A/C and B/D have different sequences, which can be inspected below.",
           "sourceIds": [
             "heme-overview"
           ],
@@ -118,7 +106,6 @@ window.RESEARCH_CONTENT = {
             {
               "id": "heme-overview",
               "title": "GSPEG2 project overview and analysis",
-              "url": "https://docs.google.com/document/d/1rmexqF9TSg2FgBzd4zzPp6pdkmKvPH0Gi1d7rOUiM1I/edit",
               "access": "Existing document permissions retained"
             }
           ]
@@ -126,7 +113,7 @@ window.RESEARCH_CONTENT = {
         {
           "id": "guanosine",
           "label": "Guanosine + PEG2",
-          "text": "Guanosine offers a hydrogen-bonding face; the PEG2 linker joins it to the peptide. A four-cap arrangement is a design hypothesis. The reported saved-frame checks did not show sustained tested guanine contacts.",
+          "text": "The guanosine cap is the assembly idea; PEG2 connects it to the peptide. The existing trajectory did not establish a persistent guanine-quartet network.",
           "sourceIds": [
             "heme-overview",
             "notebook-preliminary"
@@ -135,14 +122,11 @@ window.RESEARCH_CONTENT = {
             {
               "id": "heme-overview",
               "title": "GSPEG2 project overview and analysis",
-              "url": "https://docs.google.com/document/d/1rmexqF9TSg2FgBzd4zzPp6pdkmKvPH0Gi1d7rOUiM1I/edit",
               "access": "Existing document permissions retained"
             },
             {
               "id": "notebook-preliminary",
               "title": "OneNote · Preliminary data",
-              "page_id": "8cb03921-f862-934c-bd42-9722ae4e616c",
-              "url": "https://fairfield0-my.sharepoint.com/personal/jsmith-carpenter_fairfield_edu/_layouts/15/Doc.aspx?sourcedoc={c078a375-a377-47ed-8eb4-114bc5d5dfc6}&action=edit&wd=target%28Helix%20Project%2FBenchtop%20work.one%7C3e6ba2d1-66bc-9f47-962d-2b04a2b49820%2FPreliminary%20data%7C8cb03921-f862-934c-bd42-9722ae4e616c%2F%29&wdorigin=NavigationUrl",
               "access": "Existing notebook permissions retained"
             }
           ]
@@ -150,7 +134,7 @@ window.RESEARCH_CONTENT = {
         {
           "id": "histidines",
           "label": "Histidines",
-          "text": "Histidine at peptide position 8 faces iron in chains A and C. The Fe–His connections are imposed topology bonds, so their persistence is not a binding measurement.",
+          "text": "Histidine at peptide position 8 points toward the iron on chains A and C. The displayed Fe-His connections were specified when the model was built.",
           "sourceIds": [
             "heme-overview"
           ],
@@ -158,7 +142,6 @@ window.RESEARCH_CONTENT = {
             {
               "id": "heme-overview",
               "title": "GSPEG2 project overview and analysis",
-              "url": "https://docs.google.com/document/d/1rmexqF9TSg2FgBzd4zzPp6pdkmKvPH0Gi1d7rOUiM1I/edit",
               "access": "Existing document permissions retained"
             }
           ]
@@ -166,7 +149,7 @@ window.RESEARCH_CONTENT = {
         {
           "id": "heme",
           "label": "Heme + Fe",
-          "text": "Hemin is the iron-containing cofactor placed in the pocket. Holding hemin and leaving a site available for peroxide are different design requirements. Binding alone does not establish peroxidase activity.",
+          "text": "Hemin is the iron-containing cofactor in the pocket. The design needs to hold it securely while keeping a useful reaction site accessible to peroxide.",
           "sourceIds": [
             "heme-overview",
             "c45"
@@ -175,7 +158,6 @@ window.RESEARCH_CONTENT = {
             {
               "id": "heme-overview",
               "title": "GSPEG2 project overview and analysis",
-              "url": "https://docs.google.com/document/d/1rmexqF9TSg2FgBzd4zzPp6pdkmKvPH0Gi1d7rOUiM1I/edit",
               "access": "Existing document permissions retained"
             },
             {
@@ -305,7 +287,7 @@ window.RESEARCH_CONTENT = {
         },
         {
           "title": "Guanosine nucleopeptides · assembly and oxidation",
-          "text": "The lab’s gs-GKFF work connects guanosine-mediated assembly with peroxide-dependent ABTS oxidation. Its nanofiber architecture differs from the intended four-helix bundle. Use the corrected chemical drawing.",
+          "text": "The lab’s guanosine-nucleopeptide nanofibers promoted peroxide-dependent ABTS oxidation with and without added hemin. That result motivates a peptide-only control here. The nanofibers and this four-helix model are different structures.",
           "architecture": "Guanosine-nucleopeptide nanofibers",
           "reaction": "ABTS oxidation in peroxide-containing conditions, with comparisons involving hemin",
           "sourceIds": [
@@ -342,8 +324,6 @@ window.RESEARCH_CONTENT = {
             {
               "id": "historical-poster",
               "title": "Historical Fairfield hemin-binding poster",
-              "url": "https://drive.google.com/file/d/1JoVrj6yu0zRcj3p4OrN1-_Mcf0TU3Ue8/view",
-              "local_file": "work/source-evidence/heme-poster.jpg",
               "access": "Existing document permissions retained"
             }
           ]
@@ -360,7 +340,6 @@ window.RESEARCH_CONTENT = {
             {
               "id": "summer-report",
               "title": "Summer molecular construction report",
-              "url": "https://docs.google.com/document/d/1NmHqWayKZAZlZEAxd_fjIPbdLHrgdXQmOLS8Min0uEo/edit",
               "access": "Existing document permissions retained"
             }
           ]
@@ -378,13 +357,11 @@ window.RESEARCH_CONTENT = {
             {
               "id": "summer-report",
               "title": "Summer molecular construction report",
-              "url": "https://docs.google.com/document/d/1NmHqWayKZAZlZEAxd_fjIPbdLHrgdXQmOLS8Min0uEo/edit",
               "access": "Existing document permissions retained"
             },
             {
               "id": "heme-overview",
               "title": "GSPEG2 project overview and analysis",
-              "url": "https://docs.google.com/document/d/1rmexqF9TSg2FgBzd4zzPp6pdkmKvPH0Gi1d7rOUiM1I/edit",
               "access": "Existing document permissions retained"
             }
           ]
@@ -393,7 +370,7 @@ window.RESEARCH_CONTENT = {
           "id": "simulation",
           "number": 4,
           "title": "Prepare and run the existing model",
-          "text": "Matched topology and coordinate files were prepared in VMD and the system was simulated in NAMD. The atomic replay above samples authentic saved frames from that existing run.",
+          "text": "Dr. Macwan ran the existing NAMD simulation. The matched PSF, PDB and DCD contain 23,558 atoms; the five-second atomic replay samples saved coordinates from that run.",
           "sourceIds": [
             "heme-overview"
           ],
@@ -401,7 +378,6 @@ window.RESEARCH_CONTENT = {
             {
               "id": "heme-overview",
               "title": "GSPEG2 project overview and analysis",
-              "url": "https://docs.google.com/document/d/1rmexqF9TSg2FgBzd4zzPp6pdkmKvPH0Gi1d7rOUiM1I/edit",
               "access": "Existing document permissions retained"
             }
           ]
@@ -410,7 +386,7 @@ window.RESEARCH_CONTENT = {
           "id": "analysis",
           "number": 5,
           "title": "Read the trajectory",
-          "text": "Reported analysis found a compact core, partial helix retention and no sustained tested guanine contacts. Fe–His geometry checks imposed bonds. Physical nanoseconds remain unverified.",
+          "text": "The reported analysis found a compact peptide core with partial, uneven helix retention. It did not establish a persistent guanine-quartet network or central potassium site. The bonded Fe-His geometry remained coherent; that does not measure spontaneous hemin binding.",
           "sourceIds": [
             "heme-overview"
           ],
@@ -418,7 +394,6 @@ window.RESEARCH_CONTENT = {
             {
               "id": "heme-overview",
               "title": "GSPEG2 project overview and analysis",
-              "url": "https://docs.google.com/document/d/1rmexqF9TSg2FgBzd4zzPp6pdkmKvPH0Gi1d7rOUiM1I/edit",
               "access": "Existing document permissions retained"
             }
           ]
@@ -435,7 +410,6 @@ window.RESEARCH_CONTENT = {
             {
               "id": "heme-overview",
               "title": "GSPEG2 project overview and analysis",
-              "url": "https://docs.google.com/document/d/1rmexqF9TSg2FgBzd4zzPp6pdkmKvPH0Gi1d7rOUiM1I/edit",
               "access": "Existing document permissions retained"
             }
           ]
@@ -453,22 +427,18 @@ window.RESEARCH_CONTENT = {
             {
               "id": "notebook-goals",
               "title": "OneNote · 2026 to 2027 goals",
-              "page_id": "0f37c925-66c8-c94c-8dbc-996b27eeecb6",
-              "url": "https://fairfield0-my.sharepoint.com/personal/jsmith-carpenter_fairfield_edu/_layouts/15/Doc.aspx?sourcedoc={c078a375-a377-47ed-8eb4-114bc5d5dfc6}&action=edit&wd=target%28Helix%20Project%2FBenchtop%20work.one%7C3e6ba2d1-66bc-9f47-962d-2b04a2b49820%2F2026%E2%80%932027%20goals%7C0f37c925-66c8-c94c-8dbc-996b27eeecb6%2F%29&wdorigin=NavigationUrl",
               "access": "Existing notebook permissions retained"
             },
             {
               "id": "notebook-preliminary",
               "title": "OneNote · Preliminary data",
-              "page_id": "8cb03921-f862-934c-bd42-9722ae4e616c",
-              "url": "https://fairfield0-my.sharepoint.com/personal/jsmith-carpenter_fairfield_edu/_layouts/15/Doc.aspx?sourcedoc={c078a375-a377-47ed-8eb4-114bc5d5dfc6}&action=edit&wd=target%28Helix%20Project%2FBenchtop%20work.one%7C3e6ba2d1-66bc-9f47-962d-2b04a2b49820%2FPreliminary%20data%7C8cb03921-f862-934c-bd42-9722ae4e616c%2F%29&wdorigin=NavigationUrl",
               "access": "Existing notebook permissions retained"
             }
           ]
         }
       ],
       "chemistry": {
-        "title": "From peroxide to a green optical signal",
+        "title": "Peroxide, heme and the ABTS signal",
         "reaction": "H₂O₂ + reduced ABTS → oxidized ABTS signal",
         "steps": [
           "Peroxide reacts with an accessible ferric heme center.",
@@ -476,13 +446,13 @@ window.RESEARCH_CONTENT = {
           "ABTS is oxidized to a colored radical-cation form.",
           "Measure absorbance against blanks and a known-peroxide calibration."
         ],
-        "caption": "Educational heme-peroxidase scheme. This explains a possible assay mechanism; the cycle has not been demonstrated for this bundle.",
+        "caption": "ABTS is a reporter: its oxidized form produces a green optical signal. The animation explains the general heme-peroxidase chemistry that the bundle experiments will test.",
         "controls": [
-          "Assembly + hemin + H₂O₂ + ABTS",
-          "Free hemin under matched conditions",
-          "Assembly without hemin",
+          "Peptide + hemin + peroxide + ABTS",
+          "Free hemin at matched hemin concentration",
+          "Peptide without hemin",
           "No-peroxide and reagent blanks",
-          "Matrix/interference controls"
+          "Sample-background and interference controls"
         ],
         "sources": [
           {
@@ -494,8 +464,6 @@ window.RESEARCH_CONTENT = {
           {
             "id": "notebook-preliminary",
             "title": "OneNote · Preliminary data",
-            "page_id": "8cb03921-f862-934c-bd42-9722ae4e616c",
-            "url": "https://fairfield0-my.sharepoint.com/personal/jsmith-carpenter_fairfield_edu/_layouts/15/Doc.aspx?sourcedoc={c078a375-a377-47ed-8eb4-114bc5d5dfc6}&action=edit&wd=target%28Helix%20Project%2FBenchtop%20work.one%7C3e6ba2d1-66bc-9f47-962d-2b04a2b49820%2FPreliminary%20data%7C8cb03921-f862-934c-bd42-9722ae4e616c%2F%29&wdorigin=NavigationUrl",
             "access": "Existing notebook permissions retained"
           }
         ]
@@ -552,19 +520,14 @@ window.RESEARCH_CONTENT = {
             {
               "id": "historical-poster",
               "title": "Historical Fairfield hemin-binding poster",
-              "url": "https://drive.google.com/file/d/1JoVrj6yu0zRcj3p4OrN1-_Mcf0TU3Ue8/view",
-              "local_file": "work/source-evidence/heme-poster.jpg",
               "access": "Existing document permissions retained"
             },
             {
               "id": "notebook-preliminary",
               "title": "OneNote · Preliminary data",
-              "page_id": "8cb03921-f862-934c-bd42-9722ae4e616c",
-              "url": "https://fairfield0-my.sharepoint.com/personal/jsmith-carpenter_fairfield_edu/_layouts/15/Doc.aspx?sourcedoc={c078a375-a377-47ed-8eb4-114bc5d5dfc6}&action=edit&wd=target%28Helix%20Project%2FBenchtop%20work.one%7C3e6ba2d1-66bc-9f47-962d-2b04a2b49820%2FPreliminary%20data%7C8cb03921-f862-934c-bd42-9722ae4e616c%2F%29&wdorigin=NavigationUrl",
               "access": "Existing notebook permissions retained"
             }
           ],
-          "notebookUrl": "https://fairfield0-my.sharepoint.com/personal/jsmith-carpenter_fairfield_edu/_layouts/15/Doc.aspx?sourcedoc={c078a375-a377-47ed-8eb4-114bc5d5dfc6}&action=edit&wd=target%28Helix%20Project%2FBenchtop%20work.one%7C3e6ba2d1-66bc-9f47-962d-2b04a2b49820%2FPreliminary%20data%7C8cb03921-f862-934c-bd42-9722ae4e616c%2F%29&wdorigin=NavigationUrl",
           "figureUrl": "https://alexw4123.github.io/guanosine-heme-cinematic-viewer/assets/heme-poster.jpg"
         }
       ],
@@ -572,41 +535,31 @@ window.RESEARCH_CONTENT = {
         {
           "id": "historical-poster",
           "title": "Historical Fairfield hemin-binding poster",
-          "url": "https://drive.google.com/file/d/1JoVrj6yu0zRcj3p4OrN1-_Mcf0TU3Ue8/view",
-          "local_file": "work/source-evidence/heme-poster.jpg",
           "access": "Existing document permissions retained"
         },
         {
           "id": "heme-overview",
           "title": "GSPEG2 project overview and analysis",
-          "url": "https://docs.google.com/document/d/1rmexqF9TSg2FgBzd4zzPp6pdkmKvPH0Gi1d7rOUiM1I/edit",
           "access": "Existing document permissions retained"
         },
         {
           "id": "summer-report",
           "title": "Summer molecular construction report",
-          "url": "https://docs.google.com/document/d/1NmHqWayKZAZlZEAxd_fjIPbdLHrgdXQmOLS8Min0uEo/edit",
           "access": "Existing document permissions retained"
         },
         {
           "id": "notebook-background",
           "title": "OneNote · Project Background",
-          "page_id": "8562a2a2-9d93-f44d-bc4b-c3ba1a0a9b13",
-          "url": "https://fairfield0-my.sharepoint.com/personal/jsmith-carpenter_fairfield_edu/_layouts/15/Doc.aspx?sourcedoc={c078a375-a377-47ed-8eb4-114bc5d5dfc6}&action=edit&wd=target%28Helix%20Project%2FBenchtop%20work.one%7C3e6ba2d1-66bc-9f47-962d-2b04a2b49820%2FProject%20Background%7C8562a2a2-9d93-f44d-bc4b-c3ba1a0a9b13%2F%29&wdorigin=NavigationUrl",
           "access": "Existing notebook permissions retained"
         },
         {
           "id": "notebook-preliminary",
           "title": "OneNote · Preliminary data",
-          "page_id": "8cb03921-f862-934c-bd42-9722ae4e616c",
-          "url": "https://fairfield0-my.sharepoint.com/personal/jsmith-carpenter_fairfield_edu/_layouts/15/Doc.aspx?sourcedoc={c078a375-a377-47ed-8eb4-114bc5d5dfc6}&action=edit&wd=target%28Helix%20Project%2FBenchtop%20work.one%7C3e6ba2d1-66bc-9f47-962d-2b04a2b49820%2FPreliminary%20data%7C8cb03921-f862-934c-bd42-9722ae4e616c%2F%29&wdorigin=NavigationUrl",
           "access": "Existing notebook permissions retained"
         },
         {
           "id": "notebook-goals",
           "title": "OneNote · 2026 to 2027 goals",
-          "page_id": "0f37c925-66c8-c94c-8dbc-996b27eeecb6",
-          "url": "https://fairfield0-my.sharepoint.com/personal/jsmith-carpenter_fairfield_edu/_layouts/15/Doc.aspx?sourcedoc={c078a375-a377-47ed-8eb4-114bc5d5dfc6}&action=edit&wd=target%28Helix%20Project%2FBenchtop%20work.one%7C3e6ba2d1-66bc-9f47-962d-2b04a2b49820%2F2026%E2%80%932027%20goals%7C0f37c925-66c8-c94c-8dbc-996b27eeecb6%2F%29&wdorigin=NavigationUrl",
           "access": "Existing notebook permissions retained"
         },
         {
@@ -651,7 +604,9 @@ window.RESEARCH_CONTENT = {
       "figure": {
         "url": "https://alexw4123.github.io/guanosine-heme-cinematic-viewer/assets/heme-poster.jpg",
         "caption": "Historical Fairfield research poster · experimental samples and characterization, separate from the computational PEG2 model."
-      }
+      },
+      "summary": "Hemin is an iron-containing cofactor. The design places it inside four guanosine-capped peptide helices. PEG2 joins each cap to its peptide, and histidines face the iron. The experiments ask whether the assembly binds hemin and changes its catalytic activity.",
+      "nextExperiment": "Start with assembly, circular-dichroism and hemin-binding comparisons. Then compare ABTS oxidation in assemblies with and without hemin, alongside free-hemin and reagent controls."
     }
   }
 };

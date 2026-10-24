@@ -1,27 +1,13 @@
-# Heme bundle | Fairfield
+# Guanosine-heme bundle | Fairfield University
 
-Independent research page for the Smith-Carpenter Lab at Fairfield University. This site contains only its own project content and selection mappings, with no combined project navigation.
+Smith-Carpenter Lab research page. The project asks whether guanosine-capped peptides can form a hemin-binding bundle and support peroxide-dependent oxidation. It keeps experimental samples, the original PEG2 model, the existing simulation and planned PEG3 work distinct.
 
-The opening screen uses a short project name. The full research title and detailed methods remain available in disclosures. Source documents keep their original access permissions.
+The page opens with an overview, then the actual atomic structure. A five-step, 35-second molecular animation sits underneath. Three links cover Overview, How it works, and Research & results. Background, laboratory records, model versions, analysis, applications and sources open as research records.
 
-The mobile layout uses iPhone safe areas, 44-pixel controls and a collapsible section menu. A tap starts a 2.5-second camera rotation; it does not change coordinates or simulate molecular motion. Selection, manual controls and Escape stop it. Reduced motion disables the orbit. Nothing autoplays.
+The animation explains chemistry and uses source atomic coordinates for structural context. It is separate from experimental evidence and authentic saved simulation playback. Details identify which atoms are shown, which reacting species are named explanatory markers, and what remains unmeasured.
 
-NGL verifies source hashes, atoms and explicit bonds before displaying each model. Additional bond inference is disabled. Secondary structure is calculated from the currently loaded coordinates.
+NGL preserves source atom order and explicit bonds, with inference disabled. Secondary structure comes from the loaded model’s own coordinates. Source SHA256, atom and bond counts are checked. The original website, coordinate files and molecular archives remain unchanged.
 
-The five-second atomic replay under Modeling & Results uses authentic saved frames, with frame indices and provenance. It is separate from the camera rotation. Historical experimental samples, the opening PEG2 model, the as-run simulation and corrected reference are identified separately.
+Content was cross-checked against the project notebook, linked project reports and cited primary studies. Reported trajectory findings are identified as reported analysis; this website revision did not recompute raw trajectory statistics. Missing batch measurements are omitted.
 
-The original website and molecular archives are preserved. Missing experimental measurements are omitted instead of filled with placeholders.
-
-## Deployment
-
-GitHub Pages assembles this static site from the existing molecular archives and versioned text files. No backend or public API is added.
-
-Live page: https://alexw4123.github.io/guanosine-heme-cinematic-viewer/
-
-## How it works
-
-The eight-chapter, two-minute animated explanation is under How it works. Follow the process starts it from a deliberate click. Direct story links open paused. Playback, chapter selection, scrubbing and reduced-motion navigation remain under the visitor's control.
-
-The Heme explanation follows a sample outside the body through recognition, cofactor access, reporter chemistry, optical signal, calibration and controls. Glucose, cholesterol and methotrexate examples distinguish recognition from the reporter and cite published precedents. None establish sensing performance for this bundle.
-
-Body, cell, reaction and assay motion is explanatory 3D animation. Molecular scenes use copies of the actual project PDB coordinates with SHA256, atom and explicit-bond validation. Group/camera transforms do not change source coordinates. Three.js is served from the existing unchanged vendor archive. Sources and scale limitations are attached to each chapter. The authentic Heme saved-coordinate replay remains separate.
+The static GitHub Pages workflow assembles unchanged molecular/vendor archives with the versioned interface and content. No backend is required. The layout supports small portrait screens, landscape, keyboard navigation and reduced motion. Share cards use actual source coordinates and retain lab/author credits.

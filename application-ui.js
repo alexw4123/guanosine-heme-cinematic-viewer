@@ -3,7 +3,7 @@ window.renderResearchApplication = function renderResearchApplication(project) {
   const d=window.RESEARCH_APPLICATIONS[project];
   if(!d)return '<p class="source-note">Application details could not be loaded. Reload to try again.</p>';
   const e=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-  const links=arr=>(arr||[]).map(s=>`<a href="${e(s.url)}" target="_blank" rel="noopener">${e(s.title)} ↗</a>`).join('');
+  const links=arr=>(arr||[]).map(s=>s.url?`<a href="${e(s.url)}" target="_blank" rel="noopener">${e(s.title)} ↗</a>`:`<span class="source-citation">${e(s.title)}</span>`).join('');
   const firstCards=[d.existing,d.design].map(c=>`<article class="card"><h3>${e(c.title)}</h3><p>${e(c.text)}</p>${links(c.sources)}</article>`).join('');
   let h=`<h2>${e(d.title)}</h2><p class="section-intro">${e(d.intro)}</p><div class="cards-grid application-intro">${firstCards}</div>`;
 

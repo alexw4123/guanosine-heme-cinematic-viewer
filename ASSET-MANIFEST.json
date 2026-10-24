@@ -29,7 +29,8 @@
     "story-scene.css",
     "story-ui.js",
     "story-ui.css",
-    "iphone-polish.css"
+    "iphone-polish.css",
+    "page-layout.css"
   ],
   "newBinaryFiles": [
     {
@@ -53,8 +54,8 @@
   "files": [
     {
       "path": "index.html",
-      "bytes": 7983,
-      "sha256": "f94043a940fc011c47d7a1ae4aed35dd724004edeb54430984b1134514b61168"
+      "bytes": 7596,
+      "sha256": "dcdc56d66b51b6da3242b59eaf0baf2027e75cbe3b7f7ac224b78126607a8ad0"
     },
     {
       "path": "style.css",
@@ -68,18 +69,18 @@
     },
     {
       "path": "content.js",
-      "bytes": 32936,
-      "sha256": "7473d2450720715d8924b3ed75bc1cf54f6a493377ee73c3d73b449495e5ff07"
+      "bytes": 26176,
+      "sha256": "fc6ae402c3f9423405f97fc224eaa2c58230876fbfd4f463a4d490cf962fc989"
     },
     {
       "path": "application-data.js",
-      "bytes": 7154,
-      "sha256": "12502e158796205788b4b9032022897114fa160ffbbc8df06e8ed475e951bc04"
+      "bytes": 6598,
+      "sha256": "918979b0df960a7f455cf69bf80bcdb768ab9ffcb600c9b4991908d8ffba06a8"
     },
     {
       "path": "application-ui.js",
-      "bytes": 3311,
-      "sha256": "e53f6f4043ddfe7f9070360cb9a71528bab9f45b26bcc7cba959e2cd3a735519"
+      "bytes": 3370,
+      "sha256": "f6d99b94fa761a13eb8313a8c0701b708fb76ae3284172ee2b11aa1780c0b7c0"
     },
     {
       "path": "molecule-engine.js",
@@ -88,13 +89,13 @@
     },
     {
       "path": "app.js",
-      "bytes": 26278,
-      "sha256": "e6e3935b826c81cae5e6e81fac09398366a57f161118ca52e76fd9d9baa1043c"
+      "bytes": 25287,
+      "sha256": "a4f7ce175d0bf466cb466f06fcafafec387af0f2b152abb2485b6b8b0ffe980f"
     },
     {
       "path": "figures-data.js",
-      "bytes": 5642,
-      "sha256": "e38a39359399aa83ab05065f41688166ded3f7ae65eb808ad56ddecb62ee8ff1"
+      "bytes": 4928,
+      "sha256": "e79d3c44add1fda023443a08bbddcfc686be93c7cade2677afc01f2fb0f7df70"
     },
     {
       "path": "site-config.js",
@@ -103,8 +104,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 2587,
-      "sha256": "0ddf63448602ed35e184c978d5af5f6f65ac80ccace01a454455aea69354375c"
+      "bytes": 1792,
+      "sha256": "8eb7854986edc876285d29d4e6bfc7b7d54af988ee6ca6d7c0316286102f0632"
     },
     {
       "path": ".nojekyll",
@@ -118,41 +119,46 @@
     },
     {
       "path": ".github/workflows/pages.yml",
-      "bytes": 1255,
-      "sha256": "2de6621d7dfcefa24b403eb35c3e83a9e6ba966a0557d4349994828139f9d210"
+      "bytes": 1271,
+      "sha256": "8820d0eff2e5b016cd67ec8300d041fb693c4fa92ccba7c52a7c7ef0ec034f9f"
     },
     {
       "path": "story-data.js",
-      "bytes": 16321,
-      "sha256": "d8e1707d336b6e46d7d85b82009a7d6cb4f26974c2e0b1d149c88dffef4bb2d4"
+      "bytes": 19903,
+      "sha256": "2eb65bf4281376fe429e3cfcb84e41cfa47dd54ff9a4cdca03e82ea1ee705393"
     },
     {
       "path": "story-scene.js",
-      "bytes": 32876,
-      "sha256": "5fa50d269202456b58e8bb1cf6f2bbaa4a6da90999dcdb54ecf05c0c046775a5"
+      "bytes": 26151,
+      "sha256": "6a09e204bc3d0c433f251fbc505200dd5bc1b59a55c90b45c33e38f87caf6d15"
     },
     {
       "path": "story-scene.css",
-      "bytes": 1235,
-      "sha256": "77a59a9925335af791cad432979a54c6686a77e4fae99f6a7760bec934b70ec1"
+      "bytes": 450,
+      "sha256": "74bf711c3efefd625378678216647c906487eaedd27e022e68a93d5b03b977cf"
     },
     {
       "path": "story-ui.js",
-      "bytes": 16142,
-      "sha256": "92af160b6844398419bc8e61f3d7b32d2be27a4d9c43c97c6ec0c278a08a3a23"
+      "bytes": 14498,
+      "sha256": "b33951309b2d38947098b9065612974a8c5920ff1d5a06406d29aee3a0fc9169"
     },
     {
       "path": "story-ui.css",
-      "bytes": 10990,
-      "sha256": "6fc7a89ed6f8cd1846babae9c3399948fba5fcc3f4ee6b4af2fde8cc5ea0cf4a"
+      "bytes": 8660,
+      "sha256": "446afbd1a58dcd249704b17c18a43cefe81fbaed575b359fdbf8471ca747377f"
     },
     {
       "path": "iphone-polish.css",
       "bytes": 2587,
       "sha256": "cd2208fb247ea51965c8794c1f9d6eaef551d6792ed00fa6a0aa4ed3f35dde50"
+    },
+    {
+      "path": "page-layout.css",
+      "bytes": 9408,
+      "sha256": "219747b9acd228409845fe0ea51bf955369cef3db609c5891f50d539019215c6"
     }
   ],
-  "revision": "20261024-share-v4",
+  "revision": "20261024-clear-v5",
   "independentProjectData": true,
   "motion": {
     "kind": "camera",
@@ -162,14 +168,16 @@
     "sourceCoordinatesChanged": false
   },
   "animatedStory": {
-    "chapters": 8,
-    "durationSeconds": 120,
+    "chapters": 5,
+    "durationSeconds": 35,
     "autoplayOnPageLoad": false,
-    "startOnFollowProcessClick": true,
+    "iconOnlyPlay": true,
+    "inlineUnderAtomicStructure": true,
     "sourceAtomicModels": true,
-    "qualitativeIllustration": true,
     "reducedMotion": true,
-    "inPageCaptions": true
+    "inPageCaptions": true,
+    "humanFigure": false,
+    "fallingDrop": false
   },
   "vendorHashes": {
     "three.module.js": "c8211c69345d2e9949dc7a8ac969380497aa0600a5a8ac6a459c8cd02dd9cb8a",
@@ -183,5 +191,10 @@
     "format": "image/jpeg",
     "sha256": "d4b2641bc0c0403ca2e2f449609a0bfae4aeef1022511448707ad6bf24fb0f8d",
     "source": "Projection of unchanged project atomic coordinates and explicit bonds"
-  }
+  },
+  "navigation": [
+    "Overview",
+    "How it works",
+    "Research & results"
+  ]
 }
