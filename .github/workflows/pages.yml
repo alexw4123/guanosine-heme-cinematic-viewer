@@ -25,10 +25,11 @@ jobs:
           unzip -oq research-assets.zip -d _site
           unzip -oq atomic-replay-assets.zip -d _site
           cp index.html content.js application-data.js application-ui.js figures-data.js molecule-engine.js research-records.js README.md ASSET-MANIFEST.json .nojekyll _site/
-          mkdir -p _site/assets/motion
+          mkdir -p _site/assets/motion _site/assets/assay
           cp assets/selection-maps.v1.compact.json assets/share-card.jpg assets/source-model-fallback.png _site/assets/
-          cp assets/index-68mwwvaQ.css assets/index-SM-FqrIc.js _site/assets/
+          cp assets/index-B2qc3z6C.css assets/index-Bcy0MSQ3.js _site/assets/
           cp assets/motion/heme-atomic-replay-manifest.json assets/motion/coordinate-verification.json _site/assets/motion/
+          cp assets/assay/peroxide.sdf assets/assay/beta-d-glucose.sdf assets/assay/reagent-provenance.json _site/assets/assay/
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v4
         with:

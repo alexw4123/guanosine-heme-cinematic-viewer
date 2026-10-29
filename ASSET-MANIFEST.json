@@ -1,29 +1,69 @@
 {
   "project": "heme",
-  "version": "20261029-heme-v7",
+  "version": "20261029-heme-v8-scroll",
   "sourceCoordinatesModified": false,
   "expectedAtoms": 1213,
   "expectedBonds": 1232,
   "sourceHashes": {
     "heme-original.pdb": "e3eccb1cbe10a18a0bd633aaf076a7cd1fd2beeedccba0fd73a2a7695b238b4c"
   },
-  "componentCounts": {
-    "guanosine": 120,
-    "PEG2": 96,
-    "hemeAndFe": 73
+  "scrollMotion": "Camera only; not a simulated trajectory",
+  "assayExamples": "Explanatory; bundle activity and calibration require experiments",
+  "reagents": {
+    "title": "Public reference reagent structures for the Heme assay explanation",
+    "retrievedAtUtc": "2026-10-29T20:47:46.730648+00:00",
+    "purpose": "Explanatory reagent structures. These conformers are not a molecular trajectory, observed binding poses, or experimental activity results for the Fairfield bundle.",
+    "records": [
+      {
+        "file": "peroxide.sdf",
+        "label": "Hydrogen peroxide",
+        "pubchemCid": 784,
+        "sourceUrl": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/784/SDF?record_type=3d",
+        "identityUrl": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/784/property/Title,IUPACName,MolecularFormula/JSON",
+        "compoundPage": "https://pubchem.ncbi.nlm.nih.gov/compound/784",
+        "title": "Hydrogen Peroxide",
+        "iupacName": "hydrogen peroxide",
+        "molecularFormula": "H2O2",
+        "format": "SDF V2000",
+        "coordinateType": "PubChem 3D conformer",
+        "atoms": 4,
+        "bonds": 3,
+        "zSpanAngstrom": 1.4122,
+        "sha256": "86dc7804b665212efa898fdca6e6ddf25ae567274d3fdee407eb56ca9481ad47",
+        "coordinateChanges": false
+      },
+      {
+        "file": "beta-d-glucose.sdf",
+        "label": "Beta-D-glucose",
+        "pubchemCid": 64689,
+        "sourceUrl": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/64689/SDF?record_type=3d",
+        "identityUrl": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/64689/property/Title,IUPACName,MolecularFormula/JSON",
+        "compoundPage": "https://pubchem.ncbi.nlm.nih.gov/compound/64689",
+        "title": "Beta-D-Glucose",
+        "iupacName": "(2R,3R,4S,5S,6R)-6-(hydroxymethyl)oxane-2,3,4,5-tetrol",
+        "molecularFormula": "C6H12O6",
+        "format": "SDF V2000",
+        "coordinateType": "PubChem 3D conformer",
+        "atoms": 24,
+        "bonds": 24,
+        "zSpanAngstrom": 2.7912,
+        "sha256": "81ee78d68006313c4c1b185e666000ccce1e6bb13f05bb0d8d1c1f354dbdb2c5",
+        "coordinateChanges": false
+      }
+    ]
   },
   "files": [
     {
       "path": "index.html",
-      "sha256": "de329047e2b20d58a31f605364fd158387210370eab2ea92d63162d1a632a0c9"
+      "sha256": "bbea1fd7328bf565d2ba73632cc6ae7f2746574ab75853e7302332eaeee7fc12"
     },
     {
-      "path": "assets/index-68mwwvaQ.css",
-      "sha256": "8268e3a2d4caa62e7f7ffbc2f0bdbe7890d8893ae8c464be5917bfd01ba22b32"
+      "path": "assets/index-B2qc3z6C.css",
+      "sha256": "5783e58e70e47bc1e8c4b96605246815ff20b2eaf3d0607f18335c5b4ff48bb3"
     },
     {
-      "path": "assets/index-SM-FqrIc.js",
-      "sha256": "cd44fcddc4cd3d893a4586b07ac09b2df81fb3d0c082fb16ce8c20580a7ead86"
+      "path": "assets/index-Bcy0MSQ3.js",
+      "sha256": "ab62beef89b3fbd3f0f2861eee80e6df74259e96b8d10f044bee8be5a596a9b6"
     },
     {
       "path": "content.js",
@@ -43,7 +83,7 @@
     },
     {
       "path": "molecule-engine.js",
-      "sha256": "bc753c94b50ea7e0cdb9431c3ddb15435f6f09943cda74e755faf6d34f74c181"
+      "sha256": "fbca895233d3143b1146ec7b42be411de574344c9de4f69b7998769c8e7af4cb"
     },
     {
       "path": "research-records.js",
@@ -62,8 +102,24 @@
       "sha256": "a68d9e348e83a705575100d2e3fa9c1fdba3ef484c6f561128c10e64892629bf"
     },
     {
+      "path": "assets/assay/peroxide.sdf",
+      "sha256": "86dc7804b665212efa898fdca6e6ddf25ae567274d3fdee407eb56ca9481ad47"
+    },
+    {
+      "path": "assets/assay/beta-d-glucose.sdf",
+      "sha256": "81ee78d68006313c4c1b185e666000ccce1e6bb13f05bb0d8d1c1f354dbdb2c5"
+    },
+    {
+      "path": "assets/assay/reagent-provenance.json",
+      "sha256": "40ffd3aedc968bc1d2d336f5baebc171b075af17faaa5cf1b674c73c3a92af98"
+    },
+    {
       "path": "studio-source/src/App.jsx",
-      "sha256": "bb6af8b718897bb49e9463fc1fbe5eae5a58082a7981e935ccece0b75c38ced6"
+      "sha256": "f6004600d41e4645922238eecfc14b0f61bec4f5a5a3b9b9467875f93978b93a"
+    },
+    {
+      "path": "studio-source/src/ScrollAssay.jsx",
+      "sha256": "b7c43d04617bd6d58280225a5b8076b7370caff745f20d44c9104b8a5b3e4ca5"
     },
     {
       "path": "studio-source/src/styles.css",
@@ -74,16 +130,20 @@
       "sha256": "073624123b78ba02358175eed682f866b0ad558c6c8cdd46cfcc4a4ea893a1dc"
     },
     {
+      "path": "studio-source/src/scroll-assay.css",
+      "sha256": "253fb10c2bd448fd18256d73e52ca284dc8ac551826a421a60e111db8e6e7302"
+    },
+    {
       "path": "studio-source/src/main.jsx",
       "sha256": "832f752c6b6a454a26dbc4f2654f5bd633f2b103516c8c0abac648308c133a7e"
     },
     {
       "path": "README.md",
-      "sha256": "acf6492c06d5530f512738f8216d4f5164b3c17649938cca941377ce35f2aac8"
+      "sha256": "d3f91f2e0763b7d8cd8e416d903cb2b7d0d78c2370eb9a964d1d8baf1886eb4c"
     },
     {
       "path": ".github/workflows/pages.yml",
-      "sha256": "9d50eeb053ca1554abbe17edfc21f2619c9616152d823b49719cf3af44c9f6e7"
+      "sha256": "821de0547e99c7295efa04759c086dab4ec759788ae9c1c28d98d3a9e2665cf9"
     }
   ]
 }

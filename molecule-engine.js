@@ -48,7 +48,7 @@
 
   window.createResearchMolecule = function createResearchMolecule(options) {
     const {project,viewport,onSelection=()=>{},onReady=()=>{},onError=()=>{},onMotion=()=>{},
-      backgroundColor='#fafbfc',defaultMode='hybrid',interactionEnabled=false} = options || {};
+      backgroundColor='#fafbfc',defaultMode='hybrid',interactionEnabled=false,contextIntensity=.32} = options || {};
     const hemePalette={PEPA:'#18b8cf',PEPB:'#529fdb',PEPC:'#35c3b4',PEPD:'#88c8e2',
       guanosine:'#9676d9',linker:'#b8b2cc',heme:'#d99328',iron:'#f0aa35'};
     const hex=value=>Number.parseInt(value.slice(1),16);
@@ -59,7 +59,7 @@
     let residueByAtom=new Map(),candidatePartByAtom=new Map(),hemeColorByAtom=new Map(),pendingSelection=null,initialOrientation,generation=0,destroyed=false;
     let lastPick={index:-1,time:0},touchStart=null,resizeObserver,initialTiltApplied=false;
     let secondaryAssignments={}, coordinateFingerprint=null;
-    let motionFrame=null,motionToken=0,motionResolve=null,motionState='idle',motionProgress=0;
+    let motionFrame=null,motionToken=0,motionResolve=null,motionState='idle',motionProgress=0,scrollPose=null;
     const reducedMotion=window.matchMedia?.('(prefers-reduced-motion: reduce)');
     viewport.classList.add('research-molecule');
     viewport.tabIndex = viewport.tabIndex < 0 ? 0 : viewport.tabIndex;
@@ -80,6 +80,7 @@
         representation:state.mode,isolated:state.isolated,orientation:orientation(),sourceHash:state.sourceHash,
         hashVerified:state.hashVerified,coordinateFingerprint,secondaryStructureAssignments:{...secondaryAssignments},lastPickedAtom:state.picked,
         motionState,motionProgress,motionKind:'camera',interactionEnabled:state.interactionEnabled,
+        scrollPose:scrollPose?{...scrollPose}:null,
         palette:project==='heme'?{...hemePalette}:null};
     }
     function reflect() {
@@ -104,6 +105,7 @@
       viewport.dataset.motionState=d.motionState;
       viewport.dataset.motionProgress=String(d.motionProgress);
       viewport.dataset.motionKind=d.motionKind;
+      viewport.dataset.scrollPose=JSON.stringify(d.scrollPose);
       viewport.dataset.interactionEnabled=String(state.interactionEnabled);
       viewport.dataset.palette=JSON.stringify(d.palette);
     }
@@ -123,6 +125,7 @@
     }
     function animateModel({durationMs=2500}={}) {
       if(destroyed||!state.ready)return {started:false,reason:destroyed?'destroyed':'not-ready',finished:Promise.resolve({state:'unavailable'})};
+      scrollPose=null;
       stopAnimation('restarted');
       if(reducedMotion?.matches) {
         reportMotion('reduced-motion',0,'reduced-motion');
@@ -285,7 +288,7 @@
         this.atomColor=atom=>{
           let color=baseColor(atom);
           if(state.selected!=='all' && !selectedSet.has(atom.index) && !state.isolated) {
-            const amount=0.32;
+            const amount=Math.min(1,Math.max(0,Number(contextIntensity)||.32));
             const mix=(c,b)=>Math.round(b+(c-b)*amount);
             // Pale neutral context keeps every nonselected component legible on the light stage.
             color=(mix((color>>16)&255,222)<<16)|(mix((color>>8)&255,227)<<8)|mix(color&255,232);
@@ -297,6 +300,7 @@
     }
     function setInteractionEnabled(value) {
       state.interactionEnabled=Boolean(value);
+      if(state.interactionEnabled)scrollPose=null;
       if(stage){
         // Click picking is dispatched independently of mouse-controls actions.
         stage.mouseControls.disabled=!state.interactionEnabled;
@@ -327,7 +331,7 @@
     async function loadModel(key) {
       if(destroyed)return;
       if(project==='dhfr' && !['gs','isog'].includes(key))return;
-      stopAnimation('model-change');
+      scrollPose=null;stopAnimation('model-change');
       const token=++generation;
       const preserve=stage&&state.ready?stage.viewerControls.getOrientation().clone():null;
       const previousSelection=state.kind==='residue'?{chain:state.chain,position:state.position}:{key:state.selected};
@@ -401,10 +405,32 @@
     function rotate(direction) {
       if(!state.ready)return;
       const movement={left:[-12,0],right:[12,0],up:[0,-12],down:[0,12]}[direction];
-      if(movement){stopAnimation('manual-control');stage.trackballControls.rotate(...movement);reflect();}
+      if(movement){scrollPose=null;stopAnimation('manual-control');stage.trackballControls.rotate(...movement);reflect();}
     }
-    function zoom(delta) {if(state.ready){stopAnimation('manual-control');stage.viewerControls.zoom(Number(delta));reflect();}}
-    function reset() {stopAnimation('reset');if(state.ready&&initialOrientation){stage.viewerControls.orient(initialOrientation);reflect();}}
+    function zoom(delta) {if(state.ready){scrollPose=null;stopAnimation('manual-control');stage.viewerControls.zoom(Number(delta));reflect();}}
+    function reset() {scrollPose=null;stopAnimation('reset');if(state.ready&&initialOrientation){stage.viewerControls.orient(initialOrientation.clone());reflect();}}
+    // Scroll poses affect the camera only. Each pose starts at the cached opening
+    // matrix, so forward/backward scrolling cannot accumulate rotation or zoom.
+    function setScrollPose({yaw=0,pitch=0,zoom:zoomAmount=0,static:staticPose=false}={}) {
+      if(destroyed||!state.ready||!stage||!initialOrientation||state.interactionEnabled)return false;
+      const bounded=(value,min,max)=>Number.isFinite(Number(value))?Math.min(max,Math.max(min,Number(value))):0;
+      const isStatic=Boolean(staticPose||reducedMotion?.matches);
+      const pose={yaw:isStatic?0:bounded(yaw,-180,180),pitch:isStatic?0:bounded(pitch,-90,90),
+        zoom:isStatic?0:bounded(zoomAmount,-1,1),static:isStatic};
+      if(scrollPose&&Object.keys(pose).every(key=>scrollPose[key]===pose[key]))return true;
+      stopAnimation('scroll-camera');scrollPose=pose;
+      stage.viewerControls.orient(initialOrientation.clone());
+      if(pose.yaw||pose.pitch)stage.trackballControls.rotate(pose.yaw,pose.pitch);
+      if(pose.zoom)stage.viewerControls.zoom(pose.zoom);
+      reflect();
+      return true;
+    }
+    function restoreScrollPose() {
+      if(destroyed||!state.ready||!stage||!initialOrientation||state.interactionEnabled)return false;
+      scrollPose=null;stopAnimation('scroll-camera-reset');
+      stage.viewerControls.orient(initialOrientation.clone());reflect();
+      return true;
+    }
     function onKey(event) {
       if(!state.ready||event.altKey||event.ctrlKey||event.metaKey)return;
       const direction={ArrowLeft:'left',ArrowRight:'right',ArrowUp:'up',ArrowDown:'down'}[event.key];
@@ -442,7 +468,7 @@
       setModel:key=>loadModel(key),
       setMode(mode){if(!['atomic','secondary','hybrid'].includes(mode))return false;stopAnimation('representation-change');state.mode=mode;if(state.ready){render();emitSelection();}return true;},
       isolate(value){stopAnimation('selection');state.isolated=Boolean(value)&&state.selected!=='all';if(state.ready){render();emitSelection();}},
-      zoom,rotate,reset,animateModel,stopAnimation,setInteractionEnabled,getDiagnostics:diagnostics,
+      zoom,rotate,reset,animateModel,stopAnimation,setInteractionEnabled,setScrollPose,restoreScrollPose,getDiagnostics:diagnostics,
       destroy(){if(destroyed)return;stopAnimation('destroyed');destroyed=true;++generation;resizeObserver?.disconnect();window.removeEventListener('resize',resize);
         viewport.removeEventListener('keydown',onKey);viewport.removeEventListener('pointerdown',pointerDown);
         viewport.removeEventListener('pointerup',pointerUp);viewport.removeEventListener('pointercancel',pointerCancel);

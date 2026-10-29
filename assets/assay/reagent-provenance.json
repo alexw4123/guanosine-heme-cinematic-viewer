@@ -1,0 +1,43 @@
+{
+  "title": "Public reference reagent structures for the Heme assay explanation",
+  "retrievedAtUtc": "2026-10-29T20:47:46.730648+00:00",
+  "purpose": "Explanatory reagent structures. These conformers are not a molecular trajectory, observed binding poses, or experimental activity results for the Fairfield bundle.",
+  "records": [
+    {
+      "file": "peroxide.sdf",
+      "label": "Hydrogen peroxide",
+      "pubchemCid": 784,
+      "sourceUrl": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/784/SDF?record_type=3d",
+      "identityUrl": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/784/property/Title,IUPACName,MolecularFormula/JSON",
+      "compoundPage": "https://pubchem.ncbi.nlm.nih.gov/compound/784",
+      "title": "Hydrogen Peroxide",
+      "iupacName": "hydrogen peroxide",
+      "molecularFormula": "H2O2",
+      "format": "SDF V2000",
+      "coordinateType": "PubChem 3D conformer",
+      "atoms": 4,
+      "bonds": 3,
+      "zSpanAngstrom": 1.4122,
+      "sha256": "86dc7804b665212efa898fdca6e6ddf25ae567274d3fdee407eb56ca9481ad47",
+      "coordinateChanges": false
+    },
+    {
+      "file": "beta-d-glucose.sdf",
+      "label": "Beta-D-glucose",
+      "pubchemCid": 64689,
+      "sourceUrl": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/64689/SDF?record_type=3d",
+      "identityUrl": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/64689/property/Title,IUPACName,MolecularFormula/JSON",
+      "compoundPage": "https://pubchem.ncbi.nlm.nih.gov/compound/64689",
+      "title": "Beta-D-Glucose",
+      "iupacName": "(2R,3R,4S,5S,6R)-6-(hydroxymethyl)oxane-2,3,4,5-tetrol",
+      "molecularFormula": "C6H12O6",
+      "format": "SDF V2000",
+      "coordinateType": "PubChem 3D conformer",
+      "atoms": 24,
+      "bonds": 24,
+      "zSpanAngstrom": 2.7912,
+      "sha256": "81ee78d68006313c4c1b185e666000ccce1e6bb13f05bb0d8d1c1f354dbdb2c5",
+      "coordinateChanges": false
+    }
+  ]
+}
