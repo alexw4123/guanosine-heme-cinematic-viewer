@@ -1,4 +1,4 @@
-/* Source figures retain project version, measurement context and provenance. */
+/* Preserved source-linked Heme research content. */
 window.RESEARCH_FIGURES = {
   "version": "2026-10-24.1",
   "heme": [

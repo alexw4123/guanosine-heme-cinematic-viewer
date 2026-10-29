@@ -1,200 +1,89 @@
 {
   "project": "heme",
-  "liveUrl": "https://alexw4123.github.io/guanosine-heme-cinematic-viewer/",
-  "defaultProject": "heme",
+  "version": "20261029-heme-v7",
   "sourceCoordinatesModified": false,
-  "sourceHashes": {
-    "heme-original.pdb": "e3eccb1cbe10a18a0bd633aaf076a7cd1fd2beeedccba0fd73a2a7695b238b4c",
-    "ngl.js": "be8d4b16f1d73458efd70d2a3319ef2888fb6fa821732c319a99ff43a8e4f7e0"
-  },
+  "expectedAtoms": 1213,
   "expectedBonds": 1232,
-  "newTextFiles": [
-    "index.html",
-    "style.css",
-    "engine-styles.css",
-    "content.js",
-    "application-data.js",
-    "application-ui.js",
-    "molecule-engine.js",
-    "app.js",
-    "figures-data.js",
-    "site-config.js",
-    "README.md",
-    ".nojekyll",
-    "assets/selection-maps.v1.compact.json",
-    ".github/workflows/pages.yml",
-    "ASSET-MANIFEST.json",
-    "story-data.js",
-    "story-scene.js",
-    "story-scene.css",
-    "story-ui.js",
-    "story-ui.css",
-    "iphone-polish.css",
-    "page-layout.css"
-  ],
-  "newBinaryFiles": [
-    {
-      "path": "atomic-replay-assets.zip",
-      "bytes": 1691892,
-      "sha256": "0409a6db06ca23aa2d68490941f24608ae0798063e64d61ae9734301f95c6a61",
-      "entries": [
-        "assets/motion/coordinate-verification.json",
-        "assets/motion/heme-atomic-replay-manifest.json",
-        "assets/motion/heme-md-atomic-5s.mp4",
-        "assets/motion/heme-md-atomic-5s.vtt",
-        "assets/motion/heme-md-atomic-poster.jpg",
-        "assets/motion/heme-md-atomic-poster.png",
-        "assets/motion/replay-verification.json"
-      ]
-    }
-  ],
-  "originalArchivesModified": false,
-  "noNewBackend": true,
-  "projectSwitch": false,
+  "sourceHashes": {
+    "heme-original.pdb": "e3eccb1cbe10a18a0bd633aaf076a7cd1fd2beeedccba0fd73a2a7695b238b4c"
+  },
+  "componentCounts": {
+    "guanosine": 120,
+    "PEG2": 96,
+    "hemeAndFe": 73
+  },
   "files": [
     {
       "path": "index.html",
-      "bytes": 7710,
-      "sha256": "68dacb24baea3231a205b9e3b9bd2829eee413575933297eb7efdbd2ccf1d11a"
+      "sha256": "de329047e2b20d58a31f605364fd158387210370eab2ea92d63162d1a632a0c9"
     },
     {
-      "path": "style.css",
-      "bytes": 33929,
-      "sha256": "ebf40fc0ffefb7b0f31483a80cf6edfe19423c8841c7d299c89b38bf6453bbc1"
+      "path": "assets/index-68mwwvaQ.css",
+      "sha256": "8268e3a2d4caa62e7f7ffbc2f0bdbe7890d8893ae8c464be5917bfd01ba22b32"
     },
     {
-      "path": "engine-styles.css",
-      "bytes": 535,
-      "sha256": "a4a78621520a9d99c4645b66146fe643d3ac8e713cd563baa5f5cdafeffb5aa5"
+      "path": "assets/index-SM-FqrIc.js",
+      "sha256": "cd44fcddc4cd3d893a4586b07ac09b2df81fb3d0c082fb16ce8c20580a7ead86"
     },
     {
       "path": "content.js",
-      "bytes": 26176,
-      "sha256": "fc6ae402c3f9423405f97fc224eaa2c58230876fbfd4f463a4d490cf962fc989"
+      "sha256": "9880a97615df7a94a03414d6dd3bf4dc24a6253e458b18c2a7888f8ac2a3824f"
     },
     {
       "path": "application-data.js",
-      "bytes": 6598,
-      "sha256": "918979b0df960a7f455cf69bf80bcdb768ab9ffcb600c9b4991908d8ffba06a8"
+      "sha256": "d493f0004060abe0e6da534e0661be183110e7640d44078a9e68af1f2cbd2945"
     },
     {
       "path": "application-ui.js",
-      "bytes": 3370,
       "sha256": "f6d99b94fa761a13eb8313a8c0701b708fb76ae3284172ee2b11aa1780c0b7c0"
     },
     {
-      "path": "molecule-engine.js",
-      "bytes": 27083,
-      "sha256": "3d6381f282021ad0c05440c04baa5067df127d7a3981f037192d949dd31700b5"
-    },
-    {
-      "path": "app.js",
-      "bytes": 25287,
-      "sha256": "a4f7ce175d0bf466cb466f06fcafafec387af0f2b152abb2485b6b8b0ffe980f"
-    },
-    {
       "path": "figures-data.js",
-      "bytes": 4928,
-      "sha256": "e79d3c44add1fda023443a08bbddcfc686be93c7cade2677afc01f2fb0f7df70"
+      "sha256": "76ddd91e1aa1ac7dca64b8391a2c686e7dbf16b87a1457d8aa9ed1967aa48704"
     },
     {
-      "path": "site-config.js",
-      "bytes": 134,
-      "sha256": "bd5d1b8e72ef27a27200aab84016f10df2561a6f2aa7dc28cf061f21b58589d0"
+      "path": "molecule-engine.js",
+      "sha256": "bc753c94b50ea7e0cdb9431c3ddb15435f6f09943cda74e755faf6d34f74c181"
     },
     {
-      "path": "README.md",
-      "bytes": 1792,
-      "sha256": "8eb7854986edc876285d29d4e6bfc7b7d54af988ee6ca6d7c0316286102f0632"
-    },
-    {
-      "path": ".nojekyll",
-      "bytes": 0,
-      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      "path": "research-records.js",
+      "sha256": "8f3e74cb1adc03280f6c49a94c6e4f17da6ecf33a34f9d125b3a8038a60fe12e"
     },
     {
       "path": "assets/selection-maps.v1.compact.json",
-      "bytes": 23400,
       "sha256": "a6add87fc5be08de85e0bd1c96330131e5c08966926d4656c97cc22d29ce1188"
     },
     {
+      "path": "assets/motion/heme-atomic-replay-manifest.json",
+      "sha256": "e0afbe3c306b918bdd9d738b6f74c60b6fb0c8f10fb49ac37aa2493d82d95e98"
+    },
+    {
+      "path": "assets/motion/coordinate-verification.json",
+      "sha256": "a68d9e348e83a705575100d2e3fa9c1fdba3ef484c6f561128c10e64892629bf"
+    },
+    {
+      "path": "studio-source/src/App.jsx",
+      "sha256": "bb6af8b718897bb49e9463fc1fbe5eae5a58082a7981e935ccece0b75c38ced6"
+    },
+    {
+      "path": "studio-source/src/styles.css",
+      "sha256": "fa255a33ba33251d963cab921d278abd6fdae89fdc9a12432b19f3f8af686d04"
+    },
+    {
+      "path": "studio-source/src/research.css",
+      "sha256": "073624123b78ba02358175eed682f866b0ad558c6c8cdd46cfcc4a4ea893a1dc"
+    },
+    {
+      "path": "studio-source/src/main.jsx",
+      "sha256": "832f752c6b6a454a26dbc4f2654f5bd633f2b103516c8c0abac648308c133a7e"
+    },
+    {
+      "path": "README.md",
+      "sha256": "acf6492c06d5530f512738f8216d4f5164b3c17649938cca941377ce35f2aac8"
+    },
+    {
       "path": ".github/workflows/pages.yml",
-      "bytes": 1271,
-      "sha256": "8820d0eff2e5b016cd67ec8300d041fb693c4fa92ccba7c52a7c7ef0ec034f9f"
-    },
-    {
-      "path": "story-data.js",
-      "bytes": 19917,
-      "sha256": "af04261bd9430bfc66938105a02bc35ea803d2495c85a698f7d19a118f68732a"
-    },
-    {
-      "path": "story-scene.js",
-      "bytes": 26151,
-      "sha256": "6a09e204bc3d0c433f251fbc505200dd5bc1b59a55c90b45c33e38f87caf6d15"
-    },
-    {
-      "path": "story-scene.css",
-      "bytes": 450,
-      "sha256": "74bf711c3efefd625378678216647c906487eaedd27e022e68a93d5b03b977cf"
-    },
-    {
-      "path": "story-ui.js",
-      "bytes": 14494,
-      "sha256": "12d36bd4e528f91806025ad9872c5e7ab81d321090d0830157408a910b676fb3"
-    },
-    {
-      "path": "story-ui.css",
-      "bytes": 8660,
-      "sha256": "446afbd1a58dcd249704b17c18a43cefe81fbaed575b359fdbf8471ca747377f"
-    },
-    {
-      "path": "iphone-polish.css",
-      "bytes": 2587,
-      "sha256": "cd2208fb247ea51965c8794c1f9d6eaef551d6792ed00fa6a0aa4ed3f35dde50"
-    },
-    {
-      "path": "page-layout.css",
-      "bytes": 9408,
-      "sha256": "219747b9acd228409845fe0ea51bf955369cef3db609c5891f50d539019215c6"
+      "sha256": "9d50eeb053ca1554abbe17edfc21f2619c9616152d823b49719cf3af44c9f6e7"
     }
-  ],
-  "revision": "20261024-clear-v5-final",
-  "independentProjectData": true,
-  "motion": {
-    "kind": "camera",
-    "durationSeconds": 2.5,
-    "autoplay": false,
-    "respectsReducedMotion": true,
-    "sourceCoordinatesChanged": false
-  },
-  "animatedStory": {
-    "chapters": 5,
-    "durationSeconds": 35,
-    "autoplayOnPageLoad": false,
-    "iconOnlyPlay": true,
-    "inlineUnderAtomicStructure": true,
-    "sourceAtomicModels": true,
-    "reducedMotion": true,
-    "inPageCaptions": true,
-    "humanFigure": false,
-    "fallingDrop": false
-  },
-  "vendorHashes": {
-    "three.module.js": "c8211c69345d2e9949dc7a8ac969380497aa0600a5a8ac6a459c8cd02dd9cb8a",
-    "three.core.js": "eb077d2417f61d3e6d9264c317cabc4ea35769ed6b0ab533067292a550784c20",
-    "THREE-LICENSE.txt": "bfe119ea4fd413f5f7ca3fcd63adb0c4a073ed39daa2fe7d3e6b769e21272601"
-  },
-  "sharePreview": {
-    "image": "assets/share-card.jpg",
-    "width": 1200,
-    "height": 630,
-    "format": "image/jpeg",
-    "sha256": "d4b2641bc0c0403ca2e2f449609a0bfae4aeef1022511448707ad6bf24fb0f8d",
-    "source": "Projection of unchanged project atomic coordinates and explicit bonds"
-  },
-  "navigation": [
-    "Overview",
-    "How it works",
-    "Research & results"
   ]
 }

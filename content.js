@@ -1,4 +1,4 @@
-/* Source-linked project content. Molecular files and notebook permissions are unchanged. */
+/* Preserved source-linked Heme research content. */
 window.RESEARCH_CONTENT = {
   "version": "2026-10-24-source-audit-v5",
   "navigation": [
@@ -446,7 +446,7 @@ window.RESEARCH_CONTENT = {
           "ABTS is oxidized to a colored radical-cation form.",
           "Measure absorbance against blanks and a known-peroxide calibration."
         ],
-        "caption": "ABTS is a reporter: its oxidized form produces a green optical signal. The animation explains the general heme-peroxidase chemistry that the bundle experiments will test.",
+        "caption": "ABTS is a reporter: its oxidized form produces a green optical signal. The chapters explain the general heme-peroxidase chemistry that the bundle experiments will test.",
         "controls": [
           "Peptide + hemin + peroxide + ABTS",
           "Free hemin at matched hemin concentration",

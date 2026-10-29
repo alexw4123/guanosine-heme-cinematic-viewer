@@ -1,4 +1,4 @@
-name: Publish molecular research viewer
+name: Publish Heme molecular research
 on:
   push:
     branches: [main]
@@ -18,19 +18,21 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v6
-      - name: Prepare static research viewer
+      - name: Prepare Heme static research page
         run: |
           mkdir -p _site
-          cp page-layout.css iphone-polish.css story-data.js story-scene.js story-scene.css story-ui.js story-ui.css index.html style.css engine-styles.css content.js application-data.js application-ui.js molecule-engine.js app.js figures-data.js site-config.js README.md .nojekyll ASSET-MANIFEST.json _site/
           unzip -q assets.zip -d _site
           unzip -oq research-assets.zip -d _site
           unzip -oq atomic-replay-assets.zip -d _site
-          mkdir -p _site/assets
-          cp assets/selection-maps.v1.compact.json assets/share-card.jpg _site/assets/
+          cp index.html content.js application-data.js application-ui.js figures-data.js molecule-engine.js research-records.js README.md ASSET-MANIFEST.json .nojekyll _site/
+          mkdir -p _site/assets/motion
+          cp assets/selection-maps.v1.compact.json assets/share-card.jpg assets/source-model-fallback.png _site/assets/
+          cp assets/index-68mwwvaQ.css assets/index-SM-FqrIc.js _site/assets/
+          cp assets/motion/heme-atomic-replay-manifest.json assets/motion/coordinate-verification.json _site/assets/motion/
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v4
         with:
           path: _site
-      - name: Deploy research viewer
+      - name: Deploy Heme research page
         id: deployment
         uses: actions/deploy-pages@v4

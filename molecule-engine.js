@@ -6,8 +6,8 @@
   const atomSelection = indices => indices.length ? '@' + indices.join(',') : 'NONE';
   const expand = ranges => ranges.flatMap(([first,last]) => Array.from({length:last-first+1},(_,i)=>first+i));
   const labels = {
-    all:'Whole structure',peptide:'Peptide helices',guanosine:'Guanosine–PEG2 groups',caps:'Guanosine–PEG2 groups',
-    heme:'Heme + Fe',iron:'Iron',histidines:'Histidines',base:'Base chemistry',linker:'Linker',
+    all:'Whole structure',peptide:'Peptide helices',guanosine:'Guanosine caps',caps:'Guanosine + PEG2',
+    heme:'Heme + Fe',iron:'Iron',histidines:'Histidines',base:'Base chemistry',linker:'PEG2 linkers',
     protein:'Human DHFR',enzyme:'Human DHFR',nadph:'NADPH',candidate:'Nucleopeptide model',pocket:'Modeled pocket context',
     ribose:'Ribose',phenylalanine:'L-Phenylalanine',glutamate:'L-Glutamate',changedBaseGroups:'Changed base chemistry'
   };
@@ -15,7 +15,8 @@
     heme:{
       all:'Four peptide chains surround heme in the original PEG2 coordinate model. The two Fe–histidine bonds are imposed model connections.',
       peptide:'Each modeled chain has 15 amino acids. The chain sequences differ at several positions; these coordinates do not establish a synthesized batch sequence.',
-      guanosine:'A guanosine-derived cap connects to each peptide through PEG2. The design asks whether the caps can help organize the assembly.',
+      guanosine:'The four guanosine-derived caps are highlighted without the PEG2 linkers. The design asks whether these caps can help organize the assembly.',
+      caps:'Each guanosine-derived cap connects to a peptide through PEG2. This combined selection includes all four caps and their linkers.',
       base:'The guanine face is intended to contribute hydrogen-bonding contacts. A persistent guanine quartet has not been established for this bundle.',
       linker:'PEG2 separates the guanosine-derived cap from the peptide. This selection follows the linker atoms in the original coordinate file.',
       heme:'Heme contains an iron center. Two histidine NE2 atoms are explicitly bonded to Fe in this model; binding and catalytic activity still need experimental tests.',
@@ -46,12 +47,16 @@
   }
 
   window.createResearchMolecule = function createResearchMolecule(options) {
-    const {project,viewport,onSelection=()=>{},onReady=()=>{},onError=()=>{},onMotion=()=>{}} = options || {};
+    const {project,viewport,onSelection=()=>{},onReady=()=>{},onError=()=>{},onMotion=()=>{},
+      backgroundColor='#fafbfc',defaultMode='hybrid',interactionEnabled=false} = options || {};
+    const hemePalette={PEPA:'#18b8cf',PEPB:'#529fdb',PEPC:'#35c3b4',PEPD:'#88c8e2',
+      guanosine:'#9676d9',linker:'#b8b2cc',heme:'#d99328',iron:'#f0aa35'};
+    const hex=value=>Number.parseInt(value.slice(1),16);
     if (!['heme','dhfr'].includes(project) || !(viewport instanceof HTMLElement)) throw new Error('A project and molecular viewport are required.');
-    const state = {project,model:project==='heme'?'original-peg2':'gs',mode:'atomic',ready:false,isolated:false,
+    const state = {project,model:project==='heme'?'original-peg2':'gs',mode:['atomic','secondary','hybrid'].includes(defaultMode)?defaultMode:'hybrid',ready:false,isolated:false,interactionEnabled:Boolean(interactionEnabled),
       selected:'all',kind:'component',chain:null,position:null,picked:null,sourceHash:null,hashVerified:false};
     let maps,modelMap,stage,component,colorScheme,selectedIndices=[],selectedSet=new Set(),allIndices=[],pocketIndices=[];
-    let residueByAtom=new Map(),candidatePartByAtom=new Map(),pendingSelection=null,initialOrientation,generation=0,destroyed=false;
+    let residueByAtom=new Map(),candidatePartByAtom=new Map(),hemeColorByAtom=new Map(),pendingSelection=null,initialOrientation,generation=0,destroyed=false;
     let lastPick={index:-1,time:0},touchStart=null,resizeObserver,initialTiltApplied=false;
     let secondaryAssignments={}, coordinateFingerprint=null;
     let motionFrame=null,motionToken=0,motionResolve=null,motionState='idle',motionProgress=0;
@@ -74,7 +79,8 @@
         selectedIndices:[...selectedIndices],selectedAtomCount:selectedIndices.length,chain:state.chain,position:state.position,
         representation:state.mode,isolated:state.isolated,orientation:orientation(),sourceHash:state.sourceHash,
         hashVerified:state.hashVerified,coordinateFingerprint,secondaryStructureAssignments:{...secondaryAssignments},lastPickedAtom:state.picked,
-        motionState,motionProgress,motionKind:'camera'};
+        motionState,motionProgress,motionKind:'camera',interactionEnabled:state.interactionEnabled,
+        palette:project==='heme'?{...hemePalette}:null};
     }
     function reflect() {
       const d=diagnostics();
@@ -98,6 +104,8 @@
       viewport.dataset.motionState=d.motionState;
       viewport.dataset.motionProgress=String(d.motionProgress);
       viewport.dataset.motionKind=d.motionKind;
+      viewport.dataset.interactionEnabled=String(state.interactionEnabled);
+      viewport.dataset.palette=JSON.stringify(d.palette);
     }
     function reportMotion(status,progress,reason) {
       motionState=status;motionProgress=progress;
@@ -149,20 +157,19 @@
       reflect();
       const residue=state.kind==='residue' ? modelMap.chains.find(c=>c.segment===state.chain)?.residues.find(r=>r.position===state.position) : null;
       const key=state.selected;
-      const label=residue ? `${state.chain} · ${residue.letter}${residue.position}` :
+      const chainLabel=modelMap.chains?.find(c=>c.segment===key);
+      const label=chainLabel?`Peptide ${key.slice(-1)}`:residue ? `${state.chain} · ${residue.letter}${residue.position}` :
         key==='base' ? (project==='heme'?'Guanine base':state.model==='gs'?'Guanine base':'Isoguanine base') : labels[key]||key;
       onSelection({project,model:state.model,key,label,indices:[...selectedIndices],count:selectedIndices.length,
         kind:state.kind,chain:state.chain,position:state.position,sourceResidueName:residue?.sourceResidueName,
         sourceResidueNumber:residue?.sourceResidueNumber,picked:state.picked,
-        caption:residue?`Peptide position ${residue.position} is ${residue.sourceResidueName} in ${state.chain}, source residue ${residue.sourceResidueNumber}. This selection uses the original PEG2 coordinate model.`:captions[project][key]||'',
+        caption:chainLabel?`Peptide ${key.slice(-1)} contains ${chainLabel.sequence.length} residues in the original PEG2 coordinate model.`:residue?`Peptide position ${residue.position} is ${residue.sourceResidueName} in ${state.chain}, source residue ${residue.sourceResidueNumber}. This selection uses the original PEG2 coordinate model.`:captions[project][key]||'',
         mode:state.mode,isolated:state.isolated,ready:state.ready});
     }
     function baseColor(atom) {
       const i=atom.index;
       if (project==='heme') {
-        if (i>=1140) return atom.element==='FE'?0xffdf8c:0xffb94f;
-        const chain=maps.heme.chains.find(c=>c.groups.capLinker.atomIndexRanges.some(([a,b])=>i>=a&&i<=b));
-        return chain?0xba9aed:0x56d5e9;
+        return hemeColorByAtom.get(i)??hex(hemePalette.PEPA);
       }
       if (i>=3087) return state.model==='gs'?0xfb86ae:0xc3a3ff;
       if (i>=3013) return 0xf1c272;
@@ -173,7 +180,7 @@
       if (!state.ready || !component) return;
       component.removeAllRepresentations();
       const allowed=state.isolated?selectedIndices:allIndices;
-      const atomic={colorScheme,multipleBond:'symmetric',radiusScale:project==='heme'?0.46:0.44,
+      const atomic={colorScheme,multipleBond:'symmetric',radiusScale:project==='heme'?(state.mode==='hybrid'?0.44:0.46):0.44,
         aspectRatio:2,bondSpacing:0.75,quality:'high',opacity:1,disablePicking:false};
       if (state.mode==='atomic') {
         // The single complete representation retains the source's Fe–His cross-component bonds.
@@ -185,22 +192,24 @@
         const accessories=allowed.filter(i=>project==='heme'?!residueByAtom.has(i):i>=3013);
         // Selected peptide residues remain visible atomically alongside their coordinate-derived ribbon.
         const highlightedProtein=state.selected==='all'?[]:selectedIndices.filter(i=>protein.includes(i));
-        const atomicIndices=[...new Set([...accessories,...highlightedProtein])];
+        const atomicIndices=state.mode==='hybrid'?allowed:[...new Set([...accessories,...highlightedProtein])];
+        // The full hybrid atomic layer also retains cross-component Fe–His bonds.
         if (atomicIndices.length) component.addRepresentation('ball+stick',{...atomic,sele:atomSelection(atomicIndices)});
       }
       // Selection, isolation, and mode changes deliberately do not center or orient the camera.
       reflect();
     }
     function normalizeKey(key) {
-      const aliases={caps:'guanosine',cap:'guanosine',enzyme:'protein',phe:'phenylalanine',Phe:'phenylalanine',glu:'glutamate',Glu:'glutamate',
-        histidine:'histidines',guanosinePEG2:'guanosine',changed:'changedBaseGroups'};
+      const aliases={cap:'guanosine',enzyme:'protein',phe:'phenylalanine',Phe:'phenylalanine',glu:'glutamate',Glu:'glutamate',
+        histidine:'histidines',guanosinePEG2:'caps',changed:'changedBaseGroups'};
       return aliases[key]||key;
     }
     function indicesFor(key) {
       if (key==='all') return allIndices;
       if (project==='heme') {
-        if (key==='guanosine') return expand(modelMap.components.caps.atomIndexRanges);
-        if (key==='base'||key==='linker') return modelMap.chains.flatMap(c=>expand(c.groups[key].atomIndexRanges));
+        const chain=modelMap.chains.find(c=>c.segment===key);
+        if(chain)return chain.residues.flatMap(r=>expand(r.atomIndexRanges));
+        if (key==='guanosine'||key==='base'||key==='linker') return modelMap.chains.flatMap(c=>expand(c.groups[key].atomIndexRanges));
         return modelMap.components[key] ? expand(modelMap.components[key].atomIndexRanges) : null;
       }
       if (key==='protein') return expand(modelMap.components.enzyme.atomIndexRanges);
@@ -241,7 +250,9 @@
       if (project==='heme') {
         const residue=residueByAtom.get(picked.index);
         if (residue) return setResidue(residue.chain,residue.position,picked);
-        return setComponent(picked.index>=1140?'heme':'guanosine',picked);
+        if (picked.index>=1140) return setComponent('heme',picked);
+        const isLinker=modelMap.chains.some(c=>c.groups.linker.atomIndexRanges.some(([first,last])=>picked.index>=first&&picked.index<=last));
+        return setComponent(isLinker?'linker':'guanosine',picked);
       }
       if (picked.index>=3087) return setComponent(candidatePartByAtom.get(picked.index)||'candidate',picked);
       return setComponent(picked.index>=3013?'nadph':'protein',picked);
@@ -259,7 +270,7 @@
     }
     function makeStage() {
       if(!window.NGL)throw new Error('The molecular viewer library is unavailable.');
-      stage=new NGL.Stage(host,{backgroundColor:'#0a1728',quality:'high',sampleLevel:0,cameraType:'perspective',cameraFov:36,
+      stage=new NGL.Stage(host,{backgroundColor,quality:'high',sampleLevel:0,cameraType:'perspective',cameraFov:36,
         lightIntensity:1.1,ambientIntensity:0.72,clipNear:0,clipFar:100,fogNear:75,fogFar:100,tooltip:false});
       const canvas=stage.viewer.renderer.domElement;
       canvas.setAttribute('role','img');
@@ -274,13 +285,34 @@
         this.atomColor=atom=>{
           let color=baseColor(atom);
           if(state.selected!=='all' && !selectedSet.has(atom.index) && !state.isolated) {
-            const amount=0.34;
+            const amount=0.32;
             const mix=(c,b)=>Math.round(b+(c-b)*amount);
-            color=(mix((color>>16)&255,10)<<16)|(mix((color>>8)&255,23)<<8)|mix(color&255,40);
+            // Pale neutral context keeps every nonselected component legible on the light stage.
+            color=(mix((color>>16)&255,222)<<16)|(mix((color>>8)&255,227)<<8)|mix(color&255,232);
           }
           return color;
         };
       });
+      setInteractionEnabled(state.interactionEnabled);
+    }
+    function setInteractionEnabled(value) {
+      state.interactionEnabled=Boolean(value);
+      if(stage){
+        // Click picking is dispatched independently of mouse-controls actions.
+        stage.mouseControls.disabled=!state.interactionEnabled;
+        stage.mouseObserver.handleScroll=state.interactionEnabled;
+        const canvas=stage.viewer.renderer.domElement;
+        canvas.style.touchAction=state.interactionEnabled?'none':'pan-y pinch-zoom';
+        const observer=stage.mouseObserver;
+        ['touchstart','touchend','touchmove'].forEach(type=>{
+          const handler=observer['_onTouch'+type.slice(5)];
+          document.removeEventListener(type,handler);
+          if(state.interactionEnabled)document.addEventListener(type,handler,{passive:false});
+        });
+        if(!state.interactionEnabled)stopAnimation('page-scroll');
+      }
+      reflect();
+      return state.interactionEnabled;
     }
     async function verifiedBuffer(url,expectedHash) {
       const response=await fetch(url,{cache:'no-store'});
@@ -317,7 +349,20 @@
         if(component)stage.removeComponent(component);
         component=loaded;allIndices=Array.from({length:modelMap.atomCount},(_,i)=>i);
         residueByAtom=new Map();candidatePartByAtom=new Map();
-        if(project==='heme')modelMap.chains.forEach(c=>c.residues.forEach(r=>expand(r.atomIndexRanges).forEach(i=>residueByAtom.set(i,{chain:c.segment,position:r.position}))));
+        if(project==='heme'){
+          hemeColorByAtom=new Map();
+          modelMap.chains.forEach(c=>{
+            c.residues.forEach(r=>expand(r.atomIndexRanges).forEach(i=>{
+              residueByAtom.set(i,{chain:c.segment,position:r.position});
+              hemeColorByAtom.set(i,hex(hemePalette[c.segment]));
+            }));
+            // Coloring follows the verified source atom groups, never inferred residue names.
+            expand(c.groups.guanosine.atomIndexRanges).forEach(i=>hemeColorByAtom.set(i,hex(hemePalette.guanosine)));
+            expand(c.groups.linker.atomIndexRanges).forEach(i=>hemeColorByAtom.set(i,hex(hemePalette.linker)));
+          });
+          expand(modelMap.components.heme.atomIndexRanges).forEach(i=>hemeColorByAtom.set(i,hex(hemePalette.heme)));
+          expand(modelMap.components.iron.atomIndexRanges).forEach(i=>hemeColorByAtom.set(i,hex(hemePalette.iron)));
+        }
         else {
           ['base','ribose','linker','phenylalanine','glutamate'].forEach(part=>expand(modelMap.parts[part].atomIndexRanges).forEach(i=>candidatePartByAtom.set(i,part)));
           calculatePocket();
@@ -336,6 +381,7 @@
         if(preserve)stage.viewerControls.orient(preserve);
         else {
           component.autoView(0);
+          if(project==='heme')stage.viewerControls.zoom(viewport.clientWidth<600?0.08:0.27);
           // The deposited heme plane is initially edge-on. Tilt the camera once for the opening view;
           // all coordinates remain untouched, and later selections/modes keep this orientation.
           if(project==='heme'&&!initialTiltApplied){stage.trackballControls.rotate(30,12);initialTiltApplied=true;}
@@ -394,9 +440,9 @@
     const api={
       setComponent,setResidue,
       setModel:key=>loadModel(key),
-      setMode(mode){if(!['atomic','secondary'].includes(mode))return false;stopAnimation('representation-change');state.mode=mode;if(state.ready){render();emitSelection();}return true;},
+      setMode(mode){if(!['atomic','secondary','hybrid'].includes(mode))return false;stopAnimation('representation-change');state.mode=mode;if(state.ready){render();emitSelection();}return true;},
       isolate(value){stopAnimation('selection');state.isolated=Boolean(value)&&state.selected!=='all';if(state.ready){render();emitSelection();}},
-      zoom,rotate,reset,animateModel,stopAnimation,getDiagnostics:diagnostics,
+      zoom,rotate,reset,animateModel,stopAnimation,setInteractionEnabled,getDiagnostics:diagnostics,
       destroy(){if(destroyed)return;stopAnimation('destroyed');destroyed=true;++generation;resizeObserver?.disconnect();window.removeEventListener('resize',resize);
         viewport.removeEventListener('keydown',onKey);viewport.removeEventListener('pointerdown',pointerDown);
         viewport.removeEventListener('pointerup',pointerUp);viewport.removeEventListener('pointercancel',pointerCancel);

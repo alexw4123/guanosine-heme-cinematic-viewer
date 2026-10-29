@@ -1,4 +1,4 @@
-/* Source-linked project content. Molecular files and notebook permissions are unchanged. */
+/* Preserved source-linked Heme research content. */
 window.RESEARCH_APPLICATIONS = {
   "version": "2026-10-24-source-audit-v5",
   "heme": {
